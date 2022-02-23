@@ -33,9 +33,11 @@ gradlew
 *.bat
 *.gradle
 .gradle
-
+*.properties
 **/build/
 !src/**/build/
+generated/
+*.txt
 
 # Ignore Gradle GUI config
 gradle-app.setting
