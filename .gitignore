@@ -31,3 +31,4 @@ gradle/wrapper/
 out/production/resources/
 gradlew
 *.bat
+*.gradle
