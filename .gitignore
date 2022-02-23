@@ -33,7 +33,7 @@ gradlew
 *.bat
 *.gradle
 .gradle
-.properties
+*.properties
 **/build/
 !src/**/build/
 generated/
