@@ -37,8 +37,8 @@ public class ChatEvent {
             log.info("Received possible osu song request. Parsing now...");
             beatmap = UsagiBot.getClient().getBeatmap(parseMessage(event.getMessage()));
             log.info("Beatmap ID Found: " + beatmap.getId());
-            sendMessage("[Received] " + beatmap.getBeatmapset().getTitle() + " - " + beatmap.getBeatmapset().getArtist() +
-                    " [" + beatmap.getVersion() + "] " + beatmap.getDifficulty_rating() + "⭐");
+            sendMessage("[Received] [" + beatmap.getStatus() + "] " + beatmap.getBeatmapset().getTitle() + " - " + beatmap.getBeatmapset().getArtist() +
+                    " [" + beatmap.getVersion() + "] " + beatmap.getDifficulty_rating() + " ⭐ ");
             //UsagiBot.getIrcBot().getUserChannelDao().getUser("I_Only_Hit_100s").send().message("Map Received - " +
                     //"http://osu.ppy.sh/b/" + beatmap.getId());
         }
