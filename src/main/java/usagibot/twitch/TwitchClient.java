@@ -2,17 +2,18 @@ package usagibot.twitch;
 
 import com.github.philippheuer.credentialmanager.domain.OAuth2Credential;
 import com.github.philippheuer.events4j.simple.SimpleEventHandler;
-import com.github.twitch4j.TwitchClient;
 import com.github.twitch4j.TwitchClientBuilder;
+import lombok.extern.slf4j.Slf4j;
 import usagibot.UsagiBot;
 import usagibot.twitch.event.ChatEvent;
 
-public class Client {
+@Slf4j
+public class TwitchClient {
 
-    public static TwitchClient client;
+    public static com.github.twitch4j.TwitchClient client;
     public static OAuth2Credential credentials = new OAuth2Credential("twitch", UsagiBot.getConfig().getTwitchPassword());
 
-    public Client (){
+    public TwitchClient(){
         client = TwitchClientBuilder.builder()
                 .withEnableChat(true)
                 .withChatAccount(credentials)
@@ -22,11 +23,17 @@ public class Client {
 
     public void startClient() {
         loadListeners();
-        client.getChat().joinChannel(UsagiBot.getConfig().getTwitchChannel());
+        try {
+            client.getChat().joinChannel(UsagiBot.getConfig().getTwitchChannel());
+            log.info("Successfully Joined " + UsagiBot.getConfig().getTwitchChannel());
+        } catch (Exception e) {
+            log.warn("Could not connect to Twitch Channel. Is everything set up correctly?");
+        }
     }
 
     public void loadListeners() {
         SimpleEventHandler eventHandler = client.getEventManager().getEventHandler(SimpleEventHandler.class);
         new ChatEvent(eventHandler);
     }
+
 }
