@@ -1,13 +1,19 @@
 package usagibot.twitch.event;
 
 import com.github.philippheuer.events4j.simple.SimpleEventHandler;
+import com.github.philippheuer.events4j.simple.domain.EventSubscriber;
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
 import com.github.twitch4j.helix.domain.User;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 import usagibot.UsagiBot;
 import usagibot.osu.objects.Beatmap;
 import usagibot.twitch.TwitchClient;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -18,19 +24,25 @@ public class ChatEvent {
 
     private final String prefix = UsagiBot.getConfig().getPrefix();
     private final String channel = UsagiBot.getConfig().getTwitchChannel();
+    private final String webHookPath = UsagiBot.getConfig().getGOsuUrlPath();
     private Beatmap beatmap;
 
     public ChatEvent(SimpleEventHandler eventHandler) {
         eventHandler.onEvent(ChannelMessageEvent.class, this::onChannelMessage);
     }
 
+    @EventSubscriber
     public void onChannelMessage(ChannelMessageEvent event) {
 
         if (event.getUser().getName() == "RNRPBot") return;
 
         if (event.getMessage().equalsIgnoreCase(prefix + "np")) {
             log.info("Sending !np command in " + channel);
-            sendMessage("NP Command");
+            try {
+                sendMessage("Here you go! " + getSongFromGosuMemory().getUrl());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         if (event.getMessage().contains("https://osu.ppy.sh")) {
@@ -45,10 +57,7 @@ public class ChatEvent {
 
     }
 
-    public void checkBadge(User user) {
-
-    }
-
+    // Send a message to the chat
     public void sendMessage(String message) {
         TwitchClient.client.getChat().sendMessage(channel, message);
     }
@@ -77,5 +86,13 @@ public class ChatEvent {
                 log.warn("Scoin0 has not yet implemented all ways to request a beatmap. Only Beatmap Sets work right now.");
         }
         return null;
+    }
+
+    // Grab the map ID from Gosumemory
+    public Beatmap getSongFromGosuMemory() throws IOException {
+        JSONObject t = (JSONObject) (new JSONTokener(IOUtils.toString((new URL(webHookPath)).openStream()))).nextValue();
+        String beatmapID = t.getJSONObject("menu").getJSONObject("bm").get("id").toString();
+        beatmap = UsagiBot.getClient().getBeatmap(beatmapID);
+        return beatmap;
     }
 }
