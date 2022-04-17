@@ -85,7 +85,6 @@ public class Configuration {
             banchoServer = config.getString("bancho_server");
             banchoPort = config.getInt("bancho_port");
             banchoChannel = config.getString("bancho_channel");
-            tillerinoAPIKey = config.getString("tillerino_api_key");
             log.info("Config Loaded.");
         }
     }
@@ -99,107 +98,103 @@ public class Configuration {
     }
 
     public static String generateConfiguration() {
-        return """
-                ############################################################\s
-                # +------------------------------------------------------+ #
-                # |                      Usagibot                        | #
-                # |                 Configuration File                   | #
-                # +------------------------------------------------------+ #
-                ############################################################
-
-                # DO NOT TOUCH
-                configVersion = 1
-
-                ############################################################
-                # +------------------------------------------------------+ #
-                # |                 Settings (Global)                    | #
-                # +------------------------------------------------------+ #
-                ############################################################
-
-                # The prefix for the Twitch bot
-                # Default is !
-                prefix = !
-
-                # This program is capable to automatically update finding a new version.
-                # If true, the program will search for new updates and automatically download them.
-                # If false, the program will not search for new updates.\s
-                # Default is true
-                update = true
-
-                ############################################################
-                # +------------------------------------------------------+ #
-                # |                  Twitch Settings                     | #
-                # +------------------------------------------------------+ #
-                ############################################################
-
-                # The Twitch bot IRC username and password (required)
-                #
-                # See https://help.twitch.tv/customer/portal/articles/1302780-twitch-irc for
-                # help obtaining a Twitch IRC token
-                #
-                # Example:\s
-                #   twitch_username = UsagiBot
-                #   twitch_password = abc123 (without the 'oauth:')
-                twitch_username =
-                twitch_password =
-
-                # Twitch channel name (required)
-                #
-                # This might be different if you are running the bot on another Twitch account.
-                # Change this to the channel you are streaming on.
-                #
-                # Example:
-                #   twitch_channel = Scoin0
-                twitch_channel =\s
-
-                ############################################################
-                # +------------------------------------------------------+ #
-                # |                   GOsu Settings                      | #
-                # +------------------------------------------------------+ #
-                ############################################################
-
-                # GOsuMemory websocket path (required if you want the !np command to work)
-                #
-                # Inside the config.ini for GOsuMemory, copy the link from serverip and paste as the gosu_url_path.
-                #
-                # Example:
-                #   gosu_url_path = http://127.0.0.1:24050
-                #
-                # Default is http://127.0.0.1:24050
-                gosu_url_path = http://127.0.0.1:24050
-
-                ############################################################
-                # +------------------------------------------------------+ #
-                # |                    Osu Settings                      | #
-                # +------------------------------------------------------+ #
-                ############################################################
-
-                # Osu! API key (required)
-                #
-                # See https://osu.ppy.sh/p/api to obtain an osu! API key
-                #
-                # Example:\s
-                #   osu_api_key = abc123
-                osu_api_clientid =
-                osu_api_key =\s
-
-                # Bancho API key IRC username and password (required)
-                #
-                # See https://osu.ppy.sh/p/irc on how to get a Bancho IRC password
-                #
-                # Example:
-                #   bancho_username = UsagiBot
-                #   bancho_password = abc123
-                bancho_username =\s
-                bancho_password =\s
-
-                # Tillerino API key (optional)
-                #
-                # If you do not have an Tillerino API, leave this section blank.
-                # PP information will not be displayed if this option is blank.
-                #
-                # Example:
-                #   tillerino_api_key = abc123
-                tillerino_api_key =\s""";
+        return "############################################################\n" +
+                "# +------------------------------------------------------+ #\n" +
+                "# |                      Usagibot                        | #\n" +
+                "# |                 Configuration File                   | #\n" +
+                "# +------------------------------------------------------+ #\n" +
+                "############################################################\n" +
+                "\n" +
+                "# DO NOT TOUCH\n" +
+                "configVersion = 1\n" +
+                "\n" +
+                "############################################################\n" +
+                "# +------------------------------------------------------+ #\n" +
+                "# |                 Settings (Global)                    | #\n" +
+                "# +------------------------------------------------------+ #\n" +
+                "############################################################\n" +
+                "\n" +
+                "# The prefix for the Twitch bot\n" +
+                "# Default is !\n" +
+                "prefix = !\n" +
+                "\n" +
+                "# This program is capable to automatically update finding a new version.\n" +
+                "# If true, the program will search for new updates and automatically download them.\n" +
+                "# If false, the program will not search for new updates. \n" +
+                "# Default is true\n" +
+                "update = true\n" +
+                "\n" +
+                "############################################################\n" +
+                "# +------------------------------------------------------+ #\n" +
+                "# |                  Twitch Settings                     | #\n" +
+                "# +------------------------------------------------------+ #\n" +
+                "############################################################\n" +
+                "\n" +
+                "# The Twitch bot IRC username and password (required)\n" +
+                "#\n" +
+                "# See https://help.twitch.tv/customer/portal/articles/1302780-twitch-irc for\n" +
+                "# help obtaining a Twitch IRC token\n" +
+                "#\n" +
+                "# Example: \n" +
+                "#   twitch_username = UsagiBot\n" +
+                "#   twitch_password = oauth:abc123\n" +
+                "twitch_username =\n" +
+                "twitch_password =\n" +
+                "\n" +
+                "# Twitch channel name (required)\n" +
+                "#\n" +
+                "# This might be different if you are running the bot on another Twitch account.\n" +
+                "# Change this to the channel you are streaming on.\n" +
+                "#\n" +
+                "# Example:\n" +
+                "#   twitch_channel = Scoin0\n" +
+                "twitch_channel = \n" +
+                "\n" +
+                "############################################################\n" +
+                "# +------------------------------------------------------+ #\n" +
+                "# |                   GOsu Settings                      | #\n" +
+                "# +------------------------------------------------------+ #\n" +
+                "############################################################\n" +
+                "\n" +
+                "# GOsuMemory websocket path (required if you want the !np command to work)\n" +
+                "#\n" +
+                "# Inside the config.ini for GOsuMemory, copy the link from serverip and paste as the gosu_url_path.\n" +
+                "#\n" +
+                "# Example:\n" +
+                "#   gosu_url_path = http://127.0.0.1:24050/json\n" +
+                "#\n" +
+                "# Default is http://127.0.0.1:24050/json\n" +
+                "gosu_url_path = http://127.0.0.1:24050/json\n" +
+                "\n" +
+                "############################################################\n" +
+                "# +------------------------------------------------------+ #\n" +
+                "# |                    Osu Settings                      | #\n" +
+                "# +------------------------------------------------------+ #\n" +
+                "############################################################\n" +
+                "\n" +
+                "# Osu! API key (required)\n" +
+                "#\n" +
+                "# See https://osu.ppy.sh/home/account/edit and scroll down to obtain an osu! API key\n" +
+                "#\n" +
+                "# Example:\n" +
+                "#   osu_api_clientid = 12345\n" +
+                "#   osu_api_key = abc123\n" +
+                "osu_api_clientid = \n" +
+                "osu_api_key = \n" +
+                "\n" +
+                "# Bancho API key IRC username, password,  (required)\n" +
+                "#\n" +
+                "# See https://osu.ppy.sh/p/irc on how to get a Bancho IRC password\n" +
+                "#\n" +
+                "# Example:\n" +
+                "#   bancho_username = UsagiBot\n" +
+                "#   bancho_password = abc123\n" +
+                "#   bancho_server = irc.ppy.sh\n" +
+                "#   bancho_port = 6667\n" +
+                "bancho_username = \n" +
+                "bancho_password = \n" +
+                "bancho_server = irc.ppy.sh\n" +
+                "bancho_port = 6667\n" +
+                "bancho_channel = #osu";
     }
 }
