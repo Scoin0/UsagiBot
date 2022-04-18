@@ -8,6 +8,7 @@ import usagibot.osu.OsuClient;
 import usagibot.osu.irc.OsuIrc;
 import usagibot.osu.objects.Beatmap;
 import usagibot.twitch.TwitchClient;
+import usagibot.utils.Constants;
 import usagibot.utils.Utility;
 
 import java.io.IOException;
@@ -36,8 +37,9 @@ public class UsagiBot {
     }
 
     public static void main(String[] args) throws Exception {
-        log.info("Welcome to UsagiBot!");
+        System.out.println(Constants.logo);
         config.initConfiguration();
+
         twitchThread = new Thread(() -> {
             twitchThread.setName("Twitch");
             TwitchClient twitchClient1 = new TwitchClient();
