@@ -2,9 +2,10 @@ package usagibot.osu;
 
 public class Route {
 
-    /* BEATMAPS */
+    /* ENDPOINT */
 
     public static final Route BEATMAP = new Route(Method.GET, "beatmaps/{beatmap_id}");
+    public static final Route USER = new Route(Method.GET, "/users/{user}");
 
     private Method method;
     private String route;
