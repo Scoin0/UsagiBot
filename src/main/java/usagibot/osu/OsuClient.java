@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import usagibot.osu.objects.Beatmap;
+import usagibot.utils.RateLimit;
 
 import java.io.IOException;
 
@@ -15,6 +16,7 @@ public class OsuClient {
 
     private String token;
     private int tokenTimeout;
+    private static RateLimit limit = new RateLimit(60); // Only allow for 60 requests per minute
     private static final String TOKEN_URL = "https://osu.ppy.sh/oauth/token";
     private static final String OSU_ENDPOINT = "https://osu.ppy.sh/api/v2/";
 
@@ -55,6 +57,7 @@ public class OsuClient {
     public <T> T requestApi(String compiledRoute, String token, Class<T> tClass) {
 
         OkHttpClient client = new OkHttpClient();
+        waitForFreeTicket();
 
         Request request = new Request.Builder()
                 .url(OSU_ENDPOINT + compiledRoute)
@@ -71,7 +74,12 @@ public class OsuClient {
     }
 
     public Beatmap getBeatmap(String beatmapId) {
+        waitForFreeTicket();
         return requestApi(Route.BEATMAP.compile(beatmapId), token, Beatmap.class);
+    }
+
+    private void waitForFreeTicket() {
+        limit.getOrWaitForTicket();
     }
 
     public static class DefaultTokenObject {
