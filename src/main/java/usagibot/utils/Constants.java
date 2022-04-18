@@ -6,4 +6,14 @@ import usagibot.utils.version.VersionUtil;
 public class Constants {
 
     public static final Version version = VersionUtil.getCurrentVersion();
+    public static final String logo =
+            "\n _   _                     _ ______         _   \n" +
+            "| | | |                   (_)| ___ \\       | |  \n" +
+            "| | | | ___   __ _   __ _  _ | |_/ /  ___  | |_ \n" +
+            "| | | |/ __| / _` | / _` || || ___ \\ / _ \\ | __|\n" +
+            "| |_| |\\__ \\| (_| || (_| || || |_/ /| (_) || |_ \n" +
+            " \\___/ |___/ \\__,_| \\__, ||_|\\____/  \\___/  \\__|\n" +
+            "                     __/ |                      \n" +
+            "                    |___/                       \n" +
+            "Version: \n";
 }
