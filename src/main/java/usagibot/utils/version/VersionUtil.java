@@ -3,6 +3,7 @@ package usagibot.utils.version;
 import lombok.extern.slf4j.Slf4j;
 import ru.dmerkushov.httphelper.HttpHelper;
 import ru.dmerkushov.httphelper.HttpHelperException;
+import usagibot.UsagiBot;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -12,21 +13,15 @@ import java.util.regex.Pattern;
 @Slf4j
 public class VersionUtil {
 
-    private static final Pattern versionPattern = Pattern.compile("version=([0-9]+.[0-9]+.[0-9]+)");
-    private static String version = null;
+    private static final Pattern versionPattern = Pattern.compile("v([0-9]+.[0-9]+.[0-9]+)");
+    private static String version;
 
     public static Version getCurrentVersion() {
         if (version == null) {
-            Properties props = new Properties();
-            try {
-                props.load(VersionUtil.class.getClassLoader().getResourceAsStream("project.properties"));
-            } catch (IOException e) {
-                log.warn("Could not load project.properties!");
-                return null;
+            version = "1";
             }
-            version = props.getProperty("version");
-        }
-        return Version.fromString(version);
+        version = UsagiBot.class.getPackage().getImplementationVersion();
+        return Version.fromString(version); //Change this
     }
 
     public static Version getLatestVersion() {
