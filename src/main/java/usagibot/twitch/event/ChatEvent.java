@@ -3,17 +3,13 @@ package usagibot.twitch.event;
 import com.github.philippheuer.events4j.simple.SimpleEventHandler;
 import com.github.philippheuer.events4j.simple.domain.EventSubscriber;
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
-import com.github.twitch4j.helix.domain.User;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
-import org.json.JSONObject;
-import org.json.JSONTokener;
 import usagibot.UsagiBot;
 import usagibot.osu.objects.Beatmap;
 import usagibot.twitch.TwitchClient;
+import usagibot.utils.Utility;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -24,7 +20,6 @@ public class ChatEvent {
 
     private final String prefix = UsagiBot.getConfig().getPrefix();
     private final String channel = UsagiBot.getConfig().getTwitchChannel();
-    private final String webHookPath = UsagiBot.getConfig().getGOsuUrlPath();
     private Beatmap beatmap;
 
     public ChatEvent(SimpleEventHandler eventHandler) {
@@ -39,7 +34,7 @@ public class ChatEvent {
         if (event.getMessage().equalsIgnoreCase(prefix + "np")) {
             log.info("Sending !np command in " + channel);
             try {
-                sendMessage("Here you go! " + getSongFromGosuMemory().getUrl());
+                sendMessage("Here you go! " + Utility.getSongFromGosuMemory().getUrl());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -49,12 +44,10 @@ public class ChatEvent {
             log.info("Received possible osu song request. Parsing now...");
             beatmap = UsagiBot.getClient().getBeatmap(parseMessage(event.getMessage()));
             log.info("Beatmap ID Found: " + beatmap.getId());
-            sendMessage("[Received] [" + beatmap.getStatus() + "] " + beatmap.getBeatmapset().getTitle() + " - " + beatmap.getBeatmapset().getArtist() +
-                    " [" + beatmap.getVersion() + "] " + beatmap.getDifficulty_rating() + " ⭐ ");
+            sendMessage(Utility.receivedMessage(beatmap));
             //UsagiBot.getIrcBot().getUserChannelDao().getUser("I_Only_Hit_100s").send().message("Map Received - " +
                     //"http://osu.ppy.sh/b/" + beatmap.getId());
         }
-
     }
 
     // Send a message to the chat
@@ -86,13 +79,5 @@ public class ChatEvent {
                 log.warn("Scoin0 has not yet implemented all ways to request a beatmap. Only Beatmap Sets work right now.");
         }
         return null;
-    }
-
-    // Grab the map ID from Gosumemory
-    public Beatmap getSongFromGosuMemory() throws IOException {
-        JSONObject t = (JSONObject) (new JSONTokener(IOUtils.toString((new URL(webHookPath)).openStream()))).nextValue();
-        String beatmapID = t.getJSONObject("menu").getJSONObject("bm").get("id").toString();
-        beatmap = UsagiBot.getClient().getBeatmap(beatmapID);
-        return beatmap;
     }
 }
