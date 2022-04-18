@@ -8,6 +8,7 @@ import usagibot.osu.OsuClient;
 import usagibot.osu.irc.OsuIrc;
 import usagibot.osu.objects.Beatmap;
 import usagibot.twitch.TwitchClient;
+import usagibot.utils.Utility;
 
 import java.io.IOException;
 
@@ -37,8 +38,6 @@ public class UsagiBot {
     public static void main(String[] args) throws Exception {
         log.info("Welcome to UsagiBot!");
         config.initConfiguration();
-
-
         twitchThread = new Thread(() -> {
             twitchThread.setName("Twitch");
             TwitchClient twitchClient1 = new TwitchClient();
@@ -48,10 +47,8 @@ public class UsagiBot {
         osuClientThread = new Thread(() -> {
             osuClientThread.setName("Osu Client");
             client = OsuClient.createClient(config.getOsuClientId(), config.getOsuAPIKey());
-            Beatmap beatmap = client.getBeatmap("2965016");
-            log.info("Getting Beatmap URL "
-            + beatmap.getUrl());
         });
+
 
         osuIrcThread = new Thread(() -> {
             osuIrcThread.setName("Osu IRC");
