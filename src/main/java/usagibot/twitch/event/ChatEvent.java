@@ -40,7 +40,7 @@ public class ChatEvent {
             }
         }
 
-        if (event.getMessage().contains("https://osu.ppy.sh")) {
+        if (event.getMessage().contains("https://osu.ppy.sh/")) {
             log.info("Received possible osu song request. Parsing now...");
             beatmap = UsagiBot.getClient().getBeatmap(parseMessage(event.getMessage()));
             log.info("Beatmap ID Found: " + beatmap.getId());
