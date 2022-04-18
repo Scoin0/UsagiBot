@@ -3,6 +3,7 @@ package usagibot.twitch.event;
 import com.github.philippheuer.events4j.simple.SimpleEventHandler;
 import com.github.philippheuer.events4j.simple.domain.EventSubscriber;
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
+import com.github.twitch4j.common.events.domain.EventUser;
 import lombok.extern.slf4j.Slf4j;
 import usagibot.UsagiBot;
 import usagibot.osu.objects.Beatmap;
@@ -45,6 +46,7 @@ public class ChatEvent {
             beatmap = UsagiBot.getClient().getBeatmap(parseMessage(event.getMessage()));
             log.info("Beatmap ID Found: " + beatmap.getId());
             sendMessage(Utility.receivedMessage(beatmap));
+            sendIRCMessage(event.getUser(), beatmap);
             //UsagiBot.getIrcBot().getUserChannelDao().getUser("I_Only_Hit_100s").send().message("Map Received - " +
                     //"http://osu.ppy.sh/b/" + beatmap.getId());
         }
@@ -53,6 +55,10 @@ public class ChatEvent {
     // Send a message to the chat
     public void sendMessage(String message) {
         TwitchClient.client.getChat().sendMessage(channel, message);
+    }
+
+    public void sendIRCMessage(EventUser user, Beatmap beatmap) {
+        UsagiBot.getIrcBot().getUserChannelDao().getUser(UsagiBot.getConfig().getBanchoUsername()).send().message(Utility.ircMessage(user, beatmap));
     }
 
     // Grabs the map digits
