@@ -29,3 +29,10 @@ pause
 As of right now, the bot only accepts urls in the `beatmapsets` format. As an example,
 `https://osu.ppy.sh/beatmapsets/53176#osu/162237`. This will be changed later to accept all forms of urls.
 Like `/b/`, `/s/`, and `/beatmapsets/`. 
+
+### Todo
+
+---
+
+* PP Calculation
+* Support older osu urls. (`/b/` and `/s/`)
