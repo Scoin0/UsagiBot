@@ -9,8 +9,6 @@ import org.slf4j.LoggerFactory;
 @Slf4j
 public class Version {
 
-    static final Logger log = LoggerFactory.getLogger(Version.class);
-
     private int majorVersion;
     private int minorVersion;
     private int patchVersion;
