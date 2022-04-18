@@ -44,8 +44,8 @@ public class Utility {
 
     // The message to send to BanchoIRC
     public static String ircMessage(EventUser user, Beatmap beatmap) {
-        return String.format("[%s] > [%s %s - %s [%s]] ♫ %s ★ %.2f BPM:%.1f AR:%.1f OD:%.1f", user.getName(),
-                beatmap.getUrl(), beatmap.getBeatmapset().getArtist(), beatmap.getBeatmapset().getTitle(),
+        return String.format("[%s] > [https://osu.ppy.sh/beatmapsets/%d %s - %s [%s]] ♫ %s ★ %.2f BPM:%.1f AR:%.1f OD:%.1f", user.getName(),
+                beatmap.getBeatmapset_id(), beatmap.getBeatmapset().getArtist(), beatmap.getBeatmapset().getTitle(),
                 beatmap.getVersion(), Utility.convertTime(beatmap.getTotal_length()), beatmap.getDifficulty_rating(),
                 beatmap.getBpm(), beatmap.getAr(), beatmap.getDrain());
     }
