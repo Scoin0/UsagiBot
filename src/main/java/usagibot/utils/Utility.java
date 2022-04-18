@@ -1,6 +1,7 @@
 package usagibot.utils;
 
 import com.github.twitch4j.common.events.domain.EventUser;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -12,11 +13,11 @@ import usagibot.utils.version.VersionUtil;
 import java.io.IOException;
 import java.net.URL;
 
+@Slf4j
 public class Utility {
 
-    private static Beatmap beatmap;
+    static Beatmap beatmap;
     private static final String webHookPath = UsagiBot.getConfig().getGOsuUrlPath();
-    public static final Version version = VersionUtil.getCurrentVersion();
 
     // Converts int time to human-readable time
     public static String convertTime(int totalTime) {
