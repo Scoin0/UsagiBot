@@ -44,7 +44,7 @@ public class Utility {
 
     // The message to send to BanchoIRC
     public static String ircMessage(EventUser user, Beatmap beatmap) {
-        return String.format("[%s] > [https://osu.ppy.sh/beatmapsets/%d %s - %s [%s]] ♫ %s ★ %.2f BPM:%.1f AR:%.1f OD:%.1f", user.getName(),
+        return String.format("[%s] > [https://osu.ppy.sh/beatmapsets/%d %s - %s [%s]] \u266B %s \u2605 %.2f BPM:%.1f AR:%.1f OD:%.1f", user.getName(),
                 beatmap.getBeatmapset_id(), beatmap.getBeatmapset().getArtist(), beatmap.getBeatmapset().getTitle(),
                 beatmap.getVersion(), Utility.convertTime(beatmap.getTotal_length()), beatmap.getDifficulty_rating(),
                 beatmap.getBpm(), beatmap.getAr(), beatmap.getDrain());
@@ -52,7 +52,7 @@ public class Utility {
 
     // The message to send to Twitch
     public static String receivedMessage(Beatmap beatmap) {
-        return  String.format("[RECEIVED] > [%s] %s - %s [%s] ♫ %s ★ %.2f BPM:%.1f AR:%.1f OD:%.1f",
+        return  String.format("[RECEIVED] > [%s] %s - %s [%s] \u266B %s \u2605 %.2f BPM:%.1f AR:%.1f OD:%.1f",
                 beatmap.getStatus(), beatmap.getBeatmapset().getArtist(), beatmap.getBeatmapset().getTitle(),
                 beatmap.getVersion(), Utility.convertTime(beatmap.getTotal_length()), beatmap.getDifficulty_rating(),
                 beatmap.getBpm(), beatmap.getAr(), beatmap.getDrain());
