@@ -6,10 +6,8 @@ import org.pircbotx.exception.IrcException;
 import usagibot.configuration.Configuration;
 import usagibot.osu.OsuClient;
 import usagibot.osu.irc.OsuIrc;
-import usagibot.osu.objects.Beatmap;
 import usagibot.twitch.TwitchClient;
 import usagibot.utils.Constants;
-import usagibot.utils.Utility;
 
 import java.io.IOException;
 
