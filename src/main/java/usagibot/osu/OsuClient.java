@@ -74,7 +74,6 @@ public class OsuClient {
     }
 
     public Beatmap getBeatmap(String beatmapId) {
-        waitForFreeTicket();
         return requestApi(Route.BEATMAP.compile(beatmapId), token, Beatmap.class);
     }
 
