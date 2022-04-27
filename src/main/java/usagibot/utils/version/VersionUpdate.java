@@ -34,6 +34,7 @@ public class VersionUpdate {
     public static void checkForUpdate() {
         if (!latest.compareVersion(Constants.version)) {
             log.info("You are up to date.");
+            return;
         }
         log.info("Update was found! (Current Build: " + Constants.version + ") | (Latest Build: " + latest.toString() + ")");
         log.info("Updating now...");
