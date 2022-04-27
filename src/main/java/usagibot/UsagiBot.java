@@ -8,6 +8,7 @@ import usagibot.osu.OsuClient;
 import usagibot.osu.irc.OsuIrc;
 import usagibot.twitch.TwitchClient;
 import usagibot.utils.Constants;
+import usagibot.utils.version.VersionUpdate;
 
 import java.io.IOException;
 
@@ -37,6 +38,7 @@ public class UsagiBot {
     public static void main(String[] args) throws Exception {
         System.out.println(Constants.logo);
         config.initConfiguration();
+        VersionUpdate.checkForUpdate();
 
         twitchThread = new Thread(() -> {
             twitchThread.setName("Twitch");

@@ -35,7 +35,7 @@ public class VersionUpdate {
         if (!latest.compareVersion(Constants.version)) {
             log.info("You are up to date.");
         }
-        log.info("Update was found! (Current Build: " + Constants.version.toString() + ") | (Latest Build: " + latest.toString() + ")");
+        log.info("Update was found! (Current Build: " + Constants.version + ") | (Latest Build: " + latest.toString() + ")");
         log.info("Updating now...");
         try {
             String latestVersion = getUpdatedBotURL(VersionUtil.getLatestVersion());
@@ -48,7 +48,7 @@ public class VersionUpdate {
     }
 
     public static String getUpdatedBotURL(Version latestVersion) {
-        return "";
+        return "https://github.com/Scoin0/UsagiBot/releases/download/" + latestVersion + "/UsagiBot.jar";
     }
 
     private static void downloadLatestVersionAndRestart(String updatedBotURL, boolean shouldLaunchNow) throws IOException {
@@ -64,7 +64,7 @@ public class VersionUpdate {
         }
 
         if (System.getProperty("os.name").toLowerCase().contains("win")) {
-            final String batchFile = "update-UsagiBot-bat";
+            final String batchFile = "update-UsagiBot.bat";
             final String batchPath = new File(batchFile).getAbsolutePath();
 
             String script = "@echo off\r\n"

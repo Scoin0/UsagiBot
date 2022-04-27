@@ -16,5 +16,5 @@ public class Constants {
             " \\___/ |___/ \\__,_| \\__, ||_|\\____/  \\___/  \\__|\n" +
             "                     __/ |                      \n" +
             "                    |___/                       \n" +
-            "Version: \n";
+            "Version: v" + version;
 }
