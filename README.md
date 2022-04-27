@@ -39,12 +39,16 @@ Like `/b/`, `/s/`, and `/beatmapsets/`.
 * [Osu API Token](https://osu.ppy.sh/home/account/edit) - Scroll down to the bottom to obtain your token. More information inside the [wiki](https://github.com/Scoin0/UsagiBot/wiki/Configuration).
 
 
-### Todo
+### Todo 
 
 ---
 
 * PP Calculation
-* Support older osu urls. (`/b/` and `/s/`)
+* Support osu mods
+* Finish Implementing the Ratelimiter
+* Support other osu urls. (`/b/` and `/s/`)
+* Add more commands (`!stats` and such)
+* Have 2 versions, a standalone and an always running version.
 
 ---
 If there are any issues please let me know either in the issue tracker or DM me at `Scoin0#0002`.
