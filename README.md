@@ -4,7 +4,6 @@
 
 UsagiBot is a Twitch & Bancho IRC bot for handling song requests in Osu!
 
-**This bot is not complete yet. Please wait till release.**
 
 ### Running The Bot
 
