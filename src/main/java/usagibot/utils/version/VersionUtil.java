@@ -17,21 +17,26 @@ public class VersionUtil {
 
     public static Version getCurrentVersion() {
         if (version == null) {
-            version = "1";
+            version = "1.0.0";
             }
         version = UsagiBot.class.getPackage().getImplementationVersion();
         return Version.fromString(version);
     }
 
     public static Version getLatestVersion() {
+        version = getGithubValues().getTag_name();
+        return Version.fromString(version);
+    }
+
+    public static GitHubAPI getGithubValues() {
+        GitHubAPI github = new GitHubAPI();
         try {
             JSONArray json = new JSONArray(IOUtils.toString(new URL(Constants.githubURL), Charset.forName("UTF-8")));
             String responseBody = json.get(0).toString();
-            GitHubAPI github = new JsonMapper().readValue(responseBody, GitHubAPI.class);
-            version = github.getTag_name();
+            github = new JsonMapper().readValue(responseBody, GitHubAPI.class);
         } catch (IOException e) {
-            log.info("Unable to find URL");
+            log.warn(e.getMessage());
         }
-        return Version.fromString(version);
+        return github;
     }
 }
