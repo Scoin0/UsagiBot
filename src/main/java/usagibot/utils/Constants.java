@@ -16,5 +16,7 @@ public class Constants {
             " \\___/ |___/ \\__,_| \\__, ||_|\\____/  \\___/  \\__|\n" +
             "                     __/ |                      \n" +
             "                    |___/                       \n" +
-            "Version: v" + version;
+            "Version: v" + version + "\n" +
+            "Release Notes:\n" +
+            VersionUtil.getGithubValues().getBody() + "\n";
 }
