@@ -9,16 +9,13 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class OsuIrc {
 
-    private int messageDelay = 250;
-    private boolean reconnect = true;
-    private int reconnectTimeout = 10000; // 10 Seconds
     public static Configuration config;
 
-    private static String server = UsagiBot.getConfig().getBanchoServer();
-    private static int port = UsagiBot.getConfig().getBanchoPort();
-    private static String username = UsagiBot.getConfig().getBanchoUsername();
-    private static String password = UsagiBot.getConfig().getBanchoPassword();
-    private static String autoJoinChannel = UsagiBot.getConfig().getBanchoChannel();
+    private final static String server = UsagiBot.getConfig().getBanchoServer();
+    private final static int port = UsagiBot.getConfig().getBanchoPort();
+    private final static String username = UsagiBot.getConfig().getBanchoUsername();
+    private final static String password = UsagiBot.getConfig().getBanchoPassword();
+    private final static String autoJoinChannel = UsagiBot.getConfig().getBanchoChannel();
 
 
     public static void Builder() {
