@@ -31,8 +31,7 @@ gradle/wrapper/
 out/production/resources/
 gradlew
 *.bat
-*.gradle
-.gradle
+settings.gradle
 *.properties
 **/build/
 !src/**/build/
