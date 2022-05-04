@@ -132,7 +132,7 @@ public class Configuration {
                 "\n" +
                 "# The Twitch bot IRC username and password (required)\n" +
                 "#\n" +
-                "# See https://help.twitch.tv/customer/portal/articles/1302780-twitch-irc for\n" +
+                "# See https://twitchapps.com/tmi/ for\n" +
                 "# help obtaining a Twitch IRC token\n" +
                 "#\n" +
                 "# Example: \n" +
