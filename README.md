@@ -10,7 +10,7 @@ UsagiBot is a Twitch & Bancho IRC bot for handling song requests in Osu!
 
 1. Open notepad and create a `start.bat` script. You can copy and paste the code from below.
 ```
-java -Xms4G -Xmx4G -jar Usagibot.jar
+java -jar Usagibot.jar
 pause
 ```
 2. Run Once. It will generate the configuration file and should close back out. Fill in the fields marked `required`.
