@@ -30,7 +30,7 @@ public class ChatEvent {
     @EventSubscriber
     public void onChannelMessage(ChannelMessageEvent event) {
 
-        if (event.getUser().getName() == "RNRPBot") return;
+        if (event.getUser().getName().equals("RNRPBot")) return;
 
         if (event.getMessage().equalsIgnoreCase(prefix + "np")) {
             log.info("Sending !np command in " + channel);
@@ -47,8 +47,6 @@ public class ChatEvent {
             log.info("Beatmap ID Found: " + beatmap.getId());
             sendMessage(Utility.receivedMessage(beatmap));
             sendIRCMessage(event.getUser(), beatmap);
-            //UsagiBot.getIrcBot().getUserChannelDao().getUser("I_Only_Hit_100s").send().message("Map Received - " +
-                    //"http://osu.ppy.sh/b/" + beatmap.getId());
         }
     }
 
@@ -57,6 +55,7 @@ public class ChatEvent {
         TwitchClient.client.getChat().sendMessage(channel, message);
     }
 
+    // Send a message to Osu Client
     public void sendIRCMessage(EventUser user, Beatmap beatmap) {
         UsagiBot.getIrcBot().getUserChannelDao().getUser(UsagiBot.getConfig().getBanchoUsername()).send().message(Utility.ircMessage(user, beatmap));
     }
