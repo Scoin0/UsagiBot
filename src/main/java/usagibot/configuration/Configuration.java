@@ -8,6 +8,12 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Data
 @Getter
@@ -27,6 +33,7 @@ public class Configuration {
     private String twitchUsername;
     private String twitchPassword;
     private String twitchChannel;
+    private String twitchMessage;
 
     // GOsu Settings
     private String gOsuUrlPath;
@@ -39,7 +46,6 @@ public class Configuration {
     private String banchoChannel;
     private String osuClientId;
     private String osuAPIKey;
-    private String tillerinoAPIKey;
 
     public void createConfiguration() {
 
@@ -55,8 +61,6 @@ public class Configuration {
         } catch (Exception e) {
             log.error(e.getMessage());
         }
-        log.info("Please set up your configuration file.");
-        System.exit(0);
     }
 
     public void loadConfiguration() throws Exception {
@@ -65,11 +69,16 @@ public class Configuration {
         config.load();
         fileInput.close();
 
+        Map<String, Object> keywords = new HashMap<>();
+        keywords.put("username", twitchUsername);
+        keywords.put("musicnote", "\u266B");
+        keywords.put("star", "\u2605");
+
         log.info("Loading Config...");
         if (configVersion != config.getInt("configVersion")) {
             log.info("There has been an update to the Config file.");
             log.info("Merging old data to new Config file...");
-            //TODO: Merge old data to new data
+            // TODO: Add updating config
             log.info("Completed. Reloading Config...");
         } else {
             prefix = config.getString("prefix");
@@ -85,6 +94,8 @@ public class Configuration {
             banchoServer = config.getString("bancho_server");
             banchoPort = config.getInt("bancho_port");
             banchoChannel = config.getString("bancho_channel");
+
+            twitchMessage = parseKeywords(config.getString("twitch_message"), keywords);
             log.info("Config Loaded.");
         }
     }
@@ -95,6 +106,25 @@ public class Configuration {
         } else {
             createConfiguration();
         }
+    }
+
+    public String parseKeywords(String message, Map<String, Object> keywords) {
+        StringBuilder formatter = new StringBuilder(message);
+        List<Object> keywordsList = new ArrayList<>();
+
+        Matcher matcher = Pattern.compile("\\<(\\w+)>").matcher(message);
+
+        while (matcher.find()) {
+            String key = matcher.group(1);
+            String formatKey = String.format("<%s>", key);
+            int index = formatter.indexOf(formatKey);
+
+            if (index != -1) {
+                formatter.replace(index, index + formatKey.length(), "%s");
+                keywordsList.add(keywords.get(key));
+            }
+        }
+        return String.format(formatter.toString(), keywordsList.toArray());
     }
 
     public static String generateConfiguration() {
@@ -149,6 +179,7 @@ public class Configuration {
                 "# Example:\n" +
                 "#   twitch_channel = Scoin0\n" +
                 "twitch_channel = \n" +
+                "twitch_message = \n" +
                 "\n" +
                 "############################################################\n" +
                 "# +------------------------------------------------------+ #\n" +
