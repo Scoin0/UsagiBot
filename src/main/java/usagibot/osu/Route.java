@@ -5,7 +5,7 @@ public class Route {
     /* ENDPOINT */
 
     public static final Route BEATMAP = new Route(Method.GET, "beatmaps/{beatmap_id}");
-    public static final Route USER = new Route(Method.GET, "/users/{user}");
+    public static final Route USER = new Route(Method.GET, "users/{user}/{mode}");
 
     private Method method;
     private String route;

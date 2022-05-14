@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import usagibot.osu.objects.Beatmap;
+import usagibot.osu.objects.GameMode;
+import usagibot.osu.objects.User;
 import usagibot.utils.RateLimit;
 
 import java.io.IOException;
@@ -75,6 +77,9 @@ public class OsuClient {
 
     public Beatmap getBeatmap(String beatmapId) {
         return requestApi(Route.BEATMAP.compile(beatmapId), token, Beatmap.class);
+    }
+    public User getUser(String userId, GameMode mode) {
+        return requestApi(Route.USER.compile(userId, mode.getName()), token, User.class);
     }
 
     private void waitForFreeTicket() {

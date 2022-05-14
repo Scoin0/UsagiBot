@@ -16,11 +16,11 @@ public class User extends UserCompact {
     @JsonProperty("cover.url")
     private String cover_url;
     @JsonProperty("discord")
-    private String[] discord;
+    private String discord;
     @JsonProperty("has_supported")
     private boolean has_supported;
     @JsonProperty("interests")
-    private String[] interests;
+    private String interests;
     @JsonProperty("join_date")
     private Timestamp join_date;
     @JsonProperty("kudosu.avaliable")
@@ -28,25 +28,25 @@ public class User extends UserCompact {
     @JsonProperty("kudosu.total")
     private int kudosu_total;
     @JsonProperty("location")
-    private String[] location;
+    private String location;
     @JsonProperty("max_blocks")
     private int max_blocks;
     @JsonProperty("max_friends")
     private int max_friends;
     @JsonProperty("occupation")
-    private String[] occupation;
+    private String occupation;
     @JsonProperty("playmode")
     private GameMode playmode;
-    @JsonProperty("playstyle")
-    private String[] playstyle;
+    //@JsonProperty("playstyle")
+    //private String playstyle;
     @JsonProperty("post_count")
     private int post_count;
     @JsonProperty("title")
-    private String[] title;
+    private String title;
     @JsonProperty("title_url")
-    private String[] title_url;
+    private String title_url;
     @JsonProperty("twitter")
-    private String[] twitter;
+    private String twitter;
     @JsonProperty("website")
-    private String[] website;
+    private String website;
 }
