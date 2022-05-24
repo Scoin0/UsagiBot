@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.math.BigInteger;
 import java.sql.Timestamp;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -49,4 +50,40 @@ public class User extends UserCompact {
     private String twitter;
     @JsonProperty("website")
     private String website;
+    @JsonProperty("statistics")
+    private UserStatistics statistics;
+
+    // UserStatistics
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @Getter
+    public static class UserStatistics {
+        public int hit_accuracy;
+        public boolean is_ranked;
+        public Level level;
+        public int maximum_combo;
+        public int play_count;
+        public int play_time;
+        public int pp;
+        public int global_rank;
+        public BigInteger ranked_score;
+        public int replays_watched_by_others;
+        public BigInteger total_hits;
+        public BigInteger total_score;
+        public GradeCounts grade_counts;
+    }
+
+    @Getter
+    public static class Level {
+        public int current;
+        public int progress;
+    }
+
+    @Getter
+    public static class GradeCounts {
+        public int a;
+        public int s;
+        public int sh;
+        public int ss;
+        public int ssh;
+    }
 }
