@@ -7,8 +7,6 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 import usagibot.UsagiBot;
 import usagibot.osu.objects.Beatmap;
-import usagibot.utils.version.Version;
-import usagibot.utils.version.VersionUtil;
 
 import java.io.IOException;
 import java.net.URL;
@@ -44,8 +42,8 @@ public class Utility {
 
     // The message to send to BanchoIRC
     public static String ircMessage(EventUser user, Beatmap beatmap) {
-        return String.format("[%s] > [https://osu.ppy.sh/beatmapsets/%d %s - %s [%s]] \u266B %s \u2605 %.2f BPM:%.1f AR:%.1f OD:%.1f", user.getName(),
-                beatmap.getBeatmapset_id(), beatmap.getBeatmapset().getArtist(), beatmap.getBeatmapset().getTitle(),
+        return String.format("[%s] > [https://osu.ppy.sh/beatmapsets/%d#osu/%d %s - %s [%s]] \u266B %s \u2605 %.2f BPM:%.1f AR:%.1f OD:%.1f", user.getName(),
+                beatmap.getBeatmapset_id(), beatmap.getId(), beatmap.getBeatmapset().getArtist(), beatmap.getBeatmapset().getTitle(),
                 beatmap.getVersion(), Utility.convertTime(beatmap.getTotal_length()), beatmap.getDifficulty_rating(),
                 beatmap.getBpm(), beatmap.getAr(), beatmap.getDrain());
     }
@@ -56,5 +54,11 @@ public class Utility {
                 beatmap.getStatus(), beatmap.getBeatmapset().getArtist(), beatmap.getBeatmapset().getTitle(),
                 beatmap.getVersion(), Utility.convertTime(beatmap.getTotal_length()), beatmap.getDifficulty_rating(),
                 beatmap.getBpm(), beatmap.getAr(), beatmap.getDrain());
+    }
+
+    // Retrieve Beatmap
+    public static Beatmap getBeatmap(String beatmapId) {
+        beatmap = UsagiBot.getClient().getBeatmap(beatmapId);
+        return beatmap;
     }
 }
