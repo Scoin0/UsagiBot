@@ -22,7 +22,8 @@ pause
 #### Commands
 
 `np` - Now Playing. This command will output the current playing song as a download link in chat.    
-`rq toggle` - Request Toggle. You can turn on and off requests if you'd like.
+`rq toggle` - Request Toggle. You can turn on and off requests if you'd like.     
+`stats` - Show basic stats on the streamers profile
 
 #### Requesting songs
 Anyone can request a song to be added. To do this just simply post the beatmapset link inside the chat.
