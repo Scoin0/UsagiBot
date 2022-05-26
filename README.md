@@ -21,7 +21,7 @@ pause
 ---
 #### Commands
 
-`np` - Now Playing. This command will output the current playing song as a download link in chat.
+`np` - Now Playing. This command will output the current playing song as a download link in chat.    
 `rq toggle` - Request Toggle. You can turn on and off requests if you'd like.
 
 #### Requesting songs
