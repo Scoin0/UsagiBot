@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import usagibot.UsagiBot;
 import usagibot.osu.objects.Beatmap;
 import usagibot.twitch.TwitchClient;
-import usagibot.utils.Utility;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,6 +20,7 @@ public class ChatEvent {
 
     private final String prefix = UsagiBot.getConfig().getPrefix();
     private final String channel = UsagiBot.getConfig().getTwitchChannel();
+    private boolean requestToggle = true;
     private Beatmap beatmap;
 
     public ChatEvent(SimpleEventHandler eventHandler) {
@@ -30,23 +30,49 @@ public class ChatEvent {
     @EventSubscriber
     public void onChannelMessage(ChannelMessageEvent event) {
 
+        // Do not listen to self. Probably not needed, but just in case.
         if (event.getUser().getName().equals("RNRPBot")) return;
 
+        // Get the currently playing map
         if (event.getMessage().equalsIgnoreCase(prefix + "np")) {
             log.info("Sending !np command in " + channel);
             try {
-                sendMessage("Here you go! " + Utility.getSongFromGosuMemory().getUrl());
+                sendMessage(UsagiBot.getConfig().getNowPlayingMessage(event.getUser()));
             } catch (IOException e) {
-                e.printStackTrace();
+                log.warn(e.getMessage());
             }
         }
 
+        // Toggle the requesting feature
+        if (event.getMessage().equalsIgnoreCase(prefix + "rq toggle")) {
+            if (requestToggle) {
+                log.info("Requesting a beatmap has been turned off.");
+                sendMessage("Requesting a beatmap has been turned off.");
+                requestToggle = false;
+            } else {
+                log.info("Requesting a beatmap has been turned on.");
+                sendMessage("Requesting a beatmap has been turned on.");
+                requestToggle = true;
+            }
+        }
+
+        // Sends streamers osu stats
+        if (event.getMessage().equalsIgnoreCase(prefix + "stats")) {
+            log.info("Sending !stats command in " + channel);
+            // Will be finished in 1.1.1
+        }
+
+        // Receive, parse, and send beatmap to Osu! and Twitch Chat
         if (event.getMessage().contains("https://osu.ppy.sh/")) {
-            log.info("Received possible osu song request. Parsing now...");
-            beatmap = UsagiBot.getClient().getBeatmap(parseMessage(event.getMessage()));
-            log.info("Beatmap ID Found: " + beatmap.getId());
-            sendMessage(Utility.receivedMessage(beatmap));
-            sendIRCMessage(event.getUser(), beatmap);
+            if (requestToggle) {
+                log.info("Received possible osu song request. Parsing now...");
+                beatmap = UsagiBot.getClient().getBeatmap(parseMessage(event.getMessage()));
+                log.info("Beatmap ID Found: " + beatmap.getId());
+                sendMessage(UsagiBot.getConfig().getTwitchMessage(beatmap, event.getUser()));
+                sendIRCMessage(event.getUser(), beatmap);
+            } else {
+                sendMessage("You cannot request a beatmap at this time.");
+            }
         }
     }
 
@@ -57,7 +83,7 @@ public class ChatEvent {
 
     // Send a message to Osu Client
     public void sendIRCMessage(EventUser user, Beatmap beatmap) {
-        UsagiBot.getIrcBot().getUserChannelDao().getUser(UsagiBot.getConfig().getBanchoUsername()).send().message(Utility.ircMessage(user, beatmap));
+        UsagiBot.getIrcBot().getUserChannelDao().getUser(UsagiBot.getConfig().getBanchoUsername()).send().message(UsagiBot.getConfig().getOsuIrcMessage(beatmap, user));
     }
 
     // Grabs the map digits
@@ -75,8 +101,11 @@ public class ChatEvent {
 
         switch (urlSplit.size()) {
             case 1:
+                sendMessage("Please send maps in the beatmapsets format.");
             case 2:
+                sendMessage("Please send maps in the beatmapsets format.");
             case 3:
+                sendMessage("Please send maps in the beatmapsets format.");
             case 4:
                 String beatmap = urlSplit.get(3);
                 return beatmap;
