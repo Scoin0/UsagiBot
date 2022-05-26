@@ -29,7 +29,7 @@ public class Configuration {
 
     // Global Settings
     private String prefix = "!";
-    private int configVersion = 2;
+    private int configVersion = 3;
     private boolean useUpdater = true;
 
     // Twitch Settings
@@ -42,6 +42,7 @@ public class Configuration {
 
     // Osu Settings
     private String banchoUsername = "";
+    private String osuUsername = "";
     private String banchoPassword = "";
     private String banchoServer = "irc.ppy.sh";
     private int banchoPort = 6667;
@@ -83,6 +84,7 @@ public class Configuration {
         osuClientId = config.getString("osu_api_clientid");
         osuAPIKey = config.getString("osu_api_key");
         banchoUsername = config.getString("bancho_username");
+        osuUsername = config.getString("osu_username");
         banchoPassword = config.getString("bancho_password");
         banchoServer = config.getString("bancho_server");
         banchoPort = config.getInt("bancho_port");
@@ -204,6 +206,7 @@ public class Configuration {
         config.addProperty("osu_api_clientid", osuClientId);
         config.addProperty("osu_api_key", osuAPIKey);
         config.addProperty("bancho_username", banchoUsername);
+        config.setProperty("osu_username", ""); // Change on version 4
         config.addProperty("bancho_password", banchoPassword);
         config.addProperty("bancho_server", banchoServer);
         config.addProperty("bancho_port", banchoPort);
