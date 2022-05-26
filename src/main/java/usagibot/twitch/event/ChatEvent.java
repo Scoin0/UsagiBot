@@ -7,11 +7,15 @@ import com.github.twitch4j.common.events.domain.EventUser;
 import lombok.extern.slf4j.Slf4j;
 import usagibot.UsagiBot;
 import usagibot.osu.objects.Beatmap;
+import usagibot.osu.objects.GameMode;
+import usagibot.osu.objects.User;
 import usagibot.twitch.TwitchClient;
 
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,6 +26,7 @@ public class ChatEvent {
     private final String channel = UsagiBot.getConfig().getTwitchChannel();
     private boolean requestToggle = true;
     private Beatmap beatmap;
+    private User user = UsagiBot.getClient().getUser(UsagiBot.getConfig().getOsuUsername(), GameMode.OSU);
 
     public ChatEvent(SimpleEventHandler eventHandler) {
         eventHandler.onEvent(ChannelMessageEvent.class, this::onChannelMessage);
@@ -59,7 +64,7 @@ public class ChatEvent {
         // Sends streamers osu stats
         if (event.getMessage().equalsIgnoreCase(prefix + "stats")) {
             log.info("Sending !stats command in " + channel);
-            // Will be finished in 1.1.1
+            sendMessage(userStats());
         }
 
         // Receive, parse, and send beatmap to Osu! and Twitch Chat
@@ -113,5 +118,18 @@ public class ChatEvent {
                 log.warn("Scoin0 has not yet implemented all ways to request a beatmap. Only Beatmap Sets work right now.");
         }
         return null;
+    }
+
+    // Send all the users Osu stats
+    private String userStats() {
+        NumberFormat nf = NumberFormat.getInstance(new Locale("en", "US"));
+        return "Stats for " + user.getUsername() + ": "
+                + " PP: " + nf.format(user.getStatistics().getPp())
+                + " Global Rank: #" + nf.format(user.getStatistics().getGlobal_rank())
+                + " Level: " + user.getStatistics().getLevel().getCurrent()
+                + " Accuracy: " + user.getStatistics().getHit_accuracy() + "%"
+                + " Total Score: " + nf.format(user.getStatistics().getRanked_score())
+                + " Total Max Combo: " + nf.format(user.getStatistics().getMaximum_combo()) + "x"
+                + " Play Count: " + nf.format(user.getStatistics().getPlay_count());
     }
 }
