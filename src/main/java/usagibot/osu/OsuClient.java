@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import usagibot.osu.objects.Beatmap;
+import usagibot.osu.objects.BeatmapAttributes;
 import usagibot.osu.objects.GameMode;
 import usagibot.osu.objects.User;
 import usagibot.utils.RateLimit;
@@ -75,11 +76,42 @@ public class OsuClient {
         return null;
     }
 
+    public <T> T postApi(String compiledRoute, String token, Class<T> tClass) {
+
+        OkHttpClient client = new OkHttpClient();
+        waitForFreeTicket();
+
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode body = mapper.createObjectNode();
+        body.put("mods", "0");
+        body.put("ruleset", "osu");
+
+        Request request = new Request.Builder()
+                .url(OSU_ENDPOINT + compiledRoute)
+                .addHeader("Authorization", "Bearer " + token)
+                .addHeader("Content-Type", "application/json")
+                .post(RequestBody.create(body.toString(), MediaType.get("application/json")))
+                .build();
+
+        try {
+            Response response = client.newCall(request).execute();
+            String responseBody = response.body().string();
+            return new JsonMapper().readValue(responseBody, tClass);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public Beatmap getBeatmap(String beatmapId) {
         return requestApi(Route.BEATMAP.compile(beatmapId), token, Beatmap.class);
     }
     public User getUser(String userId, GameMode mode) {
         return requestApi(Route.USER.compile(userId, mode.getName()), token, User.class);
+    }
+
+    public BeatmapAttributes getBeatmapAttributes(String beatmapId) {
+        return postApi(Route.BEATMAP_ATTRIBUTES.compile(beatmapId), token, BeatmapAttributes.class);
     }
 
     private void waitForFreeTicket() {
