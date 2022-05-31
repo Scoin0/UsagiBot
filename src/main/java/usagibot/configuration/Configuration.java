@@ -6,7 +6,9 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import usagibot.UsagiBot;
 import usagibot.osu.objects.Beatmap;
+import usagibot.osu.objects.BeatmapAttributes;
 import usagibot.utils.Utility;
 
 import java.io.File;
@@ -116,6 +118,7 @@ public class Configuration {
 
     // TODO: Clean
     public String getOsuIrcMessage(Beatmap beatmap, EventUser user) {
+        BeatmapAttributes map = UsagiBot.getClient().getBeatmapAttributes(String.valueOf(beatmap.getId()));
         Map<String, Object> keywords = new HashMap<>();
         keywords.put("music_note_emoji", "\u266B");
         keywords.put("star_emoji", "\u2605");
@@ -129,13 +132,14 @@ public class Configuration {
         keywords.put("beatmap_url", beatmap.getUrl());
         keywords.put("bpm", beatmap.getBpm());
         keywords.put("ar", beatmap.getAr());
-        keywords.put("od", beatmap.getDrain());
+        keywords.put("od", map.getAttributes().getOverall_difficulty());
         keywords.put("user_sent", user.getName());
         return parseKeywords(osuIrcMessage, keywords);
     }
 
     // TODO: Clean
     public String getTwitchMessage(Beatmap beatmap, EventUser user) {
+        BeatmapAttributes map = UsagiBot.getClient().getBeatmapAttributes(String.valueOf(beatmap.getId()));
         Map<String, Object> keywords = new HashMap<>();
         keywords.put("music_note_emoji", "\u266B");
         keywords.put("star_emoji", "\u2605");
@@ -149,12 +153,13 @@ public class Configuration {
         keywords.put("beatmap_url", beatmap.getUrl());
         keywords.put("bpm", beatmap.getBpm());
         keywords.put("ar", beatmap.getAr());
-        keywords.put("od", beatmap.getDrain());
+        keywords.put("od", map.getAttributes().getOverall_difficulty());
         keywords.put("user_sent", user.getName());
         return parseKeywords(twitchMessage, keywords);
     }
 
     public String getNowPlayingMessage(EventUser user) throws IOException {
+        BeatmapAttributes map = UsagiBot.getClient().getBeatmapAttributes(String.valueOf(Utility.getSongFromGosuMemory().getId()));
         Map<String, Object> keywords = new HashMap<>();
         keywords.put("music_note_emoji", "\u266B");
         keywords.put("star_emoji", "\u2605");
@@ -168,7 +173,7 @@ public class Configuration {
         keywords.put("beatmap_url", Utility.getSongFromGosuMemory().getUrl());
         keywords.put("bpm", Utility.getSongFromGosuMemory().getBpm());
         keywords.put("ar", Utility.getSongFromGosuMemory().getAr());
-        keywords.put("od", Utility.getSongFromGosuMemory().getDrain());
+        keywords.put("od", map.getAttributes().getOverall_difficulty());
         keywords.put("user_sent", user.getName());
         return parseKeywords(nowPlayingMessage, keywords);
     }
