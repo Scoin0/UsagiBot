@@ -5,6 +5,7 @@ public class Route {
     /* ENDPOINT */
 
     public static final Route BEATMAP = new Route(Method.GET, "beatmaps/{beatmap_id}");
+    public static final Route BEATMAP_ATTRIBUTES = new Route(Method.POST, "beatmaps/{beatmap_id}/attributes");
     public static final Route USER = new Route(Method.GET, "users/{user}/{mode}");
 
     private Method method;
@@ -49,6 +50,7 @@ public class Route {
     }
 
     public enum Method {
-        GET
+        GET,
+        POST
     }
 }
