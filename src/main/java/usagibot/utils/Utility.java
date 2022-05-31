@@ -55,10 +55,4 @@ public class Utility {
                 beatmap.getVersion(), Utility.convertTime(beatmap.getTotal_length()), beatmap.getDifficulty_rating(),
                 beatmap.getBpm(), beatmap.getAr(), beatmap.getDrain());
     }
-
-    // Retrieve Beatmap
-    public static Beatmap getBeatmap(String beatmapId) {
-        beatmap = UsagiBot.getClient().getBeatmap(beatmapId);
-        return beatmap;
-    }
 }
