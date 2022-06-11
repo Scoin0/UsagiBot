@@ -73,8 +73,12 @@ public class ChatEvent {
                 log.info("Received possible osu song request. Parsing now...");
                 beatmap = UsagiBot.getClient().getBeatmap(parseMessage(event.getMessage()));
                 log.info("Beatmap ID Found: " + beatmap.getId());
-                sendMessage(UsagiBot.getConfig().getTwitchMessage(beatmap, event.getUser()));
-                sendIRCMessage(event.getUser(), beatmap);
+                if (beatmap.getDifficulty_rating() > UsagiBot.getConfig().getOsuStarLimit()) {
+                    sendMessage(UsagiBot.getConfig().getOsuStarLimitMessage(beatmap, event.getUser()));
+                } else {
+                    //sendMessage(UsagiBot.getConfig().getTwitchMessage(beatmap, event.getUser()));
+                    //sendIRCMessage(event.getUser(), beatmap);
+                }
             } else {
                 sendMessage("You cannot request a beatmap at this time.");
             }

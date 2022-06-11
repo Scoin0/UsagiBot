@@ -31,7 +31,7 @@ public class Configuration {
 
     // Global Settings
     private String prefix = "!";
-    private int configVersion = 3;
+    private int configVersion = 4;
     private boolean useUpdater = true;
 
     // Twitch Settings
@@ -51,11 +51,13 @@ public class Configuration {
     private String banchoChannel = "#osu";
     private String osuClientId = "";
     private String osuAPIKey = "";
+    private double osuStarLimit = 6.0;
 
     // Custom Messages
     private String twitchMessage = "[RECEIVED] > <user_sent> [<ranked_status>] <artist> - <title> [<version>] <music_note_emoji> <length> <star_emoji> <star_rating> BPM:<bpm> AR:<ar> OD:<od>";
     private String osuIrcMessage = "[<user_sent>] > [https://osu.ppy.sh/beatmapsets/<beatmap_id> <artist> - <title> [<version>]] <music_note_emoji> <length> <star_emoji> <star_rating> BPM:<bpm> AR:<ar> OD:<od>";
     private String nowPlayingMessage = "Here you go! <beatmap_url>";
+    private String osuStarLimitMessage = "\u2757 Sorry, The star level exceeds the limit.";
 
     public void createConfiguration() {
 
@@ -104,6 +106,8 @@ public class Configuration {
             log.info("Completed. Reloading Config...");
             initConfiguration();
         } else {
+            osuStarLimit = config.getFloat("osu_star_limit");
+            osuStarLimitMessage = config.getString("osu_star_limit_message");
             log.info("Config Loaded.");
         }
     }
@@ -122,6 +126,7 @@ public class Configuration {
         Map<String, Object> keywords = new HashMap<>();
         keywords.put("music_note_emoji", "\u266B");
         keywords.put("star_emoji", "\u2605");
+        keywords.put("red_exclamation", "\u2757");
         keywords.put("ranked_status", beatmap.getStatus());
         keywords.put("artist", beatmap.getBeatmapset().getArtist());
         keywords.put("title", beatmap.getBeatmapset().getTitle());
@@ -134,6 +139,7 @@ public class Configuration {
         keywords.put("ar", beatmap.getAr());
         keywords.put("od", map.getAttributes().getOverall_difficulty());
         keywords.put("user_sent", user.getName());
+        keywords.put("star_rating_limit", osuStarLimit);
         return parseKeywords(osuIrcMessage, keywords);
     }
 
@@ -143,6 +149,7 @@ public class Configuration {
         Map<String, Object> keywords = new HashMap<>();
         keywords.put("music_note_emoji", "\u266B");
         keywords.put("star_emoji", "\u2605");
+        keywords.put("red_exclamation", "\u2757");
         keywords.put("ranked_status", beatmap.getStatus());
         keywords.put("artist", beatmap.getBeatmapset().getArtist());
         keywords.put("title", beatmap.getBeatmapset().getTitle());
@@ -155,14 +162,17 @@ public class Configuration {
         keywords.put("ar", beatmap.getAr());
         keywords.put("od", map.getAttributes().getOverall_difficulty());
         keywords.put("user_sent", user.getName());
+        keywords.put("star_rating_limit", osuStarLimit);
         return parseKeywords(twitchMessage, keywords);
     }
 
+    //TODO: Clean
     public String getNowPlayingMessage(EventUser user) throws IOException {
         BeatmapAttributes map = UsagiBot.getClient().getBeatmapAttributes(String.valueOf(Utility.getSongFromGosuMemory().getId()));
         Map<String, Object> keywords = new HashMap<>();
         keywords.put("music_note_emoji", "\u266B");
         keywords.put("star_emoji", "\u2605");
+        keywords.put("red_exclamation", "\u2757");
         keywords.put("ranked_status", Utility.getSongFromGosuMemory().getStatus());
         keywords.put("artist", Utility.getSongFromGosuMemory().getBeatmapset().getArtist());
         keywords.put("title", Utility.getSongFromGosuMemory().getBeatmapset().getTitle());
@@ -175,7 +185,31 @@ public class Configuration {
         keywords.put("ar", Utility.getSongFromGosuMemory().getAr());
         keywords.put("od", map.getAttributes().getOverall_difficulty());
         keywords.put("user_sent", user.getName());
+        keywords.put("star_rating_limit", osuStarLimit);
         return parseKeywords(nowPlayingMessage, keywords);
+    }
+
+    // TODO: Clean
+    public String getOsuStarLimitMessage(Beatmap beatmap, EventUser user) {
+        BeatmapAttributes map = UsagiBot.getClient().getBeatmapAttributes(String.valueOf(beatmap.getId()));
+        Map<String, Object> keywords = new HashMap<>();
+        keywords.put("music_note_emoji", "\u266B");
+        keywords.put("star_emoji", "\u2605");
+        keywords.put("red_exclamation", "\u2757");
+        keywords.put("ranked_status", beatmap.getStatus());
+        keywords.put("artist", beatmap.getBeatmapset().getArtist());
+        keywords.put("title", beatmap.getBeatmapset().getTitle());
+        keywords.put("version", beatmap.getVersion());
+        keywords.put("length", beatmap.getTotal_length());
+        keywords.put("star_rating", beatmap.getDifficulty_rating());
+        keywords.put("beatmap_id", beatmap.getBeatmapset_id());
+        keywords.put("beatmap_url", beatmap.getUrl());
+        keywords.put("bpm", beatmap.getBpm());
+        keywords.put("ar", beatmap.getAr());
+        keywords.put("od", map.getAttributes().getOverall_difficulty());
+        keywords.put("user_sent", user.getName());
+        keywords.put("star_rating_limit", osuStarLimit);
+        return parseKeywords(osuStarLimitMessage, keywords);
     }
 
     public String parseKeywords(String message, Map<String, Object> keywords) {
@@ -211,14 +245,16 @@ public class Configuration {
         config.addProperty("osu_api_clientid", osuClientId);
         config.addProperty("osu_api_key", osuAPIKey);
         config.addProperty("bancho_username", banchoUsername);
-        config.setProperty("osu_username", ""); // Change on version 4
+        config.addProperty("osu_username", osuUsername);
+        config.addProperty("osu_star_limit", osuStarLimit);
         config.addProperty("bancho_password", banchoPassword);
         config.addProperty("bancho_server", banchoServer);
         config.addProperty("bancho_port", banchoPort);
         config.addProperty("bancho_channel", banchoChannel);
-        config.addProperty("received_message", "[RECEIVED] > <user_sent> [<ranked_status>] <artist> - <title> [<version>] <music_note_emoji> <length> <star_emoji> <star_rating> BPM:<bpm> AR:<ar> OD:<od>");
-        config.addProperty("osu_message", "[<user_sent>] > [https://osu.ppy.sh/beatmapsets/<beatmap_id> <artist> - <title> [<version>]] <music_note_emoji> <length> <star_emoji> <star_rating> BPM:<bpm> AR:<ar> OD:<od>");
-        config.addProperty("np_message", "Here you go! <beatmap_url>");
+        config.addProperty("received_message", twitchMessage);
+        config.addProperty("osu_message", osuIrcMessage);
+        config.addProperty("np_message", nowPlayingMessage);
+        config.addProperty("osu_star_limit_message", osuStarLimitMessage);
         config.save(file);
     }
 }
