@@ -21,10 +21,10 @@ pause
 ---
 #### Commands
 
-`help` - Sends a link to the Commands wiki
+`help` - Sends a link to the Commands wiki     
 `np` - Now Playing. This command will output the current playing song as a download link in chat.    
 `rq toggle` - Request Toggle. You can turn on and off requests if you'd like.     
-`stats` - Show basic stats on the streamers profile
+`stats` - Show basic stats on the streamers profile     
 `starlevel <number>` or `sl <number>` - Set star limit for requests.
 
 #### Requesting songs
