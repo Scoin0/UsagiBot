@@ -21,9 +21,11 @@ pause
 ---
 #### Commands
 
+`help` - Sends a link to the Commands wiki
 `np` - Now Playing. This command will output the current playing song as a download link in chat.    
 `rq toggle` - Request Toggle. You can turn on and off requests if you'd like.     
 `stats` - Show basic stats on the streamers profile
+`starlevel <number>` or `sl <number>` - Set star limit for requests.
 
 #### Requesting songs
 Anyone can request a song to be added. To do this just simply post the beatmapset link inside the chat.
@@ -49,7 +51,6 @@ Like `/b/`, `/s/`, and `/beatmapsets/`.
 * Support osu mods
 * Finish Implementing the Ratelimiter
 * Support other osu urls. (`/b/` and `/s/`)
-* Add more commands (`!stats` and such)
 * Have 2 versions, a standalone and an always running version.
 
 ---
