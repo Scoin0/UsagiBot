@@ -77,7 +77,7 @@ public class ChatEvent {
                     sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuStarLimitMessage(), beatmap, event.getUser()));
                 } else {
                     sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getTwitchMessage(), beatmap, event.getUser()));
-                    //sendIRCMessage(event.getUser(), beatmap);
+                    sendIRCMessage(event.getUser(), beatmap);
                 }
             } else {
                 sendMessage("You cannot request a beatmap at this time.");
