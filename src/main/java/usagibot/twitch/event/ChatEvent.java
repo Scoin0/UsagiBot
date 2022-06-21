@@ -5,6 +5,8 @@ import com.github.philippheuer.events4j.simple.domain.EventSubscriber;
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
 import com.github.twitch4j.common.events.domain.EventUser;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.lang.math.NumberUtils;
 import usagibot.UsagiBot;
 import usagibot.osu.objects.Beatmap;
 import usagibot.osu.objects.GameMode;
@@ -35,16 +37,47 @@ public class ChatEvent {
     @EventSubscriber
     public void onChannelMessage(ChannelMessageEvent event) {
 
+        String[] args = event.getMessage().split(" ");
+
         // Do not listen to self. Probably not needed, but just in case.
         if (event.getUser().getName().equals("RNRPBot")) return;
+
+        // Display link to command page
+        if (event.getMessage().equalsIgnoreCase(prefix + "help")) {
+            sendMessage("All Commands: https://github.com/Scoin0/UsagiBot/wiki/Commands");
+        }
 
         // Get the currently playing map
         if (event.getMessage().equalsIgnoreCase(prefix + "np")) {
             log.info("Sending !np command in " + channel);
             try {
-                sendMessage(UsagiBot.getConfig().getNowPlayingMessage(event.getUser()));
+                sendMessage(UsagiBot.getConfig().getLocalParsedMessage(UsagiBot.getConfig().getNowPlayingMessage(), beatmap, event.getUser()));
             } catch (IOException e) {
                 log.warn(e.getMessage());
+            }
+        }
+
+        // Change Star Limit
+        if (args[0].equalsIgnoreCase(prefix + "starlimit") || args[0].equalsIgnoreCase(prefix + "sl")) {
+            if (args.length == 2) {
+                try {
+                    double newStar = Double.parseDouble(args[1]);
+                    if (newStar >= 13.0) {
+                        sendMessage("Please choose a number below 13");
+                    } else {
+                        try {
+                            sendMessage("Star Limit changed to: " + newStar + "*");
+                            log.info("Star Limit changed to: " + newStar + "*");
+                            UsagiBot.getConfig().setOsuStarLimit(newStar);
+                        } catch (Exception e) {
+                            log.warn(e.getMessage());
+                        }
+                    }
+                } catch (NumberFormatException e) {
+                    sendMessage("Please choose a number instead.");
+                }
+            } else {
+                sendMessage("Current Star Limit: " + UsagiBot.getConfig().getOsuStarLimit() +   "*, Usage: !starlimit <num>. For example: !starlimit 6.5");
             }
         }
 
@@ -73,8 +106,12 @@ public class ChatEvent {
                 log.info("Received possible osu song request. Parsing now...");
                 beatmap = UsagiBot.getClient().getBeatmap(parseMessage(event.getMessage()));
                 log.info("Beatmap ID Found: " + beatmap.getId());
-                sendMessage(UsagiBot.getConfig().getTwitchMessage(beatmap, event.getUser()));
-                sendIRCMessage(event.getUser(), beatmap);
+                if (beatmap.getDifficulty_rating() > UsagiBot.getConfig().getOsuStarLimit()) {
+                    sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuStarLimitMessage(), beatmap, event.getUser()));
+                } else {
+                    sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getTwitchMessage(), beatmap, event.getUser()));
+                    sendIRCMessage(event.getUser(), beatmap);
+                }
             } else {
                 sendMessage("You cannot request a beatmap at this time.");
             }
@@ -88,7 +125,7 @@ public class ChatEvent {
 
     // Send a message to Osu Client
     public void sendIRCMessage(EventUser user, Beatmap beatmap) {
-        UsagiBot.getIrcBot().getUserChannelDao().getUser(UsagiBot.getConfig().getBanchoUsername()).send().message(UsagiBot.getConfig().getOsuIrcMessage(beatmap, user));
+        UsagiBot.getIrcBot().getUserChannelDao().getUser(UsagiBot.getConfig().getBanchoUsername()).send().message(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuIrcMessage(), beatmap, user));
     }
 
     // Grabs the map digits
