@@ -120,6 +120,13 @@ public class Configuration {
         }
     }
 
+    public void setOsuStarLimit(double starLimit) throws Exception {
+        PropertiesConfiguration config = new PropertiesConfiguration(file);
+        this.osuStarLimit = starLimit;
+        config.setProperty("osu_star_limit", starLimit);
+        config.save();
+    }
+
     public String getAPIParsedMessage(String message, Beatmap beatmap, EventUser user) {
         BeatmapAttributes map = UsagiBot.getClient().getBeatmapAttributes(String.valueOf(beatmap.getId()));
         Map<String, Object> keywords = new HashMap<>();
@@ -183,6 +190,7 @@ public class Configuration {
         return String.format(formatter.toString(), keywordsList.toArray());
     }
 
+    // Generate all configuration with its default or set values.
     public void generateConfiguration() throws ConfigurationException {
         PropertiesConfiguration config = new PropertiesConfiguration(file);
         config.clear();
