@@ -42,7 +42,7 @@ public class ChatEvent {
         if (event.getMessage().equalsIgnoreCase(prefix + "np")) {
             log.info("Sending !np command in " + channel);
             try {
-                sendMessage(UsagiBot.getConfig().getNowPlayingMessage(event.getUser()));
+                sendMessage(UsagiBot.getConfig().getLocalParsedMessage(UsagiBot.getConfig().getNowPlayingMessage(), beatmap, event.getUser()));
             } catch (IOException e) {
                 log.warn(e.getMessage());
             }
@@ -74,9 +74,9 @@ public class ChatEvent {
                 beatmap = UsagiBot.getClient().getBeatmap(parseMessage(event.getMessage()));
                 log.info("Beatmap ID Found: " + beatmap.getId());
                 if (beatmap.getDifficulty_rating() > UsagiBot.getConfig().getOsuStarLimit()) {
-                    sendMessage(UsagiBot.getConfig().getOsuStarLimitMessage(beatmap, event.getUser()));
+                    sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuStarLimitMessage(), beatmap, event.getUser()));
                 } else {
-                    //sendMessage(UsagiBot.getConfig().getTwitchMessage(beatmap, event.getUser()));
+                    sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getTwitchMessage(), beatmap, event.getUser()));
                     //sendIRCMessage(event.getUser(), beatmap);
                 }
             } else {
@@ -92,7 +92,7 @@ public class ChatEvent {
 
     // Send a message to Osu Client
     public void sendIRCMessage(EventUser user, Beatmap beatmap) {
-        UsagiBot.getIrcBot().getUserChannelDao().getUser(UsagiBot.getConfig().getBanchoUsername()).send().message(UsagiBot.getConfig().getOsuIrcMessage(beatmap, user));
+        UsagiBot.getIrcBot().getUserChannelDao().getUser(UsagiBot.getConfig().getBanchoUsername()).send().message(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuIrcMessage(), beatmap, user));
     }
 
     // Grabs the map digits

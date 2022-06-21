@@ -120,8 +120,7 @@ public class Configuration {
         }
     }
 
-    // TODO: Clean
-    public String getOsuIrcMessage(Beatmap beatmap, EventUser user) {
+    public String getAPIParsedMessage(String message, Beatmap beatmap, EventUser user) {
         BeatmapAttributes map = UsagiBot.getClient().getBeatmapAttributes(String.valueOf(beatmap.getId()));
         Map<String, Object> keywords = new HashMap<>();
         keywords.put("music_note_emoji", "\u266B");
@@ -140,34 +139,10 @@ public class Configuration {
         keywords.put("od", map.getAttributes().getOverall_difficulty());
         keywords.put("user_sent", user.getName());
         keywords.put("star_rating_limit", osuStarLimit);
-        return parseKeywords(osuIrcMessage, keywords);
+        return parseKeywords(message, keywords);
     }
 
-    // TODO: Clean
-    public String getTwitchMessage(Beatmap beatmap, EventUser user) {
-        BeatmapAttributes map = UsagiBot.getClient().getBeatmapAttributes(String.valueOf(beatmap.getId()));
-        Map<String, Object> keywords = new HashMap<>();
-        keywords.put("music_note_emoji", "\u266B");
-        keywords.put("star_emoji", "\u2605");
-        keywords.put("red_exclamation", "\u2757");
-        keywords.put("ranked_status", beatmap.getStatus());
-        keywords.put("artist", beatmap.getBeatmapset().getArtist());
-        keywords.put("title", beatmap.getBeatmapset().getTitle());
-        keywords.put("version", beatmap.getVersion());
-        keywords.put("length", beatmap.getTotal_length());
-        keywords.put("star_rating", beatmap.getDifficulty_rating());
-        keywords.put("beatmap_id", beatmap.getBeatmapset_id());
-        keywords.put("beatmap_url", beatmap.getUrl());
-        keywords.put("bpm", beatmap.getBpm());
-        keywords.put("ar", beatmap.getAr());
-        keywords.put("od", map.getAttributes().getOverall_difficulty());
-        keywords.put("user_sent", user.getName());
-        keywords.put("star_rating_limit", osuStarLimit);
-        return parseKeywords(twitchMessage, keywords);
-    }
-
-    //TODO: Clean
-    public String getNowPlayingMessage(EventUser user) throws IOException {
+    public String getLocalParsedMessage(String message, Beatmap beatmap, EventUser user) throws IOException {
         BeatmapAttributes map = UsagiBot.getClient().getBeatmapAttributes(String.valueOf(Utility.getSongFromGosuMemory().getId()));
         Map<String, Object> keywords = new HashMap<>();
         keywords.put("music_note_emoji", "\u266B");
@@ -186,30 +161,7 @@ public class Configuration {
         keywords.put("od", map.getAttributes().getOverall_difficulty());
         keywords.put("user_sent", user.getName());
         keywords.put("star_rating_limit", osuStarLimit);
-        return parseKeywords(nowPlayingMessage, keywords);
-    }
-
-    // TODO: Clean
-    public String getOsuStarLimitMessage(Beatmap beatmap, EventUser user) {
-        BeatmapAttributes map = UsagiBot.getClient().getBeatmapAttributes(String.valueOf(beatmap.getId()));
-        Map<String, Object> keywords = new HashMap<>();
-        keywords.put("music_note_emoji", "\u266B");
-        keywords.put("star_emoji", "\u2605");
-        keywords.put("red_exclamation", "\u2757");
-        keywords.put("ranked_status", beatmap.getStatus());
-        keywords.put("artist", beatmap.getBeatmapset().getArtist());
-        keywords.put("title", beatmap.getBeatmapset().getTitle());
-        keywords.put("version", beatmap.getVersion());
-        keywords.put("length", beatmap.getTotal_length());
-        keywords.put("star_rating", beatmap.getDifficulty_rating());
-        keywords.put("beatmap_id", beatmap.getBeatmapset_id());
-        keywords.put("beatmap_url", beatmap.getUrl());
-        keywords.put("bpm", beatmap.getBpm());
-        keywords.put("ar", beatmap.getAr());
-        keywords.put("od", map.getAttributes().getOverall_difficulty());
-        keywords.put("user_sent", user.getName());
-        keywords.put("star_rating_limit", osuStarLimit);
-        return parseKeywords(osuStarLimitMessage, keywords);
+        return parseKeywords(message, keywords);
     }
 
     public String parseKeywords(String message, Map<String, Object> keywords) {
