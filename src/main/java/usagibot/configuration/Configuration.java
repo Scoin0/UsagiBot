@@ -57,7 +57,7 @@ public class Configuration {
     private String twitchMessage = "[RECEIVED] > <user_sent> [<ranked_status>] <artist> - <title> [<version>] <music_note_emoji> <length> <star_emoji> <star_rating> BPM:<bpm> AR:<ar> OD:<od>";
     private String osuIrcMessage = "[<user_sent>] > [https://osu.ppy.sh/beatmapsets/<beatmap_id> <artist> - <title> [<version>]] <music_note_emoji> <length> <star_emoji> <star_rating> BPM:<bpm> AR:<ar> OD:<od>";
     private String nowPlayingMessage = "Here you go! <beatmap_url>";
-    private String osuStarLimitMessage = "\u2757 Sorry, The star level exceeds the limit.";
+    private String osuStarLimitMessage = "\u2757 Sorry The star level exceeds the limit.";
 
     public void createConfiguration() {
 
