@@ -31,7 +31,7 @@ public class Configuration {
 
     // Global Settings
     private String prefix = "!";
-    private int configVersion = 4;
+    private int configVersion = 5;
     private boolean useUpdater = true;
 
     // Twitch Settings
@@ -55,7 +55,7 @@ public class Configuration {
 
     // Custom Messages
     private String twitchMessage = "[RECEIVED] > <user_sent> [<ranked_status>] <artist> - <title> [<version>] <music_note_emoji> <length> <star_emoji> <star_rating> BPM:<bpm> AR:<ar> OD:<od>";
-    private String osuIrcMessage = "[<user_sent>] > [https://osu.ppy.sh/beatmapsets/<beatmap_id> <artist> - <title> [<version>]] <music_note_emoji> <length> <star_emoji> <star_rating> BPM:<bpm> AR:<ar> OD:<od>";
+    private String osuIrcMessage = "[<user_sent>] > [https://osu.ppy.sh/b/<beatmap_id> <artist> - <title> [<version>]] <music_note_emoji> <length> <star_emoji> <star_rating> BPM:<bpm> AR:<ar> OD:<od>";
     private String nowPlayingMessage = "Here you go! <beatmap_url>";
     private String osuStarLimitMessage = "\u2757 Sorry The star level exceeds the limit.";
 
@@ -94,8 +94,9 @@ public class Configuration {
         banchoPort = config.getInt("bancho_port");
         banchoChannel = config.getString("bancho_channel");
         twitchMessage = config.getString("received_message");
-        osuIrcMessage = config.getString("osu_message");
         nowPlayingMessage = config.getString("np_message");
+        osuStarLimit = config.getFloat("osu_star_limit");
+        osuStarLimitMessage = config.getString("osu_star_limit_message");
 
         // Check to see if the config version is different from my version.
         if (configVersion != config.getInt("configVersion")) {
@@ -106,8 +107,7 @@ public class Configuration {
             log.info("Completed. Reloading Config...");
             initConfiguration();
         } else {
-            osuStarLimit = config.getFloat("osu_star_limit");
-            osuStarLimitMessage = config.getString("osu_star_limit_message");
+            osuIrcMessage = config.getString("osu_message");
             log.info("Config Loaded.");
         }
     }
@@ -139,7 +139,7 @@ public class Configuration {
         keywords.put("version", beatmap.getVersion());
         keywords.put("length", beatmap.getTotal_length());
         keywords.put("star_rating", beatmap.getDifficulty_rating());
-        keywords.put("beatmap_id", beatmap.getBeatmapset_id());
+        keywords.put("beatmap_id", beatmap.getId());
         keywords.put("beatmap_url", beatmap.getUrl());
         keywords.put("bpm", beatmap.getBpm());
         keywords.put("ar", beatmap.getAr());
