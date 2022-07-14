@@ -13,6 +13,9 @@ public class TwitchClient {
     public static com.github.twitch4j.TwitchClient client;
     public static OAuth2Credential credentials = new OAuth2Credential("twitch", UsagiBot.getConfig().getTwitchPassword());
 
+    /**
+     * The Twitch IRC client constructor
+     */
     public TwitchClient(){
         client = TwitchClientBuilder.builder()
                 .withEnableChat(true)
@@ -21,6 +24,9 @@ public class TwitchClient {
                 .build();
     }
 
+    /**
+     * Joins the channel and loads the chat listener
+     */
     public void startClient() {
         loadListeners();
         try {
@@ -31,9 +37,11 @@ public class TwitchClient {
         }
     }
 
+    /**
+     * Loads the chat listener
+     */
     public void loadListeners() {
         SimpleEventHandler eventHandler = client.getEventManager().getEventHandler(SimpleEventHandler.class);
         new ChatEvent(eventHandler);
     }
-
 }
