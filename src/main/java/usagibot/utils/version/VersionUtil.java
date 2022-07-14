@@ -15,6 +15,10 @@ public class VersionUtil {
 
     private static String version;
 
+    /**
+     * Gets the current version from the build.gradle
+     * @return  The current version
+     */
     public static Version getCurrentVersion() {
         if (version == null) {
             version = "1.0.0";
@@ -23,11 +27,19 @@ public class VersionUtil {
         return Version.fromString(version);
     }
 
+    /**
+     * Gets the latest version off of Github Releases
+     * @return  The latest version off of Github Releases
+     */
     public static Version getLatestVersion() {
         version = getGithubValues().getTag_name();
         return Version.fromString(version);
     }
 
+    /**
+     * Connects to the internet to retrieve the latest version
+     * @return The latest version on Github
+     */
     public static GitHubAPI getGithubValues() {
         GitHubAPI github = new GitHubAPI();
         try {

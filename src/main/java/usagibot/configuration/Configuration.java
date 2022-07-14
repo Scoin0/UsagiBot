@@ -57,8 +57,11 @@ public class Configuration {
     private String twitchMessage = "[RECEIVED] > <user_sent> [<ranked_status>] <artist> - <title> [<version>] <music_note_emoji> <length> <star_emoji> <star_rating> BPM:<bpm> AR:<ar> OD:<od>";
     private String osuIrcMessage = "[<user_sent>] > [https://osu.ppy.sh/b/<beatmap_id> <artist> - <title> [<version>]] <music_note_emoji> <length> <star_emoji> <star_rating> BPM:<bpm> AR:<ar> OD:<od>";
     private String nowPlayingMessage = "Here you go! <beatmap_url>";
-    private String osuStarLimitMessage = "\u2757 Sorry The star level exceeds the limit.";
+    private String osuStarLimitMessage = "<red_exclamation> Sorry The star level exceeds the limit.";
 
+    /**
+     * Check to see if a config file has been created. If not, generate one.
+     */
     public void createConfiguration() {
 
         try {
@@ -72,6 +75,11 @@ public class Configuration {
         }
     }
 
+    /**
+     * Load all the configuration values. If there is an update to the config then it will load all previous
+     * values first before adding the new values.
+     * @throws Exception    If it cannot save or load the file.
+     */
     public void loadConfiguration() throws Exception {
         PropertiesConfiguration config = new PropertiesConfiguration(file);
         FileInputStream fileInput = new FileInputStream(file);
@@ -107,11 +115,16 @@ public class Configuration {
             log.info("Completed. Reloading Config...");
             initConfiguration();
         } else {
+            // This section is for adding new or updated lines to the config file.
             osuIrcMessage = config.getString("osu_message");
             log.info("Config Loaded.");
         }
     }
 
+    /**
+     * Initializes the configuration
+     * @throws Exception    If it cannot load or save the file
+     */
     public void initConfiguration() throws Exception {
         if (file.exists()) {
             loadConfiguration();
@@ -120,6 +133,11 @@ public class Configuration {
         }
     }
 
+    /**
+     * Sets the star limit
+     * @param starLimit     The star limit
+     * @throws Exception    If it cannot save the file
+     */
     public void setOsuStarLimit(double starLimit) throws Exception {
         PropertiesConfiguration config = new PropertiesConfiguration(file);
         this.osuStarLimit = starLimit;
@@ -127,6 +145,13 @@ public class Configuration {
         config.save();
     }
 
+    /**
+     * Get the Osu API message and parse it, mostly for any Osu API command.
+     * @param message   The message to be parsed
+     * @param beatmap   The beatmap information
+     * @param user      The user who sent the message on Twitch
+     * @return          The parsed and compiled message
+     */
     public String getAPIParsedMessage(String message, Beatmap beatmap, EventUser user) {
         BeatmapAttributes map = UsagiBot.getClient().getBeatmapAttributes(String.valueOf(beatmap.getId()));
         Map<String, Object> keywords = new HashMap<>();
@@ -149,6 +174,14 @@ public class Configuration {
         return parseKeywords(message, keywords);
     }
 
+    /**
+     * Get the gosumemory message and parse it, mostly for the Now Playing command.
+     * @param message   The message to be parsed
+     * @param beatmap   The beatmap information
+     * @param user      The user who sent the Now Playing command
+     * @return          The parsed and complied message
+     * @throws IOException  If it cannot find the gosumemory file
+     */
     public String getLocalParsedMessage(String message, Beatmap beatmap, EventUser user) throws IOException {
         BeatmapAttributes map = UsagiBot.getClient().getBeatmapAttributes(String.valueOf(Utility.getSongFromGosuMemory().getId()));
         Map<String, Object> keywords = new HashMap<>();
@@ -171,6 +204,12 @@ public class Configuration {
         return parseKeywords(message, keywords);
     }
 
+    /**
+     * Parse the keywords used within the configuration
+     * @param message   The message to be parsed
+     * @param keywords  The keywords to be added to the message
+     * @return          The parsed and compiled message
+     */
     public String parseKeywords(String message, Map<String, Object> keywords) {
         StringBuilder formatter = new StringBuilder(message);
         List<Object> keywordsList = new ArrayList<>();
@@ -190,7 +229,10 @@ public class Configuration {
         return String.format(formatter.toString(), keywordsList.toArray());
     }
 
-    // Generate all configuration with its default or set values.
+    /**
+     * Generate all configuration with its default or set values.
+     * @throws ConfigurationException   Occurs if an object cannot be initialized
+     */
     public void generateConfiguration() throws ConfigurationException {
         PropertiesConfiguration config = new PropertiesConfiguration(file);
         config.clear();
@@ -217,4 +259,5 @@ public class Configuration {
         config.addProperty("osu_star_limit_message", osuStarLimitMessage);
         config.save(file);
     }
+
 }

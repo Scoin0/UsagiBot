@@ -31,6 +31,9 @@ public class VersionUpdate {
         }
     }
 
+    /**
+     * Check for an update and download the latest version if one is found
+     */
     public static void checkForUpdate() {
         if (!latest.compareVersion(Constants.version)) {
             log.info("You are up to date.");
@@ -48,10 +51,21 @@ public class VersionUpdate {
         }
     }
 
+    /**
+     * Grabs the updated version's link
+     * @param latestVersion The latest version
+     * @return              The link to the latest build version
+     */
     public static String getUpdatedBotURL(Version latestVersion) {
         return "https://github.com/Scoin0/UsagiBot/releases/download/" + latestVersion + "/UsagiBot.jar";
     }
 
+    /**
+     * Downloads the latest version, applies the update, and restarts the program.
+     * @param updatedBotURL     The new url for the update
+     * @param shouldLaunchNow   Should the update start right away?
+     * @throws IOException      Occurs if the file could not be located or placed.
+     */
     private static void downloadLatestVersionAndRestart(String updatedBotURL, boolean shouldLaunchNow) throws IOException {
         Response response;
         response = Jsoup.connect(updatedBotURL)
@@ -99,75 +113,13 @@ public class VersionUpdate {
                     while ((line = bufferedReader.readLine()) != null) {
                         stringBuilder.append(line + System.lineSeparator());
                     }
-                    System.out.println(bufferedReader.toString());
                     buildProcess.destroy();
                     bufferedReader.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }));
-
             log.info ("Updated applied! Restarting!");
-            System.exit(200);
-        } else {
-            File currentFile = new File(currentFileName);
-            String currentFilePath = currentFile.getAbsolutePath();
-            currentFile.delete();
-            new File (updatedFileName).renameTo(new File(currentFilePath));
-
-            final String bashFile = "update-RNRPBot.sh";
-            final String bashPath = new File(bashFile).getAbsolutePath();
-
-            String script = "#!/bin/bash\n" +
-                    "# Script to start bot on Pi.\n";
-
-            if (shouldLaunchNow) {
-                script += "java -jar " + currentFileName + "\n";
-            }
-
-            script += "rm " + bashPath + "\n";
-            script += "read -p \"Press any key to exit\"";
-
-            try (BufferedWriter bw = new BufferedWriter(new FileWriter(bashFile))) {
-                bw.write(script);
-                bw.flush();
-            }
-
-            Set<PosixFilePermission> perms = new HashSet<>();
-            perms.add(PosixFilePermission.GROUP_EXECUTE);
-            perms.add(PosixFilePermission.GROUP_WRITE);
-            perms.add(PosixFilePermission.GROUP_READ);
-            perms.add(PosixFilePermission.OTHERS_EXECUTE);
-            perms.add(PosixFilePermission.OTHERS_WRITE); // Probably a really bad idea.
-            perms.add(PosixFilePermission.OTHERS_READ);
-            perms.add(PosixFilePermission.OWNER_EXECUTE);
-            perms.add(PosixFilePermission.OWNER_WRITE);
-            perms.add(PosixFilePermission.OWNER_READ);
-            Files.setPosixFilePermissions(Paths.get(bashPath), perms);
-
-            List<String> cmds = Arrays.asList("lxterminal", "-e", bashPath);
-            ProcessBuilder pb = new ProcessBuilder(cmds);
-
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                try {
-                    log.info("Running the script now");
-                    Process buildProcess = pb.start();
-                    String line = "";
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(buildProcess.getInputStream()));
-                    StringBuilder buffer = new StringBuilder();
-                    while ((line = reader.readLine()) != null) {
-                        buffer.append(line + System.lineSeparator());
-                    }
-                    System.out.println(buffer.toString());
-                    buildProcess.destroy();
-                    reader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (Exception e) {
-                    throw new RuntimeException("Cannot execute!");
-                }
-            }));
-            log.info("Update applied! Restarting!");
             System.exit(200);
         }
     }
