@@ -1,5 +1,6 @@
 package usagibot.utils;
 
+import com.github.twitch4j.common.events.domain.EventUser;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
@@ -16,11 +17,7 @@ public class Utility {
     static Beatmap beatmap;
     private static final String webHookPath = UsagiBot.getConfig().getGOsuUrlPath();
 
-    /**
-     * Converts integer time to human-readable time
-     * @param totalTime The total time in integer time
-     * @return  Human-readable time
-     */
+    // Converts int time to human-readable time
     public static String convertTime(int totalTime) {
         int hours = totalTime / 3600;
         int minutes = (totalTime % 3600) / 60;
@@ -35,11 +32,7 @@ public class Utility {
         return h + (hours > 0 ? "" : "") + m + (minutes > 0 ? "" : "") + s;
     }
 
-    /**
-     * Grabs the beatmap ID from gosumemory
-     * @return              The beatmap id
-     * @throws IOException  If it cannot find the location of the file
-     */
+    // Grab the map ID from Gosumemory
     public static Beatmap getSongFromGosuMemory() throws IOException {
         JSONObject t = (JSONObject) (new JSONTokener(IOUtils.toString((new URL(webHookPath)).openStream()))).nextValue();
         String beatmapID = t.getJSONObject("menu").getJSONObject("bm").get("id").toString();
@@ -47,4 +40,19 @@ public class Utility {
         return beatmap;
     }
 
+    // The message to send to BanchoIRC
+    public static String ircMessage(EventUser user, Beatmap beatmap) {
+        return String.format("[%s] > [https://osu.ppy.sh/beatmapsets/%d#osu/%d %s - %s [%s]] \u266B %s \u2605 %.2f BPM:%.1f AR:%.1f OD:%.1f", user.getName(),
+                beatmap.getBeatmapset_id(), beatmap.getId(), beatmap.getBeatmapset().getArtist(), beatmap.getBeatmapset().getTitle(),
+                beatmap.getVersion(), Utility.convertTime(beatmap.getTotal_length()), beatmap.getDifficulty_rating(),
+                beatmap.getBpm(), beatmap.getAr(), beatmap.getDrain());
+    }
+
+    // The message to send to Twitch
+    public static String receivedMessage(Beatmap beatmap) {
+        return  String.format("[RECEIVED] > [%s] %s - %s [%s] \u266B %s \u2605 %.2f BPM:%.1f AR:%.1f OD:%.1f",
+                beatmap.getStatus(), beatmap.getBeatmapset().getArtist(), beatmap.getBeatmapset().getTitle(),
+                beatmap.getVersion(), Utility.convertTime(beatmap.getTotal_length()), beatmap.getDifficulty_rating(),
+                beatmap.getBpm(), beatmap.getAr(), beatmap.getDrain());
+    }
 }

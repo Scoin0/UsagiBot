@@ -10,6 +10,7 @@ import usagibot.osu.objects.Beatmap;
 import usagibot.osu.objects.BeatmapAttributes;
 import usagibot.osu.objects.GameMode;
 import usagibot.osu.objects.User;
+import usagibot.utils.RateLimit;
 
 import java.io.IOException;
 
@@ -18,25 +19,15 @@ public class OsuClient {
 
     private String token;
     private int tokenTimeout;
+    private static RateLimit limit = new RateLimit(60); // Only allow for 60 requests per minute
     private static final String TOKEN_URL = "https://osu.ppy.sh/oauth/token";
     private static final String OSU_ENDPOINT = "https://osu.ppy.sh/api/v2/";
 
-    /**
-     * The Osu Client constructor
-     * @param token         The Osu API token
-     * @param tokenTimeout  The expiry date of the token
-     */
     public OsuClient(String token, int tokenTimeout) {
         this.token = token;
         this.tokenTimeout = tokenTimeout;
     }
 
-    /**
-     * Create the Osu API client
-     * @param clientID      The OAuth client ID
-     * @param clientSecret  The OAuth client password
-     * @return              The Osu API token and the expiry date
-     */
     public static OsuClient createClient(String clientID, String clientSecret) {
         log.info("Retrieving token with client credentials...");
         ObjectMapper mapper = new ObjectMapper();
@@ -66,17 +57,10 @@ public class OsuClient {
         return null;
     }
 
-    /**
-     * Sends a GET to the Osu API
-     * @param compiledRoute The compiled url
-     * @param token         The compiled url
-     * @param tClass        The class object
-     * @param <T>           The class object
-     * @return              The information from the Osu API
-     */
     public <T> T requestApi(String compiledRoute, String token, Class<T> tClass) {
 
         OkHttpClient client = new OkHttpClient();
+        waitForFreeTicket();
 
         Request request = new Request.Builder()
                 .url(OSU_ENDPOINT + compiledRoute)
@@ -92,17 +76,10 @@ public class OsuClient {
         return null;
     }
 
-    /**
-     * Sends a POST to the OSU API
-     * @param compiledRoute The compiled url
-     * @param token         The compiled url
-     * @param tClass        The class object
-     * @param <T>           The class object
-     * @return              The information from the Osu API
-     */
     public <T> T postApi(String compiledRoute, String token, Class<T> tClass) {
 
         OkHttpClient client = new OkHttpClient();
+        waitForFreeTicket();
 
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode body = mapper.createObjectNode();
@@ -126,32 +103,19 @@ public class OsuClient {
         return null;
     }
 
-    /**
-     * Get Beatmap information
-     * @param beatmapId The beatmap ID
-     * @return          The information about the beatmap
-     */
     public Beatmap getBeatmap(String beatmapId) {
         return requestApi(Route.BEATMAP.compile(beatmapId), token, Beatmap.class);
     }
-
-    /**
-     * Get User information
-     * @param userId    The user ID
-     * @param mode      The gamemode that's requested
-     * @return          The information about the user
-     */
     public User getUser(String userId, GameMode mode) {
         return requestApi(Route.USER.compile(userId, mode.getName()), token, User.class);
     }
 
-    /**
-     * Get BeatmapAttributes information
-     * @param beatmapId The information about the beatmap
-     * @return          The beatmap attributes
-     */
     public BeatmapAttributes getBeatmapAttributes(String beatmapId) {
         return postApi(Route.BEATMAP_ATTRIBUTES.compile(beatmapId), token, BeatmapAttributes.class);
+    }
+
+    private void waitForFreeTicket() {
+        limit.getOrWaitForTicket();
     }
 
     public static class DefaultTokenObject {
@@ -174,6 +138,6 @@ public class OsuClient {
         public String getTokenType() {
             return tokenType;
         }
-    }
 
+    }
 }
