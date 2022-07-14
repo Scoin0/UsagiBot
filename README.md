@@ -29,9 +29,7 @@ pause
 
 #### Requesting songs
 Anyone can request a song to be added. To do this just simply post the beatmapset link inside the chat.
-As of right now, the bot only accepts urls in the `beatmapsets` format. As an example,
-`https://osu.ppy.sh/beatmapsets/53176#osu/162237`. This will be changed later to accept all forms of urls.
-Like `/b/`, `/s/`, and `/beatmapsets/`.
+As an example, `https://osu.ppy.sh/beatmapsets/53176#osu/162237`.
 
 ### Requirements
 
@@ -49,8 +47,6 @@ Like `/b/`, `/s/`, and `/beatmapsets/`.
 
 * PP Calculation
 * Support osu mods
-* Finish Implementing the Ratelimiter
-* Support other osu urls. (`/b/` and `/s/`)
 * Have 2 versions, a standalone and an always running version.
 
 ---
