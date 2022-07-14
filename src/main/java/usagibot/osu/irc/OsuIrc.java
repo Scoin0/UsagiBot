@@ -17,7 +17,9 @@ public class OsuIrc {
     private final static String password = UsagiBot.getConfig().getBanchoPassword();
     private final static String autoJoinChannel = UsagiBot.getConfig().getBanchoChannel();
 
-
+    /**
+     * The pircbot IRC builder
+     */
     public static void Builder() {
         log.info("Starting Connection to Bancho IRC");
         config = new Configuration.Builder()
@@ -30,4 +32,5 @@ public class OsuIrc {
                 .addListener(new OsuListener())
                 .buildConfiguration();
     }
+
 }
