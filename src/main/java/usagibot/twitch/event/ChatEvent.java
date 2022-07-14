@@ -5,14 +5,11 @@ import com.github.philippheuer.events4j.simple.domain.EventSubscriber;
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
 import com.github.twitch4j.common.events.domain.EventUser;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.lang.math.NumberUtils;
 import usagibot.UsagiBot;
 import usagibot.osu.objects.Beatmap;
 import usagibot.osu.objects.GameMode;
 import usagibot.osu.objects.User;
 import usagibot.twitch.TwitchClient;
-
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -30,13 +27,22 @@ public class ChatEvent {
     private Beatmap beatmap;
     private User user = UsagiBot.getClient().getUser(UsagiBot.getConfig().getOsuUsername(), GameMode.OSU);
 
+    /**
+     * The ChatEvent
+     * @param eventHandler  Twitch4J's Event Handler
+     */
     public ChatEvent(SimpleEventHandler eventHandler) {
         eventHandler.onEvent(ChannelMessageEvent.class, this::onChannelMessage);
     }
 
+    /**
+     * Fires when a chat message is sent in Twitch chat
+     * @param event The chat event
+     */
     @EventSubscriber
     public void onChannelMessage(ChannelMessageEvent event) {
 
+        // Splits the message into segments
         String[] args = event.getMessage().split(" ");
 
         // Do not listen to self. Probably not needed, but just in case.
@@ -118,19 +124,30 @@ public class ChatEvent {
         }
     }
 
-    // Send a message to the chat
+    /**
+     * Sends a message within Twitch chat
+     * @param message   The message to be sent
+     */
     public void sendMessage(String message) {
         TwitchClient.client.getChat().sendMessage(channel, message);
     }
 
-    // Send a message to Osu Client
+    /**
+     * Sends a message within Osu
+     * @param user      The user that sent the beatmap
+     * @param beatmap   The beatmap information
+     */
     public void sendIRCMessage(EventUser user, Beatmap beatmap) {
         UsagiBot.getIrcBot().getUserChannelDao().getUser(UsagiBot.getConfig().getBanchoUsername()).send().message(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuIrcMessage(), beatmap, user));
     }
 
-    // Grabs the map digits
+    /**
+     * Parses the beatmap link sent in Twitch
+     * @param message   The beatmap link that was sent
+     * @return          The beatmap url
+     */
     public String parseMessage(String message) {
-        String delimiters = "https?:\\/\\/osu.ppy.sh\\/(b|s|beatmapsets)\\/([0-9]*)(#osu|#taiko|#ctb|#maina)\\/([0-9]*)";
+        String delimiters = "https?:\\/\\/osu.ppy.sh\\/(beatmapsets)\\/([0-9]*)(#osu|#taiko|#ctb|#maina)\\/([0-9]*)";
         Pattern urlPattern = Pattern.compile(delimiters, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
         Matcher matcher = urlPattern.matcher(message);
         List<String> urlSplit = new ArrayList<String>();
@@ -142,22 +159,19 @@ public class ChatEvent {
         }
 
         switch (urlSplit.size()) {
-            case 1:
-                sendMessage("Please send maps in the beatmapsets format.");
-            case 2:
-                sendMessage("Please send maps in the beatmapsets format.");
-            case 3:
-                sendMessage("Please send maps in the beatmapsets format.");
             case 4:
                 String beatmap = urlSplit.get(3);
                 return beatmap;
             default:
-                log.warn("Scoin0 has not yet implemented all ways to request a beatmap. Only Beatmap Sets work right now.");
+                log.warn("Invalid beatmap link sent.");
         }
         return null;
     }
 
-    // Send all the users Osu stats
+    /**
+     * Sends some user stats
+     * @return  The user stats
+     */
     private String userStats() {
         NumberFormat nf = NumberFormat.getInstance(new Locale("en", "US"));
         return "Stats for " + user.getUsername() + ": "
