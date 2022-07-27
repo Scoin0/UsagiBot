@@ -1,14 +1,18 @@
-package usagibot.osu.objects;
+package usagibot.osu.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
+/**
+ * Follows the osu!web documentation (As of July 26th, 2022)
+ * Description: Represents a beatmap.
+ * URL:         https://osu.ppy.sh/docs/index.html#beatmapcompact
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 public class BeatmapCompact {
 
-    // Represent a Beatmap
     @JsonProperty("beatmapset_id")
     private int beatmapset_id;
     @JsonProperty("difficulty_rating")
@@ -36,9 +40,15 @@ public class BeatmapCompact {
     @JsonProperty("max_combo")
     private int max_combo;
 
+    /**
+     * All fields are optional but there's always at least one field returned.
+     * URL: https://osu.ppy.sh/docs/index.html#beatmapcompact-failtimes
+     */
     public static class FailTimes {
 
+        // Array of length 100.
         private int[] exit;
+        // Array of length 100.
         private int[] fail;
 
         public int[] getExit() {

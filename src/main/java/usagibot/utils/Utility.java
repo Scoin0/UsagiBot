@@ -1,14 +1,24 @@
 package usagibot.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpResponse;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import usagibot.UsagiBot;
-import usagibot.osu.objects.Beatmap;
+import usagibot.osu.api.Beatmap;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.Socket;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 @Slf4j
 public class Utility {
@@ -47,4 +57,29 @@ public class Utility {
         return beatmap;
     }
 
+    /**
+     * Converts names that use spaces with ones that have underscores
+     * @param message   The message to be changed
+     * @return          The underscored message
+     */
+    public static String removeSpaces(String message) {
+        String underscoreMessage = message.replaceAll(" ", "_");
+        return underscoreMessage;
+    }
+
+    /**
+     * Search to see if GOsuMemory is running first before starting the GOsuMemory Thread
+     * @return True or false depending on if the requested program is running.
+     */
+    public static boolean findGosumemory() {
+        // Okay, to be honest, I'm drunk. This is fucked.
+        String[] firstSplit = webHookPath.split(":");
+        String startingResult = firstSplit[2];
+        String[] secondSplit = startingResult.split("/");
+        try (Socket ignored = new Socket("localhost", Integer.parseInt(secondSplit[0]))) {
+            return true;
+        } catch (IOException ignored) {
+            return false;
+        }
+    }
 }

@@ -7,8 +7,8 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import usagibot.UsagiBot;
-import usagibot.osu.objects.Beatmap;
-import usagibot.osu.objects.BeatmapAttributes;
+import usagibot.osu.api.Beatmap;
+import usagibot.osu.api.BeatmapAttributes;
 import usagibot.utils.Utility;
 
 import java.io.File;

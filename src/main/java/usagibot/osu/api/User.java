@@ -1,21 +1,20 @@
-package usagibot.osu.objects;
+package usagibot.osu.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-
 import java.math.BigInteger;
 import java.sql.Timestamp;
 
+/**
+ * Follows the osu!web documentation (As of July 26th, 2022)
+ * Description: Represents a user. This extends UserCompact with additional attributes.
+ * URL:         https://osu.ppy.sh/docs/index.html?bash#user
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
-@Slf4j
 public class User extends UserCompact {
 
-    // Represents a User.
-    @JsonProperty("cover.url")
-    private String cover_url;
     @JsonProperty("discord")
     private String discord;
     @JsonProperty("has_supported")
@@ -24,10 +23,6 @@ public class User extends UserCompact {
     private String interests;
     @JsonProperty("join_date")
     private Timestamp join_date;
-    @JsonProperty("kudosu.avaliable")
-    private int kudosu_avaliable;
-    @JsonProperty("kudosu.total")
-    private int kudosu_total;
     @JsonProperty("location")
     private String location;
     @JsonProperty("max_blocks")
@@ -38,8 +33,6 @@ public class User extends UserCompact {
     private String occupation;
     @JsonProperty("playmode")
     private GameMode playmode;
-    //@JsonProperty("playstyle")
-    //private String playstyle;
     @JsonProperty("post_count")
     private int post_count;
     @JsonProperty("title")
@@ -53,7 +46,11 @@ public class User extends UserCompact {
     @JsonProperty("statistics")
     private UserStatistics statistics;
 
-    // UserStatistics
+    /**
+     * Follows the osu!web documentation (As of July 26th, 2022)
+     * Description: Represents the user statistics found within osu!web.
+     * URL:         https://osu.ppy.sh/docs/index.html?bash#user
+     */
     @JsonIgnoreProperties(ignoreUnknown = true)
     @Getter
     public static class UserStatistics {
@@ -72,12 +69,22 @@ public class User extends UserCompact {
         public GradeCounts grade_counts;
     }
 
+    /**
+     * Follows the osu!web documentation (As of July 26th, 2022)
+     * Description: Grabs the current level of a user within the user statistics.
+     * URL:         https://osu.ppy.sh/docs/index.html?bash#user
+     */
     @Getter
     public static class Level {
         public int current;
         public int progress;
     }
 
+    /**
+     * Follows the osu!web documentation (As of July 26th, 2022)
+     * Description: Grabs the grade counts of a user within the user statistics.
+     * URL:         https://osu.ppy.sh/docs/index.html?bash#user
+     */
     @Getter
     public static class GradeCounts {
         public int a;
