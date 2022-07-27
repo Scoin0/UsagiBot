@@ -10,6 +10,7 @@ import usagibot.osu.api.Beatmap;
 import usagibot.osu.api.GameMode;
 import usagibot.osu.api.User;
 import usagibot.twitch.TwitchClient;
+import usagibot.utils.Utility;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -57,7 +58,12 @@ public class ChatEvent {
         if (event.getMessage().equalsIgnoreCase(prefix + "np")) {
             log.info("Sending !np command in " + channel);
             try {
-                sendMessage(UsagiBot.getConfig().getLocalParsedMessage(UsagiBot.getConfig().getNowPlayingMessage(), beatmap, event.getUser()));
+                if (Utility.findGosumemory()) {
+                    sendMessage(UsagiBot.getConfig().getLocalParsedMessage(UsagiBot.getConfig().getNowPlayingMessage(), beatmap, event.getUser()));
+                } else {
+                    sendMessage("GOsumemory is not online!");
+                    log.warn("GOsumemory is not online!");
+                }
             } catch (IOException e) {
                 log.warn(e.getMessage());
             }
