@@ -162,7 +162,7 @@ public class Configuration {
         keywords.put("artist", beatmap.getBeatmapset().getArtist());
         keywords.put("title", beatmap.getBeatmapset().getTitle());
         keywords.put("version", beatmap.getVersion());
-        keywords.put("length", beatmap.getTotal_length());
+        keywords.put("length", Utility.convertTime(beatmap.getTotal_length()));
         keywords.put("star_rating", beatmap.getDifficulty_rating());
         keywords.put("beatmap_id", beatmap.getId());
         keywords.put("beatmap_url", beatmap.getUrl());
@@ -192,7 +192,7 @@ public class Configuration {
         keywords.put("artist", Utility.getSongFromGosuMemory().getBeatmapset().getArtist());
         keywords.put("title", Utility.getSongFromGosuMemory().getBeatmapset().getTitle());
         keywords.put("version", Utility.getSongFromGosuMemory().getVersion());
-        keywords.put("length", Utility.getSongFromGosuMemory().getTotal_length());
+        keywords.put("length", Utility.convertTime(Utility.getSongFromGosuMemory().getTotal_length()));
         keywords.put("star_rating", Utility.getSongFromGosuMemory().getDifficulty_rating());
         keywords.put("beatmap_id", Utility.getSongFromGosuMemory().getBeatmapset_id());
         keywords.put("beatmap_url", Utility.getSongFromGosuMemory().getUrl());
