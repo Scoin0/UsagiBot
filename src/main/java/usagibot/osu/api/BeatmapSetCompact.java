@@ -1,14 +1,18 @@
-package usagibot.osu.objects;
+package usagibot.osu.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
+/**
+ * Follows the osu!web documentation (As of July 26th, 2022)
+ * Description: Represents a beatmapset.
+ * URL:         https://osu.ppy.sh/docs/index.html?bash#beatmapsetcompact
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 public class BeatmapSetCompact {
 
-    // Represents a
     @JsonProperty("artist")
     private String artist;
     @JsonProperty("artist_unicode")

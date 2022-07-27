@@ -1,20 +1,19 @@
-package usagibot.osu.objects;
+package usagibot.osu.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-
 import java.sql.Timestamp;
 
+/**
+ * Follows the osu!web documentation (As of July 26th, 2022)
+ * Description: Represents a beatmapset. This extends BeatmapsetCompact with additional attributes.
+ * URL:         https://osu.ppy.sh/docs/index.html?bash#beatmapset
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 public class BeatmapSet extends BeatmapSetCompact {
 
-    //Represents a beatmapset
-    @JsonProperty("availability.download_disabled")
-    private boolean download_disabled;
-    @JsonProperty("availability.more_information")
-    private String[] more_information;
     @JsonProperty("bpm")
     private float bpm;
     @JsonProperty("can_be_hyped")
@@ -25,10 +24,6 @@ public class BeatmapSet extends BeatmapSetCompact {
     private boolean discussion_enabled;
     @JsonProperty("discussion_locked")
     private boolean discussion_locked;
-    @JsonProperty("hype.current")
-    private int hype_current;
-    @JsonProperty("hype.required")
-    private int hype_required;
     @JsonProperty("is_scorable")
     private boolean is_scorable;
     @JsonProperty("last_updated")
@@ -41,6 +36,5 @@ public class BeatmapSet extends BeatmapSetCompact {
     private boolean storyboard;
     @JsonProperty("tags")
     private String tags;
-
 
 }

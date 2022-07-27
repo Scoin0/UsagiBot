@@ -5,7 +5,7 @@ import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import usagibot.UsagiBot;
-import usagibot.osu.objects.Beatmap;
+import usagibot.osu.api.Beatmap;
 
 import java.io.IOException;
 import java.net.URL;
@@ -45,6 +45,16 @@ public class Utility {
         String beatmapID = t.getJSONObject("menu").getJSONObject("bm").get("id").toString();
         beatmap = UsagiBot.getClient().getBeatmap(beatmapID);
         return beatmap;
+    }
+
+    /**
+     * Converts names that use spaces with ones that have underscores
+     * @param message   The message to be changed
+     * @return          The underscored message
+     */
+    public static String removeSpaces(String message) {
+        String underscoreMessage = message.replaceAll(" ", "_");
+        return underscoreMessage;
     }
 
 }

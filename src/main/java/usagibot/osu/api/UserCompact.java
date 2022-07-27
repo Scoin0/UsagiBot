@@ -1,16 +1,19 @@
-package usagibot.osu.objects;
+package usagibot.osu.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-
 import java.sql.Timestamp;
 
+/**
+ * Follows the osu!web documentation (As of July 26th, 2022)
+ * Description: Mainly used for embedded in certain responses to save additional api lookups.
+ * URL:         https://osu.ppy.sh/docs/index.html?bash#usercompact
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 public class UserCompact {
 
-    // Mainly used for embedding in certain responses to save additional api lookups
     @JsonProperty("avatar_url")
     private String avatar_url;
     @JsonProperty("country_code")
@@ -38,7 +41,12 @@ public class UserCompact {
     @JsonProperty("username")
     private String username;
 
-    // Optional attributes | Why does half this page not have a type?
+    /**
+     * Optional Attributes:
+     * Follows the osu!web documentation (As of July 26th, 2022)
+     * Description: Following are attributes which may be additionally included in the response. Relevant endpoints should list them if applicable.
+     * URL:         https://osu.ppy.sh/docs/index.html?bash#usercompact
+     */
     @JsonProperty("account_history")
     private AccountUserHistory[] account_history;
     @JsonProperty("active_tournament_banner")
@@ -64,6 +72,11 @@ public class UserCompact {
     @JsonProperty("scores_recent_count")
     private int scores_recent_count;
 
+    /**
+     * Follows the osu!web documentation (As of July 26th, 2022)
+     * Description: Grabs information from the profile banner section.
+     * URL:         https://osu.ppy.sh/docs/index.html?bash#usercompact
+     */
     public static class ProfileBanner {
 
         private int id;
@@ -83,6 +96,11 @@ public class UserCompact {
         }
     }
 
+    /**
+     * Follows the osu!web documentation (As of July 26th, 2022)
+     * Description: Grabs information from the account user history section.
+     * URL:         https://osu.ppy.sh/docs/index.html?bash#usercompact
+     */
     public static class AccountUserHistory {
 
         private String[] description;
@@ -112,6 +130,11 @@ public class UserCompact {
         }
     }
 
+    /**
+     * Follows the osu!web documentation (As of July 26th, 2022)
+     * Description: Grabs information from the user badge section.
+     * URL:         https://osu.ppy.sh/docs/index.html?bash#usercompact
+     */
     public static class UserBadge {
 
         private Timestamp timestamp;

@@ -6,10 +6,10 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
-import usagibot.osu.objects.Beatmap;
-import usagibot.osu.objects.BeatmapAttributes;
-import usagibot.osu.objects.GameMode;
-import usagibot.osu.objects.User;
+import usagibot.osu.api.Beatmap;
+import usagibot.osu.api.BeatmapAttributes;
+import usagibot.osu.api.GameMode;
+import usagibot.osu.api.User;
 
 import java.io.IOException;
 

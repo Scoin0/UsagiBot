@@ -1,9 +1,14 @@
-package usagibot.osu.objects;
+package usagibot.osu.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
+/**
+ * Follows the osu!web documentation (As of July 26th, 2022)
+ * Description: Represent beatmap difficulty attributes. Following fields are always present and then there are additional fields for different rulesets.
+ * URL:         https://osu.ppy.sh/docs/index.html#beatmapdifficultyattributes
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 public class BeatmapAttributes {
@@ -11,11 +16,14 @@ public class BeatmapAttributes {
     @JsonProperty("attributes")
     private Attributes attributes;
 
-    // Attributes
+    /**
+     * All the game-modes attributes.
+     * URL: https://osu.ppy.sh/docs/index.html?bash#beatmapdifficultyattributes
+     */
     @JsonIgnoreProperties(ignoreUnknown = true)
     @Getter
     public static class Attributes {
-        // Beatmap Difficulty
+
         @JsonProperty("max_combo")
         private int max_combo;
         @JsonProperty("star_rating")

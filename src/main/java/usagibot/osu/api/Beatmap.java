@@ -1,16 +1,19 @@
-package usagibot.osu.objects;
+package usagibot.osu.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-
 import java.sql.Timestamp;
 
+/**
+ * Follows the osu!web documentation (As of July 26th, 2022)
+ * Description: Represents a beatmap. This extends BeatmapCompact with additional attributes.
+ * URL:         https://osu.ppy.sh/docs/index.html#beatmap
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 public class Beatmap extends BeatmapCompact {
 
-    // Represent a Beatmap
     @JsonProperty("accuracy")
     private float accuracy;
     @JsonProperty("ar")
@@ -45,8 +48,8 @@ public class Beatmap extends BeatmapCompact {
     private int passcount;
     @JsonProperty("playcount")
     private int playcount;
-    //@JsonProperty("ranked")
-    //private RankedStatus ranked;
+    @JsonProperty("ranked")
+    private RankedStatus ranked;
     @JsonProperty("url")
     private String url;
     @JsonProperty("title")
