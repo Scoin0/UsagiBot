@@ -84,24 +84,23 @@ public class VersionUpdate {
 
             String script = "@echo off\r\n"
                     + "timeout 1\r\n"
-                    + "copy " + updatedFileName + " " + currentFileName + "\r\n"
-                    + "del " + updatedFileName + "\r\n";
+                    + "copy " + '"' + updatedFileName + '"' + " " + '"' + currentFileName + '"' + "\r\n"
+                    + "del " + '"' + updatedFileName + '"' + "\r\n";
             if (shouldLaunchNow) {
-                script += "java -jar " + currentFileName + "\r\n";
+                script += "java -jar " + '"' + currentFileName + '"' +"\r\n";
             }
 
-            script += "del " + batchPath + "\r\n";
+            script += "del " + '"' + batchPath + '"' + "\r\n";
 
             try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(batchFile))) {
                 bufferedWriter.write(script);
                 bufferedWriter.flush();
             }
 
-            log.info("Saved update script to " + batchFile);
+            log.info("Saved update script to " + '"' + batchFile + '"');
 
             List<String> cmds = Arrays.asList("cmd.exe", "/C", "start", batchFile);
             ProcessBuilder processBuilder = new ProcessBuilder(cmds);
-            log.info(batchPath + batchFile);
 
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 try {
@@ -120,7 +119,7 @@ public class VersionUpdate {
                 }
             }));
             log.info ("Updated applied! Restarting!");
-            System.exit(200);
+            System.exit(0);
         }
     }
 }
