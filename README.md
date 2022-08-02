@@ -1,3 +1,4 @@
+[![CodeFactor](https://www.codefactor.io/repository/github/scoin0/usagibot/badge)](https://www.codefactor.io/repository/github/scoin0/usagibot)
 # UsagiBot
 
 ---
