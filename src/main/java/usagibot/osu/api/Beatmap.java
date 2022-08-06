@@ -48,8 +48,6 @@ public class Beatmap extends BeatmapCompact {
     private int passcount;
     @JsonProperty("playcount")
     private int playcount;
-    @JsonProperty("ranked")
-    private RankedStatus ranked;
     @JsonProperty("url")
     private String url;
     @JsonProperty("title")

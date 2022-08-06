@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'me.Scoin0'
-version '1.2.3'
+version '1.2.4'
 description "UsagiBot"
 
 tasks.named('shadowJar') {
