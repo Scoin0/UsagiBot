@@ -48,7 +48,6 @@ As an example, `https://osu.ppy.sh/beatmapsets/53176#osu/162237`.
 
 * PP Calculation
 * Support osu mods
-* Have 2 versions, a standalone and an always running version.
 
 ---
 If there are any issues please let me know either in the issue tracker or DM me at `Scoin0#0002`.
