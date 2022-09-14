@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import usagibot.UsagiBot;
 import usagibot.osu.api.Beatmap;
 import usagibot.osu.api.GameMode;
+import usagibot.osu.api.Mods;
 import usagibot.osu.api.User;
 import usagibot.twitch.TwitchClient;
 import usagibot.utils.Utility;
@@ -118,11 +119,15 @@ public class ChatEvent {
                 log.info("Received possible osu song request. Parsing now...");
                 beatmap = UsagiBot.getClient().getBeatmap(parseMessage(event.getMessage()));
                 log.info("Beatmap ID Found: " + beatmap.getId());
-                if (beatmap.getDifficulty_rating() > UsagiBot.getConfig().getOsuStarLimit()) {
-                    sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuStarLimitMessage(), beatmap, event.getUser()));
-                } else {
-                    sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getTwitchMessage(), beatmap, event.getUser()));
-                    sendIRCMessage(event.getUser(), beatmap);
+                if (event.getMessage().contains("+")) {
+                    String[] m = event.getMessage().split("\\+");
+                    String m1 = m[1];
+                    if (beatmap.getDifficulty_rating() > UsagiBot.getConfig().getOsuStarLimit()) {
+                        sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuStarLimitMessage(), beatmap, event.getUser()));
+                    } else {
+                        sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getTwitchMessage() + " +" + Mods.getMods(Mods.fromShortNamesContinuous(m1)), beatmap, event.getUser()));
+                        sendIRCMessage(event.getUser(), beatmap, " +" + Mods.getMods(Mods.fromShortNamesContinuous(m1)));
+                    }
                 }
             } else {
                 sendMessage("You cannot request a beatmap at this time.");
@@ -143,8 +148,8 @@ public class ChatEvent {
      * @param user      The user that sent the beatmap
      * @param beatmap   The beatmap information
      */
-    public void sendIRCMessage(EventUser user, Beatmap beatmap) {
-        UsagiBot.getIrcBot().getUserChannelDao().getUser(UsagiBot.getConfig().getBanchoUsername()).send().message(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuIrcMessage(), beatmap, user));
+    public void sendIRCMessage(EventUser user, Beatmap beatmap, String message) {
+        UsagiBot.getIrcBot().getUserChannelDao().getUser(UsagiBot.getConfig().getBanchoUsername()).send().message(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuIrcMessage(), beatmap, user) + message);
     }
 
     /**
