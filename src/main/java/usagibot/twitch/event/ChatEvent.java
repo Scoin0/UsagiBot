@@ -128,6 +128,13 @@ public class ChatEvent {
                         sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getTwitchMessage() + " +" + Mods.getMods(Mods.fromShortNamesContinuous(m1)), beatmap, event.getUser()));
                         sendIRCMessage(event.getUser(), beatmap, " +" + Mods.getMods(Mods.fromShortNamesContinuous(m1)));
                     }
+                } else {
+                    if (beatmap.getDifficulty_rating() > UsagiBot.getConfig().getOsuStarLimit()) {
+                        sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuStarLimitMessage(), beatmap, event.getUser()));
+                    } else {
+                        sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getTwitchMessage(), beatmap, event.getUser()));
+                        sendIRCMessage(event.getUser(), beatmap, " ");
+                    }
                 }
             } else {
                 sendMessage("You cannot request a beatmap at this time.");
