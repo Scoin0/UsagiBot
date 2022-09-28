@@ -1,11 +1,16 @@
-package usagibot.twitch.commands.twitchcommands;
+package usagibot.commands.twitchcommands;
 
-import usagibot.twitch.commands.Command;
-import usagibot.twitch.commands.CommandEvent;
+import usagibot.commands.Command;
+import usagibot.commands.CommandEvent;
+
+import java.util.Arrays;
 import java.util.Optional;
 
 public class HelpCommand extends Command {
 
+    /**
+     * The help command sends avaliable help about any given command or sends help on all commands at once.
+     */
     public HelpCommand() {
         name = "help";
         description = "Sends a link to the command wiki page";
@@ -14,6 +19,10 @@ public class HelpCommand extends Command {
         aliases = new String[]{"commands"};
     }
 
+    /**
+     * Check to see if the command has arguments then send off to one of the other methods.
+     * @param event         The CommandEvent class
+     */
     @Override
     public void onCommand(CommandEvent event) {
 
@@ -26,10 +35,17 @@ public class HelpCommand extends Command {
         }
     }
 
+    /**
+     * Generic send help command
+     */
     private void sendHelp(CommandEvent event) {
-
+        event.getClient().sendMessage("All Commands: https://github.com/Scoin0/UsagiBot/wiki/Commands");
     }
 
+    /**
+     * Send information about the command given
+     * @param commandName   The command to request help from
+     */
     private void sendCommandHelp(CommandEvent event, String commandName) {
 
         boolean isFound;
@@ -41,10 +57,9 @@ public class HelpCommand extends Command {
         }
 
         if (isFound) {
-            System.out.println(command.get().getName() + " " + command.get().getDescription());
+            event.getClient().sendMessage(command.get().getDescription() + " | Usage: " + command.get().getUsage());
         } else {
-            System.out.println("Command not found.");
+            event.getClient().sendMessage("Command not found or does not exist.");
         }
     }
-
 }

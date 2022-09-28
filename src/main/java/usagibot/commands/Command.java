@@ -1,7 +1,6 @@
-package usagibot.twitch.commands;
+package usagibot.commands;
 
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,8 +16,17 @@ public abstract class Command {
     protected String[] aliases = new String[0];
     protected Command[] subcommands = new Command[0];
 
+    /**
+     * The abstract for onCommand. Every command class needs this in order to run
+     * @param event         The CommandEvent class
+     * @throws Throwable    Throws anything if needed
+     */
     public abstract void onCommand(CommandEvent event) throws Throwable;
 
+    /**
+     * The part that actually runs the command.
+     * @param event The CommandEvent
+     */
     public final void run(CommandEvent event) {
 
         if (event.getArgs().length > 0) {
@@ -34,9 +42,13 @@ public abstract class Command {
         } catch (Throwable t) {
             throwException(t, event);
         }
-
     }
 
+    /**
+     * Throws anything
+     * @param t     Throwable
+     * @param event CommandEvent
+     */
     protected void throwException (Throwable t, CommandEvent event) {
         throwException(t, event);
     }

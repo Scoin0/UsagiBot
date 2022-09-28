@@ -134,9 +134,9 @@ public enum Mods {
                     return null;
                 }
                 if (mod == Nightcore) {
-                    mods |= getMask(DoubleTime);
+                    mods += 576;
                 } else if (mod == Perfect) {
-                    mods |= getMask(SuddenDeath);
+                    mods += 16416;
                 } else {
                     mods |= getMask(mod);
                 }
@@ -158,8 +158,16 @@ public enum Mods {
 
     public static long fixNC(long mods) {
         if((mods & Nightcore.bit) != 0) {
-            mods |= DoubleTime.bit;
-            mods &= ~Nightcore.bit;
+            mods |= Nightcore.bit;
+            mods &= ~DoubleTime.bit;
+        }
+        return mods;
+    }
+
+    public static long fixPF(long mods) {
+        if((mods & Perfect.bit) != 0) {
+            mods |= Perfect.bit;
+            mods &= ~SuddenDeath.bit;
         }
         return mods;
     }

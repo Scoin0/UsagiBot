@@ -52,4 +52,4 @@ Like `/b/`, `/s/`, and `/beatmapsets/`.
 * Have 2 versions, a standalone and an always running version.
 
 ---
-If there are any issues please let me know either in the issue tracker or DM me at `Scoin0#0002`.
+If there are any issues please let me know either in the issue tracker or DM me on Discord at `Scoin0#0002`.

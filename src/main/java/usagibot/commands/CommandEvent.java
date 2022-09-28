@@ -1,6 +1,5 @@
-package usagibot.twitch.commands;
+package usagibot.commands;
 
-import com.github.philippheuer.events4j.core.EventManager;
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +12,12 @@ public class CommandEvent {
     private String[] args;
     private final CommandClient client;
 
+    /**
+     * The CommandEvent Constructor
+     * @param event     Twitch4J's ChannelMessageEvent
+     * @param args      Arguments from each command
+     * @param client    The Command Client
+     */
     public CommandEvent (ChannelMessageEvent event, String[] args, CommandClient client) {
         this.event = event;
         this.args = args;
