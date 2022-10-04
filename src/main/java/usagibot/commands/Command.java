@@ -10,7 +10,6 @@ public abstract class Command {
 
     protected String name = null;
     protected String description = "No Description Available";
-    protected String expandedDescription = null;
     protected ArrayList<String> usage = new ArrayList<>();
     protected int cooldown = 0;
     protected String[] aliases = new String[0];
@@ -32,8 +31,10 @@ public abstract class Command {
         if (event.getArgs().length > 0) {
             String[] args = event.getArgs();
             for (Command command : subcommands) {
-                event.setArgs(args.length > 1 ? Arrays.copyOfRange(args, 1, args.length) : new String[0]);
-                command.run(event);
+                if (command.isCommandFor(args[0])) {
+                    event.setArgs(args.length > 1 ? Arrays.copyOfRange(args, 1, args.length) : new String[0]);
+                    command.run(event);
+                }
             }
         }
 
@@ -42,6 +43,22 @@ public abstract class Command {
         } catch (Throwable t) {
             throwException(t, event);
         }
+    }
+
+    /**
+     * Checks if a command is an alias.
+     * @param input Alias
+     * @return  True or False depending on if it's an alias or not.
+     */
+    public boolean isCommandFor(String input) {
+        if (name.equalsIgnoreCase(input)) return true;
+
+        for (String alias : aliases) {
+            if (alias.equalsIgnoreCase(input)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
