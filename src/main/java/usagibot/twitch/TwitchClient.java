@@ -5,13 +5,15 @@ import com.github.philippheuer.events4j.simple.SimpleEventHandler;
 import com.github.twitch4j.TwitchClientBuilder;
 import lombok.extern.slf4j.Slf4j;
 import usagibot.UsagiBot;
-import usagibot.twitch.event.ChatEvent;
+import usagibot.commands.CommandClient;
+import usagibot.commands.twitchcommands.*;
 
 @Slf4j
 public class TwitchClient {
 
     public static com.github.twitch4j.TwitchClient client;
     public static OAuth2Credential credentials = new OAuth2Credential("twitch", UsagiBot.getConfig().getTwitchPassword());
+    CommandClient commandClient;
 
     /**
      * The Twitch IRC client constructor
@@ -42,6 +44,18 @@ public class TwitchClient {
      */
     public void loadListeners() {
         SimpleEventHandler eventHandler = client.getEventManager().getEventHandler(SimpleEventHandler.class);
-        new ChatEvent(eventHandler);
+        commandClient = new CommandClient(eventHandler);
+        addCommands();
+    }
+
+    /**
+     * Add commands to the list of current avaliable commands
+     */
+    public void addCommands() {
+        commandClient.addCommand(new HelpCommand());
+        commandClient.addCommand(new NowPlayingCommand());
+        commandClient.addCommand(new RequestToggleCommand());
+        commandClient.addCommand(new StarLimitCommand());
+        commandClient.addCommand(new StatsCommand());
     }
 }

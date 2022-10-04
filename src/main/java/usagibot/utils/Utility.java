@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 import usagibot.UsagiBot;
 import usagibot.osu.api.Beatmap;
+import usagibot.osu.api.Mods;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -55,6 +56,17 @@ public class Utility {
         String beatmapID = t.getJSONObject("menu").getJSONObject("bm").get("id").toString();
         beatmap = UsagiBot.getClient().getBeatmap(beatmapID);
         return beatmap;
+    }
+
+    /**
+     * Grabs the mods being played from gosumemory
+     * @return              The mods being played
+     * @throws IOException  If it cannot find the location of the file
+     */
+    public static String getModsFromGosuMemory() throws IOException {
+        JSONObject t = (JSONObject) (new JSONTokener(IOUtils.toString((new URL(webHookPath)).openStream()))).nextValue();
+        String mods = t.getJSONObject("menu").getJSONObject("mods").get("str").toString();
+        return mods;
     }
 
     /**

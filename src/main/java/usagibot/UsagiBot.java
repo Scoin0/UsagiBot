@@ -9,6 +9,7 @@ import usagibot.osu.irc.OsuIrc;
 import usagibot.twitch.TwitchClient;
 import usagibot.utils.Constants;
 import usagibot.utils.version.VersionUpdate;
+
 import java.io.IOException;
 
 @Slf4j

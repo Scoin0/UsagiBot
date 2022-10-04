@@ -50,4 +50,4 @@ As an example, `https://osu.ppy.sh/beatmapsets/53176#osu/162237`.
 * Support osu mods
 
 ---
-If there are any issues please let me know either in the issue tracker or DM me at `Scoin0#0002`.
+If there are any issues please let me know either in the issue tracker or DM me on Discord at `Scoin0#0002`.
