@@ -26,7 +26,7 @@ public class StatsCommand extends Command {
         NumberFormat nf = NumberFormat.getInstance(new Locale("en", "US"));
         User user = event.getClient().getUser();
         StringBuilder stats = new StringBuilder();
-        stats.append("Stats for '" + user.getUsername() + "':");
+        stats.append("Stats for " + user.getUsername() + ":");
         stats.append(" PP: " + nf.format(user.getStatistics().getPp()));
         stats.append(" | Rank: #" + nf.format(user.getStatistics().getGlobal_rank()));
         stats.append(" | Level: " + user.getStatistics().getLevel().getCurrent());
