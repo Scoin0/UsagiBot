@@ -31,7 +31,12 @@ public class NowPlayingCommand extends Command {
 
         try {
             if (Utility.findGosumemory()) {
-                event.getClient().sendMessage(UsagiBot.getConfig().getLocalParsedMessage(UsagiBot.getConfig().getNowPlayingMessage(), event.getClient().getBeatmap(), event.getEvent().getUser()));
+                String mods = Utility.getModsFromGosuMemory();
+                if (!mods.contains("NM")){
+                    event.getClient().sendMessage(UsagiBot.getConfig().getLocalParsedMessage(UsagiBot.getConfig().getNowPlayingMessage() + " +" + mods, event.getClient().getBeatmap(), event.getEvent().getUser()));
+                } else {
+                    event.getClient().sendMessage(UsagiBot.getConfig().getLocalParsedMessage(UsagiBot.getConfig().getNowPlayingMessage(), event.getClient().getBeatmap(), event.getEvent().getUser()));
+                }
             } else {
                 event.getClient().sendMessage("GOsumemory is not online!");
                 log.warn("GOsumemory is not online!");
