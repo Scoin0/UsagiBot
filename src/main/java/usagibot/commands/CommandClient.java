@@ -7,6 +7,7 @@ import com.github.twitch4j.common.events.domain.EventUser;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import usagibot.UsagiBot;
+import usagibot.commands.twitchcommands.RequestToggleCommand;
 import usagibot.osu.api.Beatmap;
 import usagibot.osu.api.GameMode;
 import usagibot.osu.api.User;
@@ -71,8 +72,8 @@ public class CommandClient {
      * @param user      The user that sent the beatmap
      * @param beatmap   The beatmap information
      */
-    public void sendIRCMessage(EventUser user, Beatmap beatmap, String message) {
-        UsagiBot.getIrcBot().getUserChannelDao().getUser(UsagiBot.getConfig().getBanchoUsername()).send().message(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuIrcMessage(), beatmap, user) + message);
+    public void sendIRCMessage(EventUser user, Beatmap beatmap) {
+        UsagiBot.getIrcBot().getUserChannelDao().getUser(UsagiBot.getConfig().getBanchoUsername()).send().message(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuIrcMessage(), beatmap, user));
     }
 
     /**
@@ -103,6 +104,28 @@ public class CommandClient {
     }
 
     /**
+     * Checks first to see if the sent beatmap is above the starlimit then check to see if
+     * requests are on. If so, send the beatmap to the streamer. If not, send the error message.
+     * @param event             The person who sent the map
+     * @param beatmapToReceive  The URL of the map sent.
+     */
+    public void receiveBeatmap(EventUser event, String beatmapToReceive) {
+        if (RequestToggleCommand.requestToggle) {
+            log.info("Received possible osu song request. Parsing now...");
+            beatmap = UsagiBot.getClient().getBeatmap(parseMessage(beatmapToReceive));
+            log.info("Beatmap ID Found: " + beatmap.getId());
+            if (beatmap.getDifficulty_rating() > UsagiBot.getConfig().getOsuStarLimit()) {
+                sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuStarLimitMessage(), beatmap, event));
+            } else {
+                sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getTwitchMessage(), beatmap, event));
+                sendIRCMessage(event, beatmap);
+            }
+        } else {
+            sendMessage("You cannot request a beatmap at this time.");
+        }
+    }
+
+    /**
      * Fires when a chat message is sent in Twitch chat
      * @param event The chat event
      */
@@ -114,6 +137,11 @@ public class CommandClient {
 
         String parts[] = null;
         String rawContent = event.getMessage();
+
+        // Receive, parse, and send beatmap to Osu! and Twitch Chat
+        if (event.getMessage().contains("https://osu.ppy.sh/")) {
+            receiveBeatmap(event.getUser(), event.getMessage());
+        }
 
         if (parts == null && rawContent.startsWith(getPrefix()))
             parts = Arrays.copyOf(rawContent.substring(getPrefix().length()).trim().split("\\s+", 2), 2);
