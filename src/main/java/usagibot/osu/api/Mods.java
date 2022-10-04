@@ -74,25 +74,6 @@ public enum Mods {
         return ret;
     }
 
-    public static LinkedList<Mods> fromShortNameCommaSeparated(String modString) {
-        prepare();
-        LinkedList<Mods> ret = new LinkedList<>();
-
-        if (modString.equalsIgnoreCase("None"))
-            return ret;
-
-        String[] modStrings = modString.split(",");
-        for (int i = 0; i < modStrings.length; i++) {
-            if (modStrings[i].length() == 0)
-                continue;
-            Mods mod = shortNames.get(modStrings[i]);
-            if (mod == null)
-                throw new RuntimeException(modStrings[i]);
-            ret.add(mod);
-        }
-        return ret;
-    }
-
     public static Mods fromShortName(String shortName) {
         prepare();
         return shortNames.get(shortName);
