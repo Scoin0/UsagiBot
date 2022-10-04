@@ -1,26 +1,25 @@
 package usagibot.commands;
 
 import lombok.Getter;
-
+import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 @Getter
+@Slf4j
 public abstract class Command {
 
     protected String name = null;
     protected String description = "No Description Available";
     protected ArrayList<String> usage = new ArrayList<>();
-    protected int cooldown = 0;
     protected String[] aliases = new String[0];
     protected Command[] subcommands = new Command[0];
 
     /**
      * The abstract for onCommand. Every command class needs this in order to run
      * @param event         The CommandEvent class
-     * @throws Throwable    Throws anything if needed
      */
-    public abstract void onCommand(CommandEvent event) throws Throwable;
+    public abstract void onCommand(CommandEvent event);
 
     /**
      * The part that actually runs the command.
@@ -40,8 +39,8 @@ public abstract class Command {
 
         try {
             onCommand(event);
-        } catch (Throwable t) {
-            throwException(t, event);
+        } catch (Exception e) {
+            log.warn(e.getMessage());
         }
     }
 
@@ -59,14 +58,5 @@ public abstract class Command {
             }
         }
         return false;
-    }
-
-    /**
-     * Throws anything
-     * @param t     Throwable
-     * @param event CommandEvent
-     */
-    protected void throwException (Throwable t, CommandEvent event) {
-        throwException(t, event);
     }
 }
