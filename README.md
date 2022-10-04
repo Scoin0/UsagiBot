@@ -20,17 +20,13 @@ pause
 ### Twitch Usage
 
 ---
-#### Commands
-
-`help` - Sends a link to the Commands wiki     
-`np` - Now Playing. This command will output the current playing song as a download link in chat.    
-`rq toggle` - Request Toggle. You can turn on and off requests if you'd like.     
-`stats` - Show basic stats on the streamers profile     
-`starlevel <number>` or `sl <number>` - Set star limit for requests.
+#### Here's a list of avaliable [Commands](https://github.com/Scoin0/UsagiBot/wiki/Commands)
 
 #### Requesting songs
-Anyone can request a song to be added. To do this just simply post the beatmapset link inside the chat.
-As an example, `https://osu.ppy.sh/beatmapsets/53176#osu/162237`.
+Anyone can request a song to be added. To do this just simply post the beatmapset link inside the chat.    
+As an example, `https://osu.ppy.sh/beatmapsets/53176#osu/162237`.     
+If you would like to tell the streamer to play certain mods, use `+<mods>`.    
+As an example, `https://osu.ppy.sh/beatmapsets/53176#osu/162237 +HDHR`.
 
 ### Requirements
 
@@ -47,7 +43,6 @@ As an example, `https://osu.ppy.sh/beatmapsets/53176#osu/162237`.
 ---
 
 * PP Calculation
-* Support osu mods
 
 ---
 If there are any issues please let me know either in the issue tracker or DM me on Discord at `Scoin0#0002`.
