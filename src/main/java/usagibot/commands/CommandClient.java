@@ -10,12 +10,9 @@ import usagibot.UsagiBot;
 import usagibot.commands.twitchcommands.RequestToggleCommand;
 import usagibot.osu.api.Beatmap;
 import usagibot.osu.api.GameMode;
+import usagibot.osu.api.Mods;
 import usagibot.osu.api.User;
 import usagibot.twitch.TwitchClient;
-
-import java.text.NumberFormat;
-import java.time.OffsetDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -71,9 +68,10 @@ public class CommandClient {
      * Sends a message within Osu
      * @param user      The user that sent the beatmap
      * @param beatmap   The beatmap information
+     * @param message   The message to send along with the IRCMessage
      */
-    public void sendIRCMessage(EventUser user, Beatmap beatmap) {
-        UsagiBot.getIrcBot().getUserChannelDao().getUser(UsagiBot.getConfig().getBanchoUsername()).send().message(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuIrcMessage(), beatmap, user));
+    public void sendIRCMessage(EventUser user, Beatmap beatmap, String message) {
+        UsagiBot.getIrcBot().getUserChannelDao().getUser(UsagiBot.getConfig().getBanchoUsername()).send().message(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuIrcMessage() + message, beatmap, user));
     }
 
     /**
@@ -114,11 +112,22 @@ public class CommandClient {
             log.info("Received possible osu song request. Parsing now...");
             beatmap = UsagiBot.getClient().getBeatmap(parseMessage(beatmapToReceive));
             log.info("Beatmap ID Found: " + beatmap.getId());
-            if (beatmap.getDifficulty_rating() > UsagiBot.getConfig().getOsuStarLimit()) {
-                sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuStarLimitMessage(), beatmap, event));
+            if (beatmapToReceive.contains("+")) {
+                String[] splitter = beatmapToReceive.split("\\+");
+                String mods = splitter[1];
+                if (beatmap.getDifficulty_rating() > UsagiBot.getConfig().getOsuStarLimit()) {
+                    sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuStarLimitMessage(), beatmap, event));
+                } else {
+                    sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getTwitchMessage() + " +" + Mods.toShortNamesContinuous(Mods.getMods(Mods.fromShortNamesContinuous(mods))) , beatmap, event));
+                    sendIRCMessage(event, beatmap, " +" + Mods.toShortNamesContinuous(Mods.getMods(Mods.fromShortNamesContinuous(mods))));
+                }
             } else {
-                sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getTwitchMessage(), beatmap, event));
-                sendIRCMessage(event, beatmap);
+                if (beatmap.getDifficulty_rating() > UsagiBot.getConfig().getOsuStarLimit()) {
+                    sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuStarLimitMessage(), beatmap, event));
+                } else {
+                    sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getTwitchMessage(), beatmap, event));
+                    sendIRCMessage(event, beatmap, "");
+                }
             }
         } else {
             sendMessage("You cannot request a beatmap at this time.");
@@ -132,7 +141,7 @@ public class CommandClient {
     @EventSubscriber
     public void onChannelMessage(ChannelMessageEvent event) {
 
-        // Do not listen to self.
+        // Do not listen to self. Probably not needed, but just in case.
         if (event.getUser().getName().equals("RNRPBot")) return;
 
         String parts[] = null;
@@ -147,7 +156,6 @@ public class CommandClient {
             parts = Arrays.copyOf(rawContent.substring(getPrefix().length()).trim().split("\\s+", 2), 2);
 
         if (parts != null) {
-
             String name = parts[0];
             String[] args = parts[1] == null ? new String[0] : parts[1].split("\\s+");
 
