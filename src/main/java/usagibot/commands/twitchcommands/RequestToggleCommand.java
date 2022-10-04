@@ -7,7 +7,7 @@ import usagibot.commands.CommandEvent;
 @Getter
 public class RequestToggleCommand extends Command {
 
-    public boolean requestToggle = true;
+    public static boolean requestToggle = true;
 
     /**
      * Turns on/off the requesting feature.
@@ -15,7 +15,7 @@ public class RequestToggleCommand extends Command {
     public RequestToggleCommand() {
         name = "requesttoggle";
         description = "Turns on/off the requesting feature. (Default = on)";
-        aliases = new String[]{"rp"};
+        aliases = new String[]{"rq"};
         usage.add("rq");
         usage.add("rq toggle");
         usage.add("rq on|off");
