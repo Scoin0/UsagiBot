@@ -3,7 +3,6 @@ package usagibot.commands.twitchcommands;
 import usagibot.commands.Command;
 import usagibot.commands.CommandEvent;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 public class HelpCommand extends Command {
@@ -48,16 +47,27 @@ public class HelpCommand extends Command {
      */
     private void sendCommandHelp(CommandEvent event, String commandName) {
 
-        boolean isFound;
+        boolean isCommandFound;
+        boolean isAliasCommandFound;
         Optional<Command> command = event.getClient().getCommands().stream().filter(c -> c.getName().equalsIgnoreCase(commandName)).findAny();
+        Optional<Command> aliasCommand = event.getClient().getCommands().stream().filter(c -> c.isCommandFor(commandName)).findAny();
+
         if (command.isPresent()) {
-            isFound = !command.get().getName().equalsIgnoreCase("unassigned");
+            isCommandFound = !command.get().getName().equalsIgnoreCase("unassigned");
         } else {
-            isFound = false;
+            isCommandFound = false;
         }
 
-        if (isFound) {
+        if (aliasCommand.isPresent()) {
+            isAliasCommandFound = !aliasCommand.get().getName().equalsIgnoreCase("unassigned");
+        } else {
+            isAliasCommandFound = false;
+        }
+
+        if (isCommandFound) {
             event.getClient().sendMessage(command.get().getDescription() + " | Usage: " + command.get().getUsage());
+        } else if (isAliasCommandFound) {
+            event.getClient().sendMessage(aliasCommand.get().getDescription() + " | Usage: " + aliasCommand.get().getUsage());
         } else {
             event.getClient().sendMessage("Command not found or does not exist.");
         }
