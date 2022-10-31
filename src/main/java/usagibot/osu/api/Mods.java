@@ -12,6 +12,7 @@ import java.util.LinkedList;
  * Follows the osu!web documentation (As of September 13th, 2022)
  * Description: Represents a beatmap. This extends BeatmapCompact with additional attributes.
  * URL:         https://github.com/ppy/osu-api/wiki#mods
+ * I looked at Tillerino bot for most of this
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter

@@ -1,5 +1,6 @@
 package usagibot.osu.api;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
@@ -9,20 +10,26 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum GameMode {
 
-    CATCH("fruits"),
-    MAINA("mania"),
-    OSU("osu"),
-    TAIKO("taiko");
+    OSU("osu", 0),
+    TAIKO("taiko", 1),
+    CATCH("fruits", 2),
+    MAINA("mania", 3);
 
     @JsonValue
     private String name;
+    @JsonProperty("mode")
+    private int id;
 
-    GameMode(String name) {
+    GameMode(String name, int id) {
         this.name = name;
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
+    public int getId() {
+        return id;
+    }
 }
