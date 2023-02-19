@@ -1,6 +1,5 @@
 plugins {
     id 'java'
-    id 'application'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
@@ -10,9 +9,9 @@ description "UsagiBot"
 
 tasks.named('shadowJar') {
     manifest {
-        attributes( 'Implementation-Title'   : project.name,
-                    'Implementation-Version' : project.version,
-                    'Main-Class'             : 'usagibot.UsagiBot')
+        attributes('Implementation-Title': project.name,
+                'Implementation-Version': project.version,
+                'Main-Class': 'usagibot.UsagiBot')
     }
 }
 
