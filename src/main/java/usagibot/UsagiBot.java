@@ -51,7 +51,6 @@ public class UsagiBot {
             client = OsuClient.createClient(config.getOsuClientId(), config.getOsuAPIKey());
         });
 
-
         osuIrcThread = new Thread(() -> {
             osuIrcThread.setName("Osu IRC");
             OsuIrc.Builder();

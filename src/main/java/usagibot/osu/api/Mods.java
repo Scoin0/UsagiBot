@@ -12,6 +12,7 @@ import java.util.LinkedList;
  * Follows the osu!web documentation (As of September 13th, 2022)
  * Description: Represents a beatmap. This extends BeatmapCompact with additional attributes.
  * URL:         https://github.com/ppy/osu-api/wiki#mods
+ * I looked at Tillerino bot for most of this
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
@@ -136,21 +137,4 @@ public enum Mods {
         }
         return ret.toString();
     }
-
-    public static long fixNC(long mods) {
-        if((mods & Nightcore.bit) != 0) {
-            mods |= Nightcore.bit;
-            mods &= ~DoubleTime.bit;
-        }
-        return mods;
-    }
-
-    public static long fixPF(long mods) {
-        if((mods & Perfect.bit) != 0) {
-            mods |= Perfect.bit;
-            mods &= ~SuddenDeath.bit;
-        }
-        return mods;
-    }
-
 }
