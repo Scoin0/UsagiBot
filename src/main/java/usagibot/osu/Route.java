@@ -6,11 +6,6 @@ public class Route {
     public static final Route BEATMAP = new Route(Method.GET, "beatmaps/{beatmap_id}");
     public static final Route BEATMAP_ATTRIBUTES = new Route(Method.POST, "beatmaps/{beatmap_id}/attributes");
     public static final Route USER = new Route(Method.GET, "users/{user}/{mode}");
-    public static final Route UPDATE_USER = new Route(Method.POST, "update?user={user}&mode={mode}");
-    public static final Route ALL_STAT_UPDATES = new Route(Method.GET, "stats_history?user={user}&mode={mode}&from={from}&to={to}");
-    public static final Route HIGHSCORES = new Route(Method.GET, "hiscores?user={user}&mode={mode}&from={from}&to={to}");
-    public static final Route PEAK = new Route(Method.GET, "peak?user={user}&mode={mode}");
-    public static final Route BEST_PLAYS = new Route(Method.GET, "bestplays?mode={mode}&from={from}&to={to}&limit={limit}");
 
     private Method method;
     private String route;

@@ -137,21 +137,4 @@ public enum Mods {
         }
         return ret.toString();
     }
-
-    public static long fixNC(long mods) {
-        if((mods & Nightcore.bit) != 0) {
-            mods |= Nightcore.bit;
-            mods &= ~DoubleTime.bit;
-        }
-        return mods;
-    }
-
-    public static long fixPF(long mods) {
-        if((mods & Perfect.bit) != 0) {
-            mods |= Perfect.bit;
-            mods &= ~SuddenDeath.bit;
-        }
-        return mods;
-    }
-
 }
