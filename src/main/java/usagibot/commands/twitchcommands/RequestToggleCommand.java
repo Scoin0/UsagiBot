@@ -1,6 +1,7 @@
 package usagibot.commands.twitchcommands;
 
 import lombok.Getter;
+import usagibot.UsagiBot;
 import usagibot.commands.Command;
 import usagibot.commands.CommandEvent;
 
@@ -30,7 +31,7 @@ public class RequestToggleCommand extends Command {
 
         if (event.getArgs().length == 0) {
             event.getClient().sendMessage("The current status of requesting beatmaps is: " + requestToggle);
-        } else {
+        } else if (event.getEvent().getUser().getName().equals(UsagiBot.getConfig().getTwitchChannel())) {
             if (event.getArgs()[0].equalsIgnoreCase("toggle")) {
                 requestToggle = !requestToggle;
                 event.getClient().sendMessage("The current status of requesting beatmaps is: " + requestToggle);
