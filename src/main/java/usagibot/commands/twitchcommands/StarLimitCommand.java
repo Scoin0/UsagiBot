@@ -28,22 +28,22 @@ public class StarLimitCommand extends Command {
 
         if (event.getArgs().length == 0) {
             event.getClient().sendMessage("The current star limit is: " + UsagiBot.getConfig().getOsuStarLimit() + "*");
-        }
-
-        if (event.getArgs().length == 1) {
-            try {
-                double newStarLimit = Double.parseDouble(event.getArgs()[0]);
-                if (newStarLimit >= 13) {
-                    event.getClient().sendMessage("Please enter a number below 13.");
-                } else {
-                    event.getClient().sendMessage("The star limit has been changed to " + newStarLimit);
-                    log.info("The star limit has been changed to " + newStarLimit);
-                    UsagiBot.getConfig().setOsuStarLimit(newStarLimit);
+        } else if (event.getEvent().getUser().getName().equals(UsagiBot.getConfig().getTwitchChannel())) {
+            if (event.getArgs().length == 1) {
+                try {
+                    double newStarLimit = Double.parseDouble(event.getArgs()[0]);
+                    if (newStarLimit <= 0 || newStarLimit >= 13) {
+                        event.getClient().sendMessage("Please enter a number between 0.1 and 12.99!");
+                    } else {
+                        event.getClient().sendMessage("The star limit has been changed to " + newStarLimit);
+                        log.info("The star limit has been changed to " + newStarLimit);
+                        UsagiBot.getConfig().setOsuStarLimit(newStarLimit);
+                    }
+                } catch (NumberFormatException e) {
+                    event.getClient().sendMessage("You've sent something that is not a number.");
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (NumberFormatException e) {
-                event.getClient().sendMessage("You've sent something that is not a number.");
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
     }
