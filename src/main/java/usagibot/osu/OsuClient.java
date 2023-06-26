@@ -12,6 +12,7 @@ import usagibot.osu.api.GameMode;
 import usagibot.osu.api.User;
 
 import java.io.IOException;
+import java.util.Locale;
 
 @Slf4j
 public class OsuClient {
@@ -126,6 +127,58 @@ public class OsuClient {
         return null;
     }
 
+    public <T> T postApi(String compiledRoute, String token, GameMode mode, Class<T> tClass) {
+
+        OkHttpClient client = new OkHttpClient();
+
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode body = mapper.createObjectNode();
+        body.put("mods", "0");
+        body.put("ruleset", mode.getName().toLowerCase(Locale.ROOT));
+
+        Request request = new Request.Builder()
+                .url(OSU_ENDPOINT + compiledRoute)
+                .addHeader("Authorization", "Bearer " + token)
+                .addHeader("Content-Type", "application/json")
+                .post(RequestBody.create(body.toString(), MediaType.get("application/json")))
+                .build();
+
+        try {
+            Response response = client.newCall(request).execute();
+            String responseBody = response.body().string();
+            return new JsonMapper().readValue(responseBody, tClass);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public <T> T postApi(String compiledRoute, String token, GameMode mode, int mods, Class<T> tClass) {
+
+        OkHttpClient client = new OkHttpClient();
+
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode body = mapper.createObjectNode();
+        body.put("mods", mods);
+        body.put("ruleset", mode.getName().toLowerCase(Locale.ROOT));
+
+        Request request = new Request.Builder()
+                .url(OSU_ENDPOINT + compiledRoute)
+                .addHeader("Authorization", "Bearer " + token)
+                .addHeader("Content-Type", "application/json")
+                .post(RequestBody.create(body.toString(), MediaType.get("application/json")))
+                .build();
+
+        try {
+            Response response = client.newCall(request).execute();
+            String responseBody = response.body().string();
+            return new JsonMapper().readValue(responseBody, tClass);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     /**
      * Get Beatmap information
      * @param beatmapId The beatmap ID
@@ -152,6 +205,24 @@ public class OsuClient {
      */
     public BeatmapAttributes getBeatmapAttributes(String beatmapId) {
         return postApi(Route.BEATMAP_ATTRIBUTES.compile(beatmapId), token, BeatmapAttributes.class);
+    }
+
+    /**
+     * Get BeatmapAttributes information
+     * @param beatmapId The information about the beatmap
+     * @return          The beatmap attributes
+     */
+    public BeatmapAttributes getBeatmapAttributes(String beatmapId, GameMode mode) {
+        return postApi(Route.BEATMAP_ATTRIBUTES.compile(beatmapId), token, mode, BeatmapAttributes.class);
+    }
+
+    /**
+     * Get BeatmapAttributes information
+     * @param beatmapId The information about the beatmap
+     * @return          The beatmap attributes
+     */
+    public BeatmapAttributes getBeatmapAttributes(String beatmapId, GameMode mode, int mods) {
+        return postApi(Route.BEATMAP_ATTRIBUTES.compile(beatmapId), token, mode, mods, BeatmapAttributes.class);
     }
 
     public static class DefaultTokenObject {

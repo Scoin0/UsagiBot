@@ -9,11 +9,14 @@ import org.slf4j.LoggerFactory;
 import usagibot.UsagiBot;
 import usagibot.osu.api.Beatmap;
 import usagibot.osu.api.BeatmapAttributes;
+import usagibot.osu.api.GameMode;
+import usagibot.osu.api.Mods;
 import usagibot.utils.Utility;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -152,23 +155,24 @@ public class Configuration {
      * @param user      The user who sent the message on Twitch
      * @return          The parsed and compiled message
      */
-    public String getAPIParsedMessage(String message, Beatmap beatmap, EventUser user) {
-        BeatmapAttributes map = UsagiBot.getClient().getBeatmapAttributes(String.valueOf(beatmap.getId()));
+    public String getAPIParsedMessage(String message, Beatmap beatmap, EventUser user, int mods) {
+        BeatmapAttributes map = UsagiBot.getClient().getBeatmapAttributes((String.valueOf(beatmap.getId())), beatmap.getMode(), mods);
         Map<String, Object> keywords = new HashMap<>();
-        keywords.put("music_note_emoji", "\u266B");
+        DecimalFormat dFormat = new DecimalFormat("#.##");
+        keywords.put("music_note_emoji", "♫");
         keywords.put("star_emoji", "\u2605");
         keywords.put("red_exclamation", "\u2757");
         keywords.put("ranked_status", beatmap.getStatus());
         keywords.put("artist", beatmap.getBeatmapset().getArtist());
         keywords.put("title", beatmap.getBeatmapset().getTitle());
         keywords.put("version", beatmap.getVersion());
-        keywords.put("length", Utility.convertTime(beatmap.getTotal_length()));
-        keywords.put("star_rating", beatmap.getDifficulty_rating());
+        keywords.put("length", Utility.convertTime(Mods.convertTime(beatmap.getTotal_length(), mods)));
+        keywords.put("star_rating", dFormat.format(map.getAttributes().getStar_rating()));
         keywords.put("beatmap_id", beatmap.getId());
         keywords.put("beatmap_url", beatmap.getUrl());
-        keywords.put("bpm", beatmap.getBpm());
-        keywords.put("ar", beatmap.getAr());
-        keywords.put("od", map.getAttributes().getOverall_difficulty());
+        keywords.put("bpm", Mods.convertBPM(beatmap.getBpm(), mods));
+        keywords.put("ar", map.getAttributes().getApproach_rate());
+        keywords.put("od", dFormat.format(map.getAttributes().getOverall_difficulty()));
         keywords.put("user_sent", user.getName());
         keywords.put("star_rating_limit", osuStarLimit);
         return parseKeywords(message, keywords);

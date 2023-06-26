@@ -2,11 +2,9 @@ package usagibot.osu.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.*;
 
 /**
  * Follows the osu!web documentation (As of September 13th, 2022)
@@ -16,6 +14,7 @@ import java.util.LinkedList;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
+@Slf4j
 public enum Mods {
 
     NoFail      (1, "NF"),
@@ -107,7 +106,7 @@ public enum Mods {
         return  ret;
     }
 
-    public static Long fromShortNamesContinuous(String message) {
+    public static Optional<Long> fromShortNamesContinuous(String message) {
         long mods = 0;
         for (int i = 0; i < message.length(); i+=2) {
             try {
@@ -126,7 +125,7 @@ public enum Mods {
                 return null;
             }
         }
-        return mods;
+        return Optional.of(mods);
     }
 
     public static String toShortNamesContinuous(Collection<Mods> mods) {
@@ -136,5 +135,33 @@ public enum Mods {
             ret.append(mod.getShortName());
         }
         return ret.toString();
+    }
+
+    public static int convertTime(int time, int mods) {
+        String modType = Mods.toShortNamesContinuous(Mods.getMods(mods));
+
+        if (modType.contains("NC") || modType.contains("DT")) {
+            time = (int) (time / 1.5);
+        }
+        return time;
+    }
+
+    public static double convertBPM(double bpm, int mods) {
+        String modType = Mods.toShortNamesContinuous(Mods.getMods(mods));
+
+        if (modType.contains("NC") || modType.contains("DT")) {
+            bpm = bpm * 1.5;
+        }
+        return bpm;
+    }
+
+    public static int convertToInt(String mods) {
+        long modLong;
+        if (mods.equals("0")) {
+            modLong = 0;
+        } else {
+            modLong = fromShortNamesContinuous(mods).get();
+        }
+        return (int) modLong;
     }
 }
