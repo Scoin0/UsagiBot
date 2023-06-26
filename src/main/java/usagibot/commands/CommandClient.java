@@ -4,6 +4,7 @@ import com.github.philippheuer.events4j.simple.SimpleEventHandler;
 import com.github.philippheuer.events4j.simple.domain.EventSubscriber;
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
 import com.github.twitch4j.common.events.domain.EventUser;
+import kotlin.text.Regex;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import usagibot.UsagiBot;
@@ -27,6 +28,7 @@ public class CommandClient {
     private User user = UsagiBot.getClient().getUser(UsagiBot.getConfig().getOsuUsername(), GameMode.OSU);
     private final ArrayList<Command> commands;
     private final HashMap<String, Integer> commandIndex;
+    private String hackyMods = "0";
 
     /**
      * The CommandClient Constructor
@@ -71,7 +73,7 @@ public class CommandClient {
      * @param message   The message to send along with the IRCMessage
      */
     public void sendIRCMessage(EventUser user, Beatmap beatmap, String message) {
-        UsagiBot.getIrcBot().getUserChannelDao().getUser(UsagiBot.getConfig().getBanchoUsername()).send().message(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuIrcMessage() + message, beatmap, user));
+        UsagiBot.getIrcBot().getUserChannelDao().getUser(UsagiBot.getConfig().getBanchoUsername()).send().message(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuIrcMessage() + message, beatmap, user, Mods.convertToInt(hackyMods)));
     }
 
     /**
@@ -80,7 +82,7 @@ public class CommandClient {
      * @return          The beatmap url
      */
     public String parseMessage(String message) {
-        String delimiters = "https?:\\/\\/osu.ppy.sh\\/(beatmapsets)\\/([0-9]*)(#osu|#taiko|#ctb|#maina)\\/([0-9]*)";
+        String delimiters = "https?:\\/\\/osu.ppy.sh\\/(beatmapsets)\\/([0-9]*)(#osu|#taiko|#ctb|#mania)\\/([0-9]*)";
         Pattern urlPattern = Pattern.compile(delimiters, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
         Matcher matcher = urlPattern.matcher(message);
         List<String> urlSplit = new ArrayList<String>();
@@ -115,17 +117,20 @@ public class CommandClient {
             if (beatmapToReceive.contains("+")) {
                 String[] splitter = beatmapToReceive.split("\\+");
                 String mods = splitter[1];
+                hackyMods = mods;
+                Optional<Long> aLong = Mods.fromShortNamesContinuous(mods);
+                String hackyFix = Mods.toShortNamesContinuous(Mods.getMods(aLong.get()));
                 if (beatmap.getDifficulty_rating() > UsagiBot.getConfig().getOsuStarLimit()) {
-                    sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuStarLimitMessage(), beatmap, event));
+                    sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuStarLimitMessage(), beatmap, event, Mods.convertToInt(mods)));
                 } else {
-                    sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getTwitchMessage() + " +" + Mods.toShortNamesContinuous(Mods.getMods(Mods.fromShortNamesContinuous(mods))) , beatmap, event));
-                    sendIRCMessage(event, beatmap, " +" + Mods.toShortNamesContinuous(Mods.getMods(Mods.fromShortNamesContinuous(mods))));
+                    sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getTwitchMessage() + " +" + hackyFix, beatmap, event, Mods.convertToInt(mods)));
+                    sendIRCMessage(event, beatmap, " +" + hackyFix);
                 }
             } else {
                 if (beatmap.getDifficulty_rating() > UsagiBot.getConfig().getOsuStarLimit()) {
-                    sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuStarLimitMessage(), beatmap, event));
+                    sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuStarLimitMessage(), beatmap, event, 0));
                 } else {
-                    sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getTwitchMessage(), beatmap, event));
+                    sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getTwitchMessage(), beatmap, event, 0));
                     sendIRCMessage(event, beatmap, "");
                 }
             }
