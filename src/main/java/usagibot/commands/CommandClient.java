@@ -117,6 +117,7 @@ public class CommandClient {
             if (beatmapToReceive.contains("+")) {
                 String[] splitter = beatmapToReceive.split("\\+");
                 String mods = splitter[1];
+                // Fuck me, I wanna rewrite all of this.
                 hackyMods = mods;
                 Optional<Long> aLong = Mods.fromShortNamesContinuous(mods);
                 String hackyFix = Mods.toShortNamesContinuous(Mods.getMods(aLong.get()));
