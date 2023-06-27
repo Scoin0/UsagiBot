@@ -42,13 +42,11 @@ public class Route {
 
         StringBuilder compiledRoute = new StringBuilder(route);
 
-        for (String param : params)
-            compiledRoute.replace(
-                    compiledRoute.indexOf("{"),
-                    compiledRoute.indexOf("}") + 1,
-                    param
-            );
+        for (String param : params) {
+            int openingBraceIndex = compiledRoute.indexOf("{");
+            int closingBraceIndex = compiledRoute.indexOf("}", openingBraceIndex);
+            compiledRoute.replace(openingBraceIndex, closingBraceIndex + 1, param);
+        }
         return compiledRoute.toString();
     }
-
 }

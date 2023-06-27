@@ -47,13 +47,12 @@ public class StatsCommand extends Command {
      */
     public String getStats(User user) {
         NumberFormat nf = NumberFormat.getInstance(new Locale("en", "US"));
-        StringBuilder stats = new StringBuilder();
-        stats.append("Stats for " + user.getUsername() + ":");
-        stats.append(" PP: " + nf.format(user.getStatistics().getPp()));
-        stats.append(" | Rank: #" + nf.format(user.getStatistics().getGlobal_rank()));
-        stats.append(" | Level: " + user.getStatistics().getLevel().getCurrent());
-        stats.append(" | Accuracy: " + user.getStatistics().getHit_accuracy() + "%");
-        stats.append(" | Play Count: " + nf.format(user.getStatistics().getPlay_count()));
-        return stats.toString();
+        String stats = "Stats for " + user.getUsername() + ":" +
+                " PP: " + nf.format(user.getStatistics().getPp()) +
+                " | Rank: #" + nf.format(user.getStatistics().getGlobal_rank()) +
+                " | Level: " + user.getStatistics().getLevel().getCurrent() +
+                " | Accuracy: " + user.getStatistics().getHit_accuracy() + "%" +
+                " | Play Count: " + nf.format(user.getStatistics().getPlay_count());
+        return stats;
     }
 }

@@ -9,6 +9,7 @@ import usagibot.osu.api.Beatmap;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.URL;
+import java.time.Duration;
 
 @Slf4j
 public class Utility {
@@ -22,17 +23,22 @@ public class Utility {
      * @return  Human-readable time
      */
     public static String convertTime(int totalTime) {
+        Duration time = Duration.ofSeconds(totalTime);
         int hours = totalTime / 3600;
         int minutes = (totalTime % 3600) / 60;
         int seconds = totalTime % 60;
 
-        String h = (hours > 0 ? hours + ":" : "");
-        String m = (minutes < 10 && minutes > 0 && hours > 0 ? "0" : "")
-                + (minutes > 0 ? (hours > 0 && seconds == 0 ? String.valueOf(minutes) : minutes + ":") : "");
-        String s = (seconds == 0 && (hours > 0 || minutes > 0) ? "" : (seconds < 10 && (hours > 0 || minutes > 0) ? "0" : "")
-                + seconds + "");
+        String formattedTime = "";
 
-        return h + (hours > 0 ? "" : "") + m + (minutes > 0 ? "" : "") + s;
+        if (hours > 0) {
+            formattedTime += String.format("%d:%02d:%02d", hours, minutes, seconds);
+        } else if (minutes > 0) {
+            formattedTime += String.format("%d:%02d", minutes, seconds);
+        } else {
+            formattedTime += String.format("0:%02d", seconds);
+        }
+
+        return formattedTime;
     }
 
     /**
