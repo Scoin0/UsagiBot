@@ -170,7 +170,7 @@ public class Configuration {
         keywords.put("beatmap_id", beatmap.getId());
         keywords.put("beatmap_url", beatmap.getUrl());
         keywords.put("bpm", Mods.convertBPM(beatmap.getBpm(), mods));
-        keywords.put("ar", map.getAttributes().getApproach_rate());
+        keywords.put("ar", dFormat.format(map.getAttributes().getApproach_rate()));
         keywords.put("od", dFormat.format(map.getAttributes().getOverall_difficulty()));
         keywords.put("user_sent", user.getName());
         keywords.put("star_rating_limit", osuStarLimit);
