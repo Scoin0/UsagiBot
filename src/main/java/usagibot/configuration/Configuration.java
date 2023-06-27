@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import usagibot.UsagiBot;
 import usagibot.osu.api.Beatmap;
 import usagibot.osu.api.BeatmapAttributes;
-import usagibot.osu.api.GameMode;
 import usagibot.osu.api.Mods;
 import usagibot.utils.Utility;
 
@@ -159,7 +158,7 @@ public class Configuration {
         BeatmapAttributes map = UsagiBot.getClient().getBeatmapAttributes((String.valueOf(beatmap.getId())), beatmap.getMode(), mods);
         Map<String, Object> keywords = new HashMap<>();
         DecimalFormat dFormat = new DecimalFormat("#.##");
-        keywords.put("music_note_emoji", "♫");
+        keywords.put("music_note_emoji", "\u266B");
         keywords.put("star_emoji", "\u2605");
         keywords.put("red_exclamation", "\u2757");
         keywords.put("ranked_status", beatmap.getStatus());

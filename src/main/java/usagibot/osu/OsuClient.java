@@ -13,6 +13,7 @@ import usagibot.osu.api.User;
 
 import java.io.IOException;
 import java.util.Locale;
+import java.util.Objects;
 
 @Slf4j
 public class OsuClient {
@@ -171,7 +172,7 @@ public class OsuClient {
 
         try {
             Response response = client.newCall(request).execute();
-            String responseBody = response.body().string();
+            String responseBody = Objects.requireNonNull(response.body()).string();
             return new JsonMapper().readValue(responseBody, tClass);
         } catch (IOException e) {
             e.printStackTrace();
