@@ -169,7 +169,7 @@ public class Configuration {
         keywords.put("star_rating", dFormat.format(map.getAttributes().getStar_rating()));
         keywords.put("beatmap_id", beatmap.getId());
         keywords.put("beatmap_url", beatmap.getUrl());
-        keywords.put("bpm", Mods.convertBPM(beatmap.getBpm(), mods));
+        keywords.put("bpm", dFormat.format(Mods.convertBPM(beatmap.getBpm(), mods)));
         keywords.put("ar", dFormat.format(map.getAttributes().getApproach_rate()));
         keywords.put("od", dFormat.format(map.getAttributes().getOverall_difficulty()));
         keywords.put("user_sent", user.getName());
