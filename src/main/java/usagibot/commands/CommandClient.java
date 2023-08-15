@@ -71,8 +71,8 @@ public class CommandClient {
      * @param beatmap   The beatmap information
      * @param message   The message to send along with the IRCMessage
      */
-    public void sendIRCMessage(EventUser user, Beatmap beatmap, String message) {
-        UsagiBot.getIrcBot().getUserChannelDao().getUser(UsagiBot.getConfig().getBanchoUsername()).send().message(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuIrcMessage() + message, beatmap, user, Mods.convertToInt(hackyMods)));
+    public void sendIRCMessage(EventUser user, Beatmap beatmap, String message, int mods) {
+        UsagiBot.getIrcBot().getUserChannelDao().getUser(UsagiBot.getConfig().getBanchoUsername()).send().message(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuIrcMessage() + message, beatmap, user, mods));
     }
 
     /**
@@ -128,14 +128,14 @@ public class CommandClient {
                     sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuStarLimitMessage(), beatmap, event, Mods.convertToInt(mods)));
                 } else {
                     sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getTwitchMessage() + " +" + hackyFix, beatmap, event, Mods.convertToInt(mods)));
-                    sendIRCMessage(event, beatmap, " +" + hackyFix);
+                    sendIRCMessage(event, beatmap, " +" + hackyFix, Mods.convertToInt(mods));
                 }
             } else {
                 if (beatmap.getDifficulty_rating() > UsagiBot.getConfig().getOsuStarLimit()) {
                     sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuStarLimitMessage(), beatmap, event, 0));
                 } else {
                     sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getTwitchMessage(), beatmap, event, 0));
-                    sendIRCMessage(event, beatmap, "");
+                    sendIRCMessage(event, beatmap, "", 0);
                 }
             }
         } else {
