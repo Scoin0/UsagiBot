@@ -2,6 +2,7 @@ package usagibot.osu.irc;
 
 import lombok.extern.slf4j.Slf4j;
 import org.pircbotx.Configuration;
+import org.pircbotx.delay.Delay;
 import usagibot.UsagiBot;
 
 import java.nio.charset.StandardCharsets;
@@ -27,7 +28,8 @@ public class OsuIrc {
                 .setName(username)
                 .addAutoJoinChannel(autoJoinChannel)
                 .setServerPassword(password)
-                .setAutoReconnect(false)
+                .setAutoReconnect(true)
+                .setAutoReconnectAttempts(10)
                 .setEncoding(StandardCharsets.UTF_8)
                 .addListener(new OsuListener())
                 .buildConfiguration();
