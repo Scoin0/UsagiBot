@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'me.Scoin0'
-version '2.0.3'
+version '2.0.5'
 description "UsagiBot"
 
 tasks.named('shadowJar') {
@@ -40,5 +40,5 @@ dependencies {
     implementation group: 'org.json', name: 'json', version: '20220320'
     implementation 'com.github.pircbotx:pircbotx:2.2'
 
-    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.26'
 }
