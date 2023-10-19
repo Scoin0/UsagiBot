@@ -52,6 +52,8 @@ public class TwitchClient {
      * Add commands to the list of current avaliable commands
      */
     public void addCommands() {
+        commandClient.addCommand(new BanCommand());
+        commandClient.addCommand(new UnbanCommand());
         commandClient.addCommand(new HelpCommand());
         commandClient.addCommand(new NowPlayingCommand());
         commandClient.addCommand(new RequestToggleCommand());

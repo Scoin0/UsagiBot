@@ -3,6 +3,7 @@ package usagibot;
 import lombok.extern.slf4j.Slf4j;
 import org.pircbotx.PircBotX;
 import org.pircbotx.exception.IrcException;
+import usagibot.configuration.BannedUsers;
 import usagibot.configuration.Configuration;
 import usagibot.osu.OsuClient;
 import usagibot.osu.irc.OsuIrc;
@@ -16,6 +17,7 @@ import java.io.IOException;
 public class UsagiBot {
 
     static Configuration config = new Configuration();
+    static BannedUsers bannedUsers = new BannedUsers();
     static OsuClient client;
     static PircBotX bot;
 
@@ -27,11 +29,15 @@ public class UsagiBot {
         return config;
     }
 
+    public static BannedUsers getBannedUsers() {
+        return bannedUsers;
+    }
+
     public static OsuClient getClient() {
         return client;
     }
 
-    public static PircBotX getIrcBot(){
+    public static PircBotX getIrcBot() {
         return bot;
     }
 
