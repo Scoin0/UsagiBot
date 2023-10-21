@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -185,22 +187,23 @@ public class Configuration {
      * @return          The parsed and complied message
      * @throws IOException  If it cannot find the gosumemory file
      */
-    public String getLocalParsedMessage(String message, Beatmap beatmap, EventUser user) throws IOException {
-        BeatmapAttributes map = UsagiBot.getClient().getBeatmapAttributes(String.valueOf(Utility.getSongFromGosuMemory().getId()));
+    public String getLocalParsedMessage(String message, Beatmap beatmap, EventUser user) throws IOException, ExecutionException, InterruptedException {
+        Future<Beatmap> futureBeatmap = Utility.fetchBeatmapInBackground();
+        BeatmapAttributes map = UsagiBot.getClient().getBeatmapAttributes(String.valueOf(futureBeatmap.get().getId()));
         Map<String, Object> keywords = new HashMap<>();
         keywords.put("music_note_emoji", "\u266B");
         keywords.put("star_emoji", "\u2605");
         keywords.put("red_exclamation", "\u2757");
-        keywords.put("ranked_status", Utility.getSongFromGosuMemory().getStatus());
-        keywords.put("artist", Utility.getSongFromGosuMemory().getBeatmapset().getArtist());
-        keywords.put("title", Utility.getSongFromGosuMemory().getBeatmapset().getTitle());
-        keywords.put("version", Utility.getSongFromGosuMemory().getVersion());
-        keywords.put("length", Utility.convertTime(Utility.getSongFromGosuMemory().getTotal_length()));
-        keywords.put("star_rating", Utility.getSongFromGosuMemory().getDifficulty_rating());
-        keywords.put("beatmap_id", Utility.getSongFromGosuMemory().getBeatmapset_id());
-        keywords.put("beatmap_url", Utility.getSongFromGosuMemory().getUrl());
-        keywords.put("bpm", Utility.getSongFromGosuMemory().getBpm());
-        keywords.put("ar", Utility.getSongFromGosuMemory().getAr());
+        keywords.put("ranked_status", futureBeatmap.get().getStatus());
+        keywords.put("artist", futureBeatmap.get().getBeatmapset().getArtist());
+        keywords.put("title", futureBeatmap.get().getBeatmapset().getTitle());
+        keywords.put("version", futureBeatmap.get().getVersion());
+        keywords.put("length", Utility.convertTime(futureBeatmap.get().getTotal_length()));
+        keywords.put("star_rating", futureBeatmap.get().getDifficulty_rating());
+        keywords.put("beatmap_id", futureBeatmap.get().getBeatmapset_id());
+        keywords.put("beatmap_url", futureBeatmap.get().getUrl());
+        keywords.put("bpm", futureBeatmap.get().getBpm());
+        keywords.put("ar", futureBeatmap.get().getAr());
         keywords.put("od", map.getAttributes().getOverall_difficulty());
         keywords.put("user_sent", user.getName());
         keywords.put("star_rating_limit", osuStarLimit);
