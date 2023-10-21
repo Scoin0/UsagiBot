@@ -7,6 +7,8 @@ import org.json.JSONArray;
 import usagibot.UsagiBot;
 import usagibot.utils.Constants;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 
@@ -32,7 +34,7 @@ public class VersionUtil {
      * @return  The latest version off of Github Releases
      */
     public static Version getLatestVersion() {
-        version = getGithubValues().getTag_name();
+        version = Constants.gitHubInfo.getTag_name();
         return Version.fromString(version);
     }
 
@@ -41,14 +43,23 @@ public class VersionUtil {
      * @return The latest version on Github
      */
     public static GitHubAPI getGithubValues() {
-        GitHubAPI github = new GitHubAPI();
+        GitHubAPI gitHubAPI = new GitHubAPI();
+
         try {
-            JSONArray json = new JSONArray(IOUtils.toString(new URL(Constants.githubURL), Charset.forName("UTF-8")));
-            String responseBody = json.get(0).toString();
-            github = new JsonMapper().readValue(responseBody, GitHubAPI.class);
-        } catch (IOException e) {
-            log.warn(e.getMessage());
+            URL githubURL = new URL(Constants.githubURL);
+
+            try (InputStream inputStream = githubURL.openStream()) {
+                JSONArray json = new JSONArray(IOUtils.toString(inputStream, Charset.forName("UTF-8")));
+                String responseBody = json.get(0).toString();
+                log.info(responseBody);
+                gitHubAPI = new JsonMapper().readValue(responseBody, GitHubAPI.class);
+            } catch (IOException e) {
+                log.warn("Failed to read GitHub's API response: " + e.getMessage());
+            }
+
+        } catch (MalformedURLException e) {
+            log.warn("Invalid GitHub URL: " + e.getMessage());
         }
-        return github;
+        return gitHubAPI;
     }
 }
