@@ -9,9 +9,13 @@ import usagibot.osu.OsuClient;
 import usagibot.osu.irc.OsuIrc;
 import usagibot.twitch.TwitchClient;
 import usagibot.utils.Constants;
+import usagibot.utils.Utility;
 import usagibot.utils.version.VersionUpdate;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class UsagiBot {
@@ -20,10 +24,6 @@ public class UsagiBot {
     static BannedUsers bannedUsers = new BannedUsers();
     static OsuClient client;
     static PircBotX bot;
-
-    private static Thread osuClientThread;
-    private static Thread twitchThread;
-    private static Thread osuIrcThread;
 
     public static Configuration getConfig() {
         return config;
@@ -46,19 +46,30 @@ public class UsagiBot {
         config.initConfiguration();
         VersionUpdate.checkForUpdate();
 
-        twitchThread = new Thread(() -> {
-            twitchThread.setName("Twitch");
-            TwitchClient twitchClient1 = new TwitchClient();
-            twitchClient1.startClient();
+        ExecutorService executor = Executors.newFixedThreadPool(3);
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            executor.shutdown();
+            Utility.shutdownExecutor();
+            try {
+                if (!executor.awaitTermination(10, TimeUnit.SECONDS)) {
+                    log.info("Awaiting Termination...");
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }));
+
+        executor.execute(() -> {
+            TwitchClient twitchClient = new TwitchClient();
+            twitchClient.startClient();
         });
 
-        osuClientThread = new Thread(() -> {
-            osuClientThread.setName("Osu Client");
+        executor.execute(() -> {
             client = OsuClient.createClient(config.getOsuClientId(), config.getOsuAPIKey());
         });
 
-        osuIrcThread = new Thread(() -> {
-            osuIrcThread.setName("Osu IRC");
+        executor.execute(() -> {
             OsuIrc.Builder();
             bot = new PircBotX(OsuIrc.config);
             try {
@@ -67,9 +78,5 @@ public class UsagiBot {
                 e.printStackTrace();
             }
         });
-
-        twitchThread.start();
-        osuClientThread.start();
-        osuIrcThread.start();
     }
 }
