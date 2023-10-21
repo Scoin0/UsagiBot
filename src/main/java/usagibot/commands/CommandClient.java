@@ -71,7 +71,8 @@ public class CommandClient {
      * @param message   The message to send along with the IRCMessage
      */
     public void sendIRCMessage(EventUser user, Beatmap beatmap, String message, int mods) {
-        UsagiBot.getIrcBot().getUserChannelDao().getUser(UsagiBot.getConfig().getBanchoUsername()).send().message(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuIrcMessage() + message, beatmap, user, mods));
+        String formattedMessage = UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuIrcMessage() + message, beatmap, user, mods);
+        UsagiBot.getIrcBot().getUserChannelDao().getUser(UsagiBot.getConfig().getBanchoUsername()).send().message(formattedMessage);
     }
 
     /**
@@ -132,6 +133,31 @@ public class CommandClient {
     }
 
     /**
+     * Fires when a chat message is sent in Twitch chat
+     * @param event The chat event
+     */
+    @EventSubscriber
+    public void onChannelMessage(ChannelMessageEvent event) {
+        String rawContent = event.getMessage();
+        String[] parts = getCommandParts(rawContent);
+
+        if (containsOsuLink(rawContent)) {
+            receiveBeatmap(event.getUser(), rawContent);
+        }
+
+        if (parts != null) {
+            String name = parts[0];
+            String[] args = parts[1] == null ? new String[0] : parts[1].split("\\s+");
+
+            Command command = getCommandByName(name);
+
+            if (command != null) {
+                executeCommand(command, event, args);
+            }
+        }
+    }
+
+    /**
      * Check if the Request Toggle command has been used
      * @return True or False if the command has been toggled
      */
@@ -172,38 +198,25 @@ public class CommandClient {
                 .orElse("0");
     }
 
-    /**
-     * Fires when a chat message is sent in Twitch chat
-     * @param event The chat event
-     */
-    @EventSubscriber
-    public void onChannelMessage(ChannelMessageEvent event) {
-        String[] parts = null;
-        String rawContent = event.getMessage();
+    private boolean containsOsuLink(String message) {
+        return message.contains("https://osu.ppy.sh/");
+    }
 
-        // Receive, parse, and send beatmap to Osu! and Twitch Chat
-        if (event.getMessage().contains("https://osu.ppy.sh/")) {
-            receiveBeatmap(event.getUser(), event.getMessage());
+    private String[] getCommandParts(String message) {
+        String contentWithoutPrefix = message.substring(getPrefix().length()).trim();
+        return Arrays.copyOf(contentWithoutPrefix.split("\\s+", 2), 2);
+    }
+
+    private Command getCommandByName(String name) {
+        synchronized (commandIndex) {
+            int i = commandIndex.getOrDefault(name.toLowerCase(), -1);
+            return i != -1 ? commands.get(i) : null;
         }
+    }
 
-        if (rawContent.startsWith(getPrefix()))
-            parts = Arrays.copyOf(rawContent.substring(getPrefix().length()).trim().split("\\s+", 2), 2);
-
-        if (parts != null) {
-            String name = parts[0];
-            String[] args = parts[1] == null ? new String[0] : parts[1].split("\\s+");
-
-            final Command command;
-            synchronized (commandIndex) {
-                int i = commandIndex.getOrDefault(name.toLowerCase(), -1);
-                command = i != -1 ? commands.get(i) : null;
-            }
-
-            if (command != null) {
-                CommandEvent commandEvent = new CommandEvent(event, args, this);
-                log.info("Sending " + commandEvent.getClient().getPrefix() +  command.getName() + " command in #" + event.getChannel().getName());
-                command.run(commandEvent);
-            }
-        }
+    private void executeCommand(Command command, ChannelMessageEvent event, String[] args) {
+        CommandEvent commandEvent = new CommandEvent(event, args, this);
+        log.info("Sending " + commandEvent.getClient().getPrefix() + command.getName() + " command in #" + event.getChannel().getName());
+        command.run(commandEvent);
     }
 }
