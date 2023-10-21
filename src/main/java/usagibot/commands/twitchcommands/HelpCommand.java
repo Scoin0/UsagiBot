@@ -46,28 +46,13 @@ public class HelpCommand extends Command {
      * @param commandName   The command to request help from
      */
     private void sendCommandHelp(CommandEvent event, String commandName) {
+        Optional<Command> command = event.getClient().getCommands()
+                .stream()
+                .filter(c -> c.getName().equalsIgnoreCase(commandName) || c.isCommandFor(commandName))
+                .findFirst();
 
-        boolean isCommandFound;
-        boolean isAliasCommandFound;
-        Optional<Command> command = event.getClient().getCommands().stream().filter(c -> c.getName().equalsIgnoreCase(commandName)).findAny();
-        Optional<Command> aliasCommand = event.getClient().getCommands().stream().filter(c -> c.isCommandFor(commandName)).findAny();
-
-        if (command.isPresent()) {
-            isCommandFound = !command.get().getName().equalsIgnoreCase("unassigned");
-        } else {
-            isCommandFound = false;
-        }
-
-        if (aliasCommand.isPresent()) {
-            isAliasCommandFound = !aliasCommand.get().getName().equalsIgnoreCase("unassigned");
-        } else {
-            isAliasCommandFound = false;
-        }
-
-        if (isCommandFound) {
+        if (command.isPresent() && !command.get().getName().equalsIgnoreCase("unassigned")) {
             event.getClient().sendMessage(command.get().getDescription() + " | Usage: " + command.get().getUsage());
-        } else if (isAliasCommandFound) {
-            event.getClient().sendMessage(aliasCommand.get().getDescription() + " | Usage: " + aliasCommand.get().getUsage());
         } else {
             event.getClient().sendMessage("Command not found or does not exist.");
         }
