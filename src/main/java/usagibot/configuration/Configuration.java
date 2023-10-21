@@ -68,7 +68,6 @@ public class Configuration {
      * Check to see if a config file has been created. If not, generate one.
      */
     public void createConfiguration() {
-
         try {
             if (!file.exists()) {
                 log.info("The config file has not been found. Generating one now...");
@@ -273,5 +272,4 @@ public class Configuration {
         config.addProperty("osu_star_limit_message", osuStarLimitMessage);
         config.save(file);
     }
-
 }
