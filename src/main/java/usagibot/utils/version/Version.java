@@ -2,8 +2,6 @@ package usagibot.utils.version;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Getter
 @Slf4j
@@ -53,14 +51,12 @@ public class Version {
      */
     public static Version fromString(String version) {
         String[] section = version.split("\\.");
-        if (section.length == 3) {
-            return new Version(parseInt(section[0], 1), parseInt(section[1], 0), parseInt(section[2], 0));
-        } else if (section.length == 2) {
-            return new Version(parseInt(section[0], 1), parseInt(section[1], 0));
-        } else if (section.length == 1) {
-            return new Version(parseInt(section[0], 1));
-        }
-        return new Version(1);
+
+        int major = parseInt(section.length > 0 ? section[0] : "1", 1);
+        int minor = parseInt(section.length > 1 ? section[1] : "0", 0);
+        int patch = parseInt(section.length > 2 ? section[2] : "0", 0);
+
+        return new Version(major, minor, patch);
     }
 
     /**
@@ -69,18 +65,19 @@ public class Version {
      * @return          If the Version is higher than the current version
      */
     public boolean compareVersion(Version version) {
-        if (version == null || this.getMajorVersion() > version.getMajorVersion()) {
+        if (version == null) {
             return true;
-        } else if (this.getMajorVersion() == version.getMajorVersion()) {
-            if (this.getMinorVersion() > version.getMinorVersion()) {
-                return true;
-            } else if (this.getMinorVersion() == version.getMinorVersion()) {
-                if (this.getPatchVersion() > version.getPatchVersion()) {
-                    return true;
-                }
-            }
         }
-        return false;
+
+        if (this.getMajorVersion() > version.getMajorVersion()) {
+            return true;
+        } else if (this.getMajorVersion() == version.getMajorVersion() && this.getMinorVersion() > version.getMinorVersion()) {
+            return true;
+        } else {
+            return this.getMajorVersion() == version.getMajorVersion() &&
+                    this.getMinorVersion() == version.getMinorVersion() &&
+                    this.getPatchVersion() > version.getPatchVersion();
+        }
     }
 
     /**
