@@ -109,13 +109,12 @@ public class Utility {
      * @return True or false depending on if the requested program is running.
      */
     public static boolean findGosumemory() {
-        // Okay, to be honest, I'm drunk. This is fucked.
-        String[] firstSplit = webHookPath.split(":");
-        String startingResult = firstSplit[2];
-        String[] secondSplit = startingResult.split("/");
-        try (Socket ignored = new Socket("localhost", Integer.parseInt(secondSplit[0]))) {
+        try {
+            String[] splitParts = webHookPath.split(":");
+            int port = Integer.parseInt(splitParts[2].split("/")[0]);
+            new Socket("localhost", port).close();
             return true;
-        } catch (IOException ignored) {
+        } catch (IOException | NumberFormatException | ArrayIndexOutOfBoundsException ignored) {
             return false;
         }
     }

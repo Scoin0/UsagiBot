@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import usagibot.UsagiBot;
 import usagibot.osu.api.Beatmap;
 import usagibot.osu.api.BeatmapAttributes;
+import usagibot.osu.api.BeatmapSet;
 import usagibot.osu.api.Mods;
 import usagibot.utils.Utility;
 
@@ -158,14 +159,17 @@ public class Configuration {
      */
     public String getAPIParsedMessage(String message, Beatmap beatmap, EventUser user, int mods) {
         BeatmapAttributes map = UsagiBot.getClient().getBeatmapAttributes((String.valueOf(beatmap.getId())), beatmap.getMode(), mods);
-        Map<String, Object> keywords = new HashMap<>();
+
+        BeatmapSet beatmapSet = beatmap.getBeatmapset();
         DecimalFormat dFormat = new DecimalFormat("#.##");
+
+        Map<String, Object> keywords = new HashMap<>();
         keywords.put("music_note_emoji", "\u266B");
         keywords.put("star_emoji", "\u2605");
         keywords.put("red_exclamation", "\u2757");
         keywords.put("ranked_status", beatmap.getStatus());
-        keywords.put("artist", beatmap.getBeatmapset().getArtist());
-        keywords.put("title", beatmap.getBeatmapset().getTitle());
+        keywords.put("artist", beatmapSet.getArtist());
+        keywords.put("title", beatmapSet.getTitle());
         keywords.put("version", beatmap.getVersion());
         keywords.put("length", Utility.convertTime(Mods.convertTime(beatmap.getTotal_length(), mods)));
         keywords.put("star_rating", dFormat.format(map.getAttributes().getStar_rating()));
@@ -190,20 +194,24 @@ public class Configuration {
     public String getLocalParsedMessage(String message, Beatmap beatmap, EventUser user) throws IOException, ExecutionException, InterruptedException {
         Future<Beatmap> futureBeatmap = Utility.fetchBeatmapInBackground();
         BeatmapAttributes map = UsagiBot.getClient().getBeatmapAttributes(String.valueOf(futureBeatmap.get().getId()));
+
+        Beatmap fetchedBeatmap = futureBeatmap.get();
+        BeatmapSet beatmapSet = fetchedBeatmap.getBeatmapset();
+
         Map<String, Object> keywords = new HashMap<>();
         keywords.put("music_note_emoji", "\u266B");
         keywords.put("star_emoji", "\u2605");
         keywords.put("red_exclamation", "\u2757");
-        keywords.put("ranked_status", futureBeatmap.get().getStatus());
-        keywords.put("artist", futureBeatmap.get().getBeatmapset().getArtist());
-        keywords.put("title", futureBeatmap.get().getBeatmapset().getTitle());
-        keywords.put("version", futureBeatmap.get().getVersion());
-        keywords.put("length", Utility.convertTime(futureBeatmap.get().getTotal_length()));
-        keywords.put("star_rating", futureBeatmap.get().getDifficulty_rating());
-        keywords.put("beatmap_id", futureBeatmap.get().getBeatmapset_id());
-        keywords.put("beatmap_url", futureBeatmap.get().getUrl());
-        keywords.put("bpm", futureBeatmap.get().getBpm());
-        keywords.put("ar", futureBeatmap.get().getAr());
+        keywords.put("ranked_status", fetchedBeatmap.getStatus());
+        keywords.put("artist", beatmapSet.getArtist());
+        keywords.put("title", beatmapSet.getTitle());
+        keywords.put("version", fetchedBeatmap.getVersion());
+        keywords.put("length", Utility.convertTime(fetchedBeatmap.getTotal_length()));
+        keywords.put("star_rating", fetchedBeatmap.getDifficulty_rating());
+        keywords.put("beatmap_id", beatmapSet.getId());
+        keywords.put("beatmap_url", fetchedBeatmap.getUrl());
+        keywords.put("bpm", fetchedBeatmap.getBpm());
+        keywords.put("ar", fetchedBeatmap.getAr());
         keywords.put("od", map.getAttributes().getOverall_difficulty());
         keywords.put("user_sent", user.getName());
         keywords.put("star_rating_limit", osuStarLimit);
