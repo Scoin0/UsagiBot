@@ -4,9 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import usagibot.UsagiBot;
 import usagibot.commands.Command;
 import usagibot.commands.CommandEvent;
+import usagibot.osu.api.Beatmap;
 import usagibot.utils.Utility;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 @Slf4j
 public class NowPlayingCommand extends Command {
@@ -28,12 +31,11 @@ public class NowPlayingCommand extends Command {
      */
     @Override
     public void onCommand(CommandEvent event) {
-
         try {
             if (Utility.findGosumemory()) {
-                String mods = Utility.getModsFromGosuMemory();
-                if (!mods.contains("NM")){
-                    event.getClient().sendMessage(UsagiBot.getConfig().getLocalParsedMessage(UsagiBot.getConfig().getNowPlayingMessage() + " +" + mods, event.getClient().getBeatmap(), event.getEvent().getUser()));
+                Future<String> futureMods = Utility.fetchBeatmapModsInBackground();
+                if (!futureMods.get().contains("NM")){
+                    event.getClient().sendMessage(UsagiBot.getConfig().getLocalParsedMessage(UsagiBot.getConfig().getNowPlayingMessage() + " +" + futureMods.get(), event.getClient().getBeatmap(), event.getEvent().getUser()));
                 } else {
                     event.getClient().sendMessage(UsagiBot.getConfig().getLocalParsedMessage(UsagiBot.getConfig().getNowPlayingMessage(), event.getClient().getBeatmap(), event.getEvent().getUser()));
                 }
@@ -43,6 +45,10 @@ public class NowPlayingCommand extends Command {
             }
         } catch (IOException e) {
             log.warn(e.getMessage());
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }

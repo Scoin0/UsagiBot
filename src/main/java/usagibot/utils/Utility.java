@@ -1,21 +1,26 @@
 package usagibot.utils;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
-import org.json.JSONObject;
-import org.json.JSONTokener;
 import usagibot.UsagiBot;
 import usagibot.osu.api.Beatmap;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.net.URL;
 import java.time.Duration;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 @Slf4j
 public class Utility {
 
     static Beatmap beatmap;
     private static final String webHookPath = UsagiBot.getConfig().getGOsuUrlPath();
+    private static final ExecutorService executor = Executors.newFixedThreadPool(1);
 
     /**
      * Converts integer time to human-readable time
@@ -41,16 +46,42 @@ public class Utility {
         return formattedTime;
     }
 
+    public static Future<Beatmap> fetchBeatmapInBackground() {
+        return executor.submit(() -> {
+            try {
+                return getSongFromGosuMemory();
+            } catch (IOException e) {
+                log.warn(e.getMessage());
+                return null;
+            }
+        });
+    }
+
+    public static Future<String> fetchBeatmapModsInBackground() {
+        return executor.submit(() -> {
+            try {
+                return getModsFromGosuMemory();
+            } catch (IOException e) {
+                log.warn(e.getMessage());
+                return null;
+            }
+        });
+    }
+
     /**
      * Grabs the beatmap ID from gosumemory
      * @return              The beatmap id
      * @throws IOException  If it cannot find the location of the file
      */
     public static Beatmap getSongFromGosuMemory() throws IOException {
-        JSONObject t = (JSONObject) (new JSONTokener(IOUtils.toString((new URL(webHookPath)).openStream()))).nextValue();
-        String beatmapID = t.getJSONObject("menu").getJSONObject("bm").get("id").toString();
-        beatmap = UsagiBot.getClient().getBeatmap(beatmapID);
-        return beatmap;
+        HttpURLConnection connection = openConnection(webHookPath);
+
+        try (InputStream inputStream = connection.getInputStream()) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode rootNode = objectMapper.readTree(inputStream);
+            String beatmapID = rootNode.path("menu").path("bm").path("id").asText();
+            return beatmap = UsagiBot.getClient().getBeatmap(beatmapID);
+        }
     }
 
     /**
@@ -59,19 +90,14 @@ public class Utility {
      * @throws IOException  If it cannot find the location of the file
      */
     public static String getModsFromGosuMemory() throws IOException {
-        JSONObject t = (JSONObject) (new JSONTokener(IOUtils.toString((new URL(webHookPath)).openStream()))).nextValue();
-        String mods = t.getJSONObject("menu").getJSONObject("mods").get("str").toString();
-        return mods;
-    }
+        HttpURLConnection connection = openConnection(webHookPath);
 
-    /**
-     * Converts names that use spaces with ones that have underscores
-     * @param message   The message to be changed
-     * @return          The underscored message
-     */
-    public static String removeSpaces(String message) {
-        String underscoreMessage = message.replaceAll(" ", "_");
-        return underscoreMessage;
+        try (InputStream inputStream = connection.getInputStream()) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode rootNode = objectMapper.readTree(inputStream);
+            String mods = rootNode.path("menu").path("mods").path("str").toString();
+            return mods.replaceAll("^\"|\"$", "");
+        }
     }
 
     /**
@@ -88,5 +114,11 @@ public class Utility {
         } catch (IOException ignored) {
             return false;
         }
+    }
+
+    private static HttpURLConnection openConnection(String url) throws IOException {
+        HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+        connection.setRequestMethod("GET");
+        return connection;
     }
 }

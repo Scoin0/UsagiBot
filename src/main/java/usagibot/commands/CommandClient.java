@@ -23,11 +23,10 @@ public class CommandClient {
 
     private final String prefix = UsagiBot.getConfig().getPrefix();
     private final String channel = UsagiBot.getConfig().getTwitchChannel();
-    private Beatmap beatmap;
     private final User user = UsagiBot.getClient().getUser(UsagiBot.getConfig().getOsuUsername(), GameMode.OSU);
     private final ArrayList<Command> commands;
+    private Beatmap beatmap;
     private final HashMap<String, Integer> commandIndex;
-    private String hackyMods = "0";
 
     /**
      * The CommandClient Constructor
@@ -81,27 +80,19 @@ public class CommandClient {
      * @return          The beatmap url
      */
     public String parseMessage(String message) {
-        String delimiters = "https?://osu.ppy.sh/(beatmapsets)/([0-9]*)(#osu|#taiko|#ctb|#mania)/([0-9]*)";
-        Pattern urlPattern = Pattern.compile(delimiters, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
+        Pattern urlPattern = Pattern.compile("https?://osu.ppy.sh/beatmapsets/([0-9]*)#(osu|taiko|ctb|mania)/([0-9]*)", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
         Matcher matcher = urlPattern.matcher(message);
-        List<String> urlSplit = new ArrayList<>();
 
-        while (matcher.find()) {
-            for (int i = 1; i <= matcher.groupCount(); i++) {
-                urlSplit.add(matcher.group(i));
+        if (matcher.find()) {
+            String gameMode = matcher.group(2);
+            String beatmapID = matcher.group(3);
+
+            if ("osu".equalsIgnoreCase(gameMode) || "taiko".equalsIgnoreCase(gameMode) || "ctb".equalsIgnoreCase(gameMode) || "mania".equalsIgnoreCase(gameMode)) {
+                return beatmapID;
             }
         }
 
-        switch (urlSplit.size()) {
-            case 1:
-            case 2:
-            case 3:
-                break;
-            case 4:
-                return urlSplit.get(3);
-            default:
-                log.warn("Invalid beatmap link sent.");
-        }
+        log.warn("Invalid beatmap link sent.");
         return null;
     }
 
@@ -112,35 +103,73 @@ public class CommandClient {
      * @param beatmapToReceive  The URL of the map sent.
      */
     public void receiveBeatmap(EventUser event, String beatmapToReceive) {
-        if (RequestToggleCommand.requestToggle && !UsagiBot.getBannedUsers().bannedUsers.contains(event.getName())) {
-            log.info("Received possible osu song request. Parsing now...");
-            beatmap = UsagiBot.getClient().getBeatmap(parseMessage(beatmapToReceive));
-            log.info("Beatmap ID Found: " + beatmap.getId());
-            if (beatmapToReceive.contains("+")) {
-                String[] splitter = beatmapToReceive.split("\\+");
-                String mods = splitter[1];
-                // Fuck me, I wanna rewrite all of this.
-                hackyMods = mods;
-                Optional<Long> aLong = Mods.fromShortNamesContinuous(mods);
-                assert Objects.requireNonNull(aLong).isPresent();
-                String hackyFix = Mods.toShortNamesContinuous(Mods.getMods((aLong).get()));
-                if (beatmap.getDifficulty_rating() > UsagiBot.getConfig().getOsuStarLimit()) {
-                    sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuStarLimitMessage(), beatmap, event, Mods.convertToInt(mods)));
-                } else {
-                    sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getTwitchMessage() + " +" + hackyFix, beatmap, event, Mods.convertToInt(mods)));
-                    sendIRCMessage(event, beatmap, " +" + hackyFix, Mods.convertToInt(mods));
-                }
-            } else {
-                if (beatmap.getDifficulty_rating() > UsagiBot.getConfig().getOsuStarLimit()) {
-                    sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuStarLimitMessage(), beatmap, event, 0));
-                } else {
-                    sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getTwitchMessage(), beatmap, event, 0));
-                    sendIRCMessage(event, beatmap, "", 0);
-                }
-            }
-        } else {
+        if (!isRequestToggleActive() || isUserBanned(event.getName())) {
             sendMessage("You cannot request a beatmap at this time.");
+            return;
         }
+
+        log.info("Received possible osu song request. Getting beatmap data now...");
+        Beatmap beatmap = UsagiBot.getClient().getBeatmap(parseMessage(beatmapToReceive));
+        log.info("Beatmap ID Found: " + beatmap.getId());
+
+        String mods = extractMods(beatmapToReceive);
+        String gameplayMods = getGameplayMods(mods);
+        int modsAsInt = Mods.convertToInt(mods);
+
+        if (beatmap.getDifficulty_rating() > UsagiBot.getConfig().getOsuStarLimit()) {
+            sendMessage(UsagiBot.getConfig().getAPIParsedMessage(UsagiBot.getConfig().getOsuStarLimitMessage(), beatmap, event, modsAsInt));
+        } else {
+            String message = UsagiBot.getConfig().getTwitchMessage();
+            if (!gameplayMods.isEmpty())
+            {
+                message += " +" + gameplayMods;
+                sendIRCMessage(event, beatmap, " +" + gameplayMods, modsAsInt);
+            } else {
+                sendIRCMessage(event, beatmap, "", Mods.convertToInt(mods));
+            }
+            sendMessage(UsagiBot.getConfig().getAPIParsedMessage(message, beatmap, event, modsAsInt));
+        }
+    }
+
+    /**
+     * Check if the Request Toggle command has been used
+     * @return True or False if the command has been toggled
+     */
+    private boolean isRequestToggleActive() {
+        return RequestToggleCommand.requestToggle;
+    }
+
+    /**
+     * Check if the user has been banned from using the bot
+     * @param username The person's username
+     * @return True or False if the user has been banned
+     */
+    private boolean isUserBanned(String username) {
+        return UsagiBot.getBannedUsers().bannedUsers.contains(username);
+    }
+
+    /**
+     * Extract the mods, if any, from the link sent in Twitch Chat
+     * @param beatmapToReceive Link from Twitch chat
+     * @return The mods used for the map
+     */
+    private String extractMods(String beatmapToReceive) {
+        if (beatmapToReceive.contains("+")) {
+            return beatmapToReceive.split("\\+")[1];
+        } else {
+            return "";
+        }
+    }
+
+    /**
+     * This is to display the mods used once their beatmap attributes has been calculated.
+     * @param mods The mods used for the map
+     * @return The mods used for the map
+     */
+    private String getGameplayMods(String mods) {
+        Optional<Long> aLong = Mods.fromShortNamesContinuous(mods);
+        return aLong.map(value -> Mods.toShortNamesContinuous(Mods.getMods(value)))
+                .orElse("0");
     }
 
     /**
@@ -149,10 +178,6 @@ public class CommandClient {
      */
     @EventSubscriber
     public void onChannelMessage(ChannelMessageEvent event) {
-
-        // Do not listen to self. Probably not needed, but just in case.
-        if (event.getUser().getName().equals("RNRPBot")) return;
-
         String[] parts = null;
         String rawContent = event.getMessage();
 
