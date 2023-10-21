@@ -7,16 +7,12 @@ import usagibot.utils.Constants;
 
 import java.io.*;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.attribute.PosixFilePermission;
 import java.util.*;
 
 @Slf4j
 public class VersionUpdate {
 
-    static Version latest = VersionUtil.getLatestVersion();
-
+    private static Version latest = VersionUtil.getLatestVersion();
     private static String currentFileName;
     private static String updatedFileName = "UsagiBot.jar.update";
 
@@ -70,56 +66,71 @@ public class VersionUpdate {
         Response response;
         response = Jsoup.connect(updatedBotURL)
                 .ignoreContentType(true)
-                .timeout(60*1000)
+                .timeout(60 * 1000)
                 .maxBodySize(1024 * 1024 * 100)
                 .execute();
 
         try (FileOutputStream out = new FileOutputStream(updatedFileName)) {
             out.write(response.bodyAsBytes());
+        } catch (IOException e) {
+            log.error("Error writing the update file: " + e.getMessage());
+            e.printStackTrace();
         }
 
         if (System.getProperty("os.name").toLowerCase().contains("win")) {
-            final String batchFile = "update-UsagiBot.bat";
-            final String batchPath = new File(batchFile).getAbsolutePath();
-
-            String script = "@echo off\r\n"
-                    + "timeout 1\r\n"
-                    + "copy " + '"' + updatedFileName + '"' + " " + '"' + currentFileName + '"' + "\r\n"
-                    + "del " + '"' + updatedFileName + '"' + "\r\n";
-            if (shouldLaunchNow) {
-                script += "java -jar " + '"' + currentFileName + '"' +"\r\n";
+            try {
+                String batchScript = createBatchScript(shouldLaunchNow);
+                log.info("Saved update script to " + batchScript);
+                executeBatchScript(batchScript);
+            } catch (IOException e) {
+                log.error("Error creating or executing the batch script: " + e.getMessage());
+                e.printStackTrace();
             }
-
-            script += "del " + '"' + batchPath + '"' + "\r\n";
-
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(batchFile))) {
-                bufferedWriter.write(script);
-                bufferedWriter.flush();
-            }
-
-            log.info("Saved update script to " + '"' + batchFile + '"');
-
-            List<String> cmds = Arrays.asList("cmd.exe", "/C", "start", batchFile);
-            ProcessBuilder processBuilder = new ProcessBuilder(cmds);
-
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                try {
-                    log.info("Running update script...");
-                    Process buildProcess = processBuilder.start();
-                    String line = "";
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(buildProcess.getInputStream()));
-                    StringBuilder stringBuilder = new StringBuilder();
-                    while ((line = bufferedReader.readLine()) != null) {
-                        stringBuilder.append(line + System.lineSeparator());
-                    }
-                    buildProcess.destroy();
-                    bufferedReader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }));
-            log.info ("Updated applied! Restarting!");
-            System.exit(0);
         }
+    }
+
+    private static String createBatchScript(boolean shouldLaunchNow) throws IOException {
+        final String batchFile = "update-UsagiBot.bat";
+        final String batchPath = new File(batchFile).getAbsolutePath();
+
+        String script = "@echo off\r\n"
+                + "timeout 1\r\n"
+                + "copy \"" + updatedFileName + "\" \"" + currentFileName + "\"\r\n"
+                + "del \"" + updatedFileName + "\"\r\n";
+
+        if (shouldLaunchNow) {
+            script += "java -jar \"" + currentFileName + "\"\r\n";
+        }
+
+        script += "del \"" + batchPath + "\"\r\n";
+
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(batchFile))) {
+            bufferedWriter.write(script);
+        }
+        return batchFile;
+    }
+
+    private static void executeBatchScript(String batchScript) throws IOException {
+        List<String> cmds = Arrays.asList("cmd.exe", "/C", "start", batchScript);
+        ProcessBuilder processBuilder = new ProcessBuilder(cmds);
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                log.info("Running update script...");
+                Process buildProcess = processBuilder.start();
+                String line;
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(buildProcess.getInputStream()));
+                StringBuilder stringBuilder = new StringBuilder();
+                while ((line = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(line).append(System.lineSeparator());
+                }
+                buildProcess.destroy();
+                bufferedReader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }));
+        log.info("Update applied! Restarting!");
+        System.exit(0);
     }
 }

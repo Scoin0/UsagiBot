@@ -20,7 +20,7 @@ public class Utility {
 
     static Beatmap beatmap;
     private static final String webHookPath = UsagiBot.getConfig().getGOsuUrlPath();
-    private static final ExecutorService executor = Executors.newFixedThreadPool(1);
+    private static ExecutorService executor = Executors.newFixedThreadPool(1);
 
     /**
      * Converts integer time to human-readable time
@@ -66,6 +66,10 @@ public class Utility {
                 return null;
             }
         });
+    }
+
+    public static void shutdownExecutor() {
+        executor.shutdown();
     }
 
     /**
