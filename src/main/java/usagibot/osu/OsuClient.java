@@ -41,7 +41,6 @@ public class OsuClient {
         return sharedClient;
     }
 
-
     /**
      * Create the Osu API client
      * @param clientID      The OAuth client ID
@@ -50,6 +49,8 @@ public class OsuClient {
      */
     public static OsuClient createClient(String clientID, String clientSecret) {
         log.info("Retrieving token with client credentials...");
+        OkHttpClient client = getSharedClient();
+
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode body = mapper.createObjectNode();
         body.put("client_id", clientID);
@@ -57,23 +58,21 @@ public class OsuClient {
         body.put("grant_type", "client_credentials");
         body.put("scope", "public");
 
+        RequestBody requestBody = RequestBody.create(body.toString(), MediaType.get("application/json"));
+
         Request request = new Request.Builder()
                 .url(TOKEN_URL)
-                .post(RequestBody.create(body.toString(), MediaType.get("application/json")))
+                .post(requestBody)
                 .build();
 
-        OkHttpClient client = getSharedClient();
-
-        try {
-            Response response = client.newCall(request).execute();
+        try (Response response = client.newCall(request).execute()) {
             String responseBody = response.body().string();
             DefaultTokenObject tokenObject = new JsonMapper().readValue(responseBody, DefaultTokenObject.class);
             log.info("Token retrieved!");
             return new OsuClient(tokenObject.getAccessToken(), tokenObject.getExpiresIn());
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Unable to retrieve token. Is the configuration set up properly?", e);
         }
-        log.info("Unable to retrieve token. Is the configuration set up properly?");
         return null;
     }
 
@@ -86,15 +85,14 @@ public class OsuClient {
      * @return              The information from the Osu API
      */
     public <T> T requestApi(String compiledRoute, String token, Class<T> tClass) {
-
         OkHttpClient client = getSharedClient();
 
         Request request = new Request.Builder()
                 .url(OSU_ENDPOINT + compiledRoute)
                 .addHeader("Authorization", "Bearer " + token)
                 .build();
-        try {
-            Response response = client.newCall(request).execute();
+
+        try (Response response = client.newCall(request).execute()) {
             String body = response.body().string();
             return new JsonMapper().readValue(body, tClass);
         } catch (IOException e) {
@@ -139,6 +137,8 @@ public class OsuClient {
     }
 
     private <T> T executeHttpPost(String compiledRoute, String token, ObjectNode body, Class<T> tClass) {
+        OkHttpClient client = getSharedClient();
+
         Request request = new Request.Builder()
                 .url(OSU_ENDPOINT + compiledRoute)
                 .addHeader("Authorization", "Bearer " + token)
@@ -146,10 +146,7 @@ public class OsuClient {
                 .post(RequestBody.create(body.toString(), MediaType.get("application/json")))
                 .build();
 
-        OkHttpClient client = getSharedClient();
-
-        try {
-            Response response = client.newCall(request).execute();
+        try (Response response = client.newCall(request).execute()) {
             String responseBody = Objects.requireNonNull(response.body()).string();
             return new JsonMapper().readValue(responseBody, tClass);
         } catch (IOException e) {
@@ -183,7 +180,7 @@ public class OsuClient {
      * @return          The beatmap attributes
      */
     public BeatmapAttributes getBeatmapAttributes(String beatmapId) {
-        return getBeatmapAttributes(beatmapId, null, 0);
+        return postApi(Route.BEATMAP_ATTRIBUTES.compile(beatmapId), token, BeatmapAttributes.class);
     }
 
     /**
@@ -192,7 +189,7 @@ public class OsuClient {
      * @return          The beatmap attributes
      */
     public BeatmapAttributes getBeatmapAttributes(String beatmapId, GameMode mode) {
-        return getBeatmapAttributes(beatmapId, mode, 0);
+        return postApi(Route.BEATMAP_ATTRIBUTES.compile(beatmapId), token, mode, BeatmapAttributes.class);
     }
 
     /**
@@ -225,5 +222,4 @@ public class OsuClient {
             return tokenType;
         }
     }
-
 }
