@@ -22,6 +22,7 @@ public class OsuClient {
     private int tokenTimeout;
     private static final String TOKEN_URL = "https://osu.ppy.sh/oauth/token";
     private static final String OSU_ENDPOINT = "https://osu.ppy.sh/api/v2/";
+    private static OkHttpClient sharedClient;
 
     /**
      * The Osu Client constructor
@@ -32,6 +33,14 @@ public class OsuClient {
         this.token = token;
         this.tokenTimeout = tokenTimeout;
     }
+
+    public static synchronized OkHttpClient getSharedClient() {
+        if (sharedClient == null) {
+            sharedClient = new OkHttpClient();
+        }
+        return sharedClient;
+    }
+
 
     /**
      * Create the Osu API client
@@ -53,7 +62,7 @@ public class OsuClient {
                 .post(RequestBody.create(body.toString(), MediaType.get("application/json")))
                 .build();
 
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = getSharedClient();
 
         try {
             Response response = client.newCall(request).execute();
@@ -78,7 +87,7 @@ public class OsuClient {
      */
     public <T> T requestApi(String compiledRoute, String token, Class<T> tClass) {
 
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = getSharedClient();
 
         Request request = new Request.Builder()
                 .url(OSU_ENDPOINT + compiledRoute)
@@ -103,72 +112,41 @@ public class OsuClient {
      * @return              The information from the Osu API
      */
     public <T> T postApi(String compiledRoute, String token, Class<T> tClass) {
-
-        OkHttpClient client = new OkHttpClient();
-
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode body = mapper.createObjectNode();
         body.put("mods", "0");
         body.put("ruleset", "osu");
 
-        Request request = new Request.Builder()
-                .url(OSU_ENDPOINT + compiledRoute)
-                .addHeader("Authorization", "Bearer " + token)
-                .addHeader("Content-Type", "application/json")
-                .post(RequestBody.create(body.toString(), MediaType.get("application/json")))
-                .build();
-
-        try {
-            Response response = client.newCall(request).execute();
-            String responseBody = response.body().string();
-            return new JsonMapper().readValue(responseBody, tClass);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return executeHttpPost(compiledRoute, token, body, tClass);
     }
 
     public <T> T postApi(String compiledRoute, String token, GameMode mode, Class<T> tClass) {
-
-        OkHttpClient client = new OkHttpClient();
-
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode body = mapper.createObjectNode();
         body.put("mods", "0");
         body.put("ruleset", mode.getName().toLowerCase(Locale.ROOT));
 
-        Request request = new Request.Builder()
-                .url(OSU_ENDPOINT + compiledRoute)
-                .addHeader("Authorization", "Bearer " + token)
-                .addHeader("Content-Type", "application/json")
-                .post(RequestBody.create(body.toString(), MediaType.get("application/json")))
-                .build();
-
-        try {
-            Response response = client.newCall(request).execute();
-            String responseBody = response.body().string();
-            return new JsonMapper().readValue(responseBody, tClass);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return executeHttpPost(compiledRoute, token, body, tClass);
     }
 
     public <T> T postApi(String compiledRoute, String token, GameMode mode, int mods, Class<T> tClass) {
-
-        OkHttpClient client = new OkHttpClient();
-
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode body = mapper.createObjectNode();
         body.put("mods", mods);
         body.put("ruleset", mode.getName().toLowerCase(Locale.ROOT));
 
+        return executeHttpPost(compiledRoute, token, body, tClass);
+    }
+
+    private <T> T executeHttpPost(String compiledRoute, String token, ObjectNode body, Class<T> tClass) {
         Request request = new Request.Builder()
                 .url(OSU_ENDPOINT + compiledRoute)
                 .addHeader("Authorization", "Bearer " + token)
                 .addHeader("Content-Type", "application/json")
                 .post(RequestBody.create(body.toString(), MediaType.get("application/json")))
                 .build();
+
+        OkHttpClient client = getSharedClient();
 
         try {
             Response response = client.newCall(request).execute();
@@ -205,7 +183,7 @@ public class OsuClient {
      * @return          The beatmap attributes
      */
     public BeatmapAttributes getBeatmapAttributes(String beatmapId) {
-        return postApi(Route.BEATMAP_ATTRIBUTES.compile(beatmapId), token, BeatmapAttributes.class);
+        return getBeatmapAttributes(beatmapId, null, 0);
     }
 
     /**
@@ -214,7 +192,7 @@ public class OsuClient {
      * @return          The beatmap attributes
      */
     public BeatmapAttributes getBeatmapAttributes(String beatmapId, GameMode mode) {
-        return postApi(Route.BEATMAP_ATTRIBUTES.compile(beatmapId), token, mode, BeatmapAttributes.class);
+        return getBeatmapAttributes(beatmapId, mode, 0);
     }
 
     /**
