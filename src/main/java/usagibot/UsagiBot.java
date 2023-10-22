@@ -42,9 +42,9 @@ public class UsagiBot {
     }
 
     public static void main(String[] args) throws Exception {
-        System.out.println(Constants.logo);
+        //System.out.println(Constants.logo);
         config.initConfiguration();
-        VersionUpdate.checkForUpdate();
+        //VersionUpdate.checkForUpdate();
 
         ExecutorService executor = Executors.newFixedThreadPool(3);
 

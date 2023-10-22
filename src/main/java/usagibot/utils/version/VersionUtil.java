@@ -51,7 +51,6 @@ public class VersionUtil {
             try (InputStream inputStream = githubURL.openStream()) {
                 JSONArray json = new JSONArray(IOUtils.toString(inputStream, Charset.forName("UTF-8")));
                 String responseBody = json.get(0).toString();
-                log.info(responseBody);
                 gitHubAPI = new JsonMapper().readValue(responseBody, GitHubAPI.class);
             } catch (IOException e) {
                 log.warn("Failed to read GitHub's API response: " + e.getMessage());
