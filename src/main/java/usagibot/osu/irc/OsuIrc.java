@@ -26,7 +26,6 @@ public class OsuIrc {
         config = new Configuration.Builder()
                 .addServer(server, port)
                 .setName(username)
-                .addAutoJoinChannel(autoJoinChannel)
                 .setServerPassword(password)
                 .setAutoReconnect(true)
                 .setAutoReconnectAttempts(10)
