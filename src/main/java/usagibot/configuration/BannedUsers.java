@@ -1,19 +1,15 @@
 package usagibot.configuration;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
+@Slf4j
 public class BannedUsers {
 
     private static File file = new File("bannedusers.txt");
-    private static final Logger log = LoggerFactory.getLogger(BannedUsers.class);
-
-    public List<String> bannedUsers = new ArrayList<>();
+    public Set<String> bannedUsers = new HashSet<>();
 
     public BannedUsers() {
         try {
@@ -21,12 +17,12 @@ public class BannedUsers {
                 log.info("Creating bannedusers.txt");
                 file.createNewFile();
             } else {
-                BufferedReader reader = new BufferedReader(new FileReader(file));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    bannedUsers.add(line);
+                try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        bannedUsers.add(line);
+                    }
                 }
-                reader.close();
             }
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -34,32 +30,28 @@ public class BannedUsers {
     }
 
     public void addBannedUser(String user) {
-        String username = user.toLowerCase(Locale.ROOT);
-        if (!bannedUsers.contains(username)) {
-            bannedUsers.add(username);
-            log.info("Added " + username + " to the banned users file.");
+        String username = user.toLowerCase();
+        if (bannedUsers.add(username)) {
+            log.info("Added {} to the banned users file.", username);
             saveBannedUsersFile();
         } else {
-            log.info("User: " + username + " is already banned.");
+            log.info("User: {} is already banned.", username);
         }
     }
 
     public void removeBannedUser(String user) {
-        String username = user.toLowerCase(Locale.ROOT);
-        if (bannedUsers.contains(username)) {
-            bannedUsers.remove(username);
-            log.info("Removed " + username + " from the banned users file.");
+        String username = user.toLowerCase();
+        if (bannedUsers.remove(username)) {
+            log.info("Removed {} from the banned users file.", username);
             saveBannedUsersFile();
         }
     }
 
     public void saveBannedUsersFile() {
-        try {
-            FileWriter writer = new FileWriter(file);
-            for (String users : bannedUsers) {
-                writer.write(users + System.lineSeparator());
+        try (FileWriter writer = new FileWriter(file)) {
+            for (String user : bannedUsers) {
+                writer.write(user + System.lineSeparator());
             }
-            writer.close();
         } catch (IOException e) {
             log.error(e.getMessage());
         }
