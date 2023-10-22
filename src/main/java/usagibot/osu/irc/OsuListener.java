@@ -15,5 +15,4 @@ public class OsuListener extends ListenerAdapter {
     public void onConnect(ConnectEvent event) {
         log.info("Connected to Bancho IRC!");
     }
-
 }
