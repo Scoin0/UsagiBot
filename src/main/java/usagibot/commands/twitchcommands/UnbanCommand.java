@@ -3,8 +3,7 @@ package usagibot.commands.twitchcommands;
 import usagibot.UsagiBot;
 import usagibot.commands.Command;
 import usagibot.commands.CommandEvent;
-
-import java.util.Locale;
+import usagibot.configuration.BannedUsers;
 
 public class UnbanCommand extends Command {
 
@@ -18,21 +17,23 @@ public class UnbanCommand extends Command {
 
     @Override
     public void onCommand(CommandEvent event) {
+        if (!event.getEvent().getUser().getName().equals(UsagiBot.getConfig().getTwitchChannel())) {
+            return; // Ignore commands from other users
+        }
 
-        if (event.getEvent().getUser().getName().equals(UsagiBot.getConfig().getTwitchChannel())) {
-            if (event.getArgs().length == 0) {
-                event.getClient().sendMessage("Please supply a username.");
-            }
+        if (event.getArgs().length == 0) {
+            event.getClient().sendMessage("Please supply a username.");
+            return;
+        }
 
-            if (event.getArgs().length >= 1) {
-                String unbannedUser = event.getArgs()[0].toLowerCase(Locale.ROOT);
-                if (!UsagiBot.getBannedUsers().bannedUsers.contains(unbannedUser)) {
-                    event.getClient().sendMessage(unbannedUser + " is not banned.");
-                } else {
-                    UsagiBot.getBannedUsers().removeBannedUser(unbannedUser);
-                    event.getClient().sendMessage(unbannedUser + " has been unrestricted from using the bot.");
-                }
-            }
+        String bannedUser = event.getArgs()[0];
+        BannedUsers bannedUsers = UsagiBot.getBannedUsers();
+
+        if (!bannedUsers.bannedUsers.contains(bannedUser.toLowerCase())) {
+            event.getClient().sendMessage(bannedUser + " is not restricted.");
+        } else {
+            bannedUsers.removeBannedUser(bannedUser);
+            event.getClient().sendMessage(bannedUser + " has been unrestricted from using the bot.");
         }
     }
 }
