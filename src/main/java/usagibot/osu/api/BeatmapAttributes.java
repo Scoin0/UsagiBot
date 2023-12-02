@@ -32,6 +32,8 @@ public class BeatmapAttributes {
         private float approach_rate;
         @JsonProperty("great_hit_window")
         private float great_hit_window;
+        @JsonProperty("speed_note_count")
+        private float speedNoteCount;
 
         // Standard
         @JsonProperty("aim_difficulty")

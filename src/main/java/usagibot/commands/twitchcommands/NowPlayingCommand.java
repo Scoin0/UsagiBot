@@ -22,7 +22,7 @@ public class NowPlayingCommand extends Command {
         description = "Sends the currently playing map to twitch chat.";
         usage.add("np");
         usage.add("nowplaying");
-        aliases = new String[]{"np"};
+        aliases = new String[]{"np", "current", "map"};
     }
 
     /**
