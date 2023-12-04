@@ -203,8 +203,10 @@ public class CommandClient {
     }
 
     private String[] getCommandParts(String message) {
-        String contentWithoutPrefix = message.substring(getPrefix().length()).trim();
-        return Arrays.copyOf(contentWithoutPrefix.split("\\s+", 2), 2);
+        if (message.startsWith(getPrefix())) {
+            return Arrays.copyOf(message.substring(getPrefix().length()).trim().split("\\s+", 2), 2);
+        }
+        return null;
     }
 
     private Command getCommandByName(String name) {
