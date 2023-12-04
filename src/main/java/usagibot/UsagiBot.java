@@ -6,7 +6,9 @@ import org.pircbotx.exception.IrcException;
 import usagibot.configuration.BannedUsers;
 import usagibot.configuration.Configuration;
 import usagibot.osu.OsuClient;
+import usagibot.osu.api.GameMode;
 import usagibot.osu.irc.OsuIrc;
+import usagibot.osu.pp.PPCalculator;
 import usagibot.twitch.TwitchClient;
 import usagibot.utils.Constants;
 import usagibot.utils.Utility;
@@ -42,9 +44,9 @@ public class UsagiBot {
     }
 
     public static void main(String[] args) throws Exception {
-        //System.out.println(Constants.logo);
+        System.out.println(Constants.logo);
         config.initConfiguration();
-        //VersionUpdate.checkForUpdate();
+        VersionUpdate.checkForUpdate();
 
         ExecutorService executor = Executors.newFixedThreadPool(3);
 
