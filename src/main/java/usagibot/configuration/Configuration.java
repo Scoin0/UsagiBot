@@ -194,6 +194,10 @@ public class Configuration {
         Future<Beatmap> futureBeatmap = Utility.fetchBeatmapInBackground();
         BeatmapAttributes map = UsagiBot.getClient().getBeatmapAttributes(String.valueOf(futureBeatmap.get().getId()));
 
+        if (futureBeatmap.get().getBeatmapset_id() == 0) {
+            return "The current beatmap is unlisted.";
+        }
+
         Beatmap fetchedBeatmap = futureBeatmap.get();
         BeatmapSet beatmapSet = fetchedBeatmap.getBeatmapset();
 
