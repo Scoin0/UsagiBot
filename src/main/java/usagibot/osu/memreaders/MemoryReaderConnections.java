@@ -4,6 +4,10 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import usagibot.UsagiBot;
 import usagibot.osu.api.Beatmap;
+import usagibot.osu.memreaders.gosu.GOsuMemoryReader;
+import usagibot.osu.memreaders.rosu.ROsuReader;
+import usagibot.osu.memreaders.streamcompanion.StreamCompanionReader;
+import usagibot.osu.memreaders.tosu.TOsuReader;
 
 import java.io.BufferedReader;
 import java.io.IOException;

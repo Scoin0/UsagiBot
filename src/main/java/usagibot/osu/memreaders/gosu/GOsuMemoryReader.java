@@ -1,8 +1,10 @@
-package usagibot.osu.memreaders;
+package usagibot.osu.memreaders.gosu;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import usagibot.UsagiBot;
 import usagibot.osu.api.Beatmap;
+import usagibot.osu.memreaders.IMemoryReader;
+import usagibot.osu.memreaders.MemoryReaderConnections;
 import usagibot.osu.memreaders.gosu.GOsuModel;
 
 import java.io.IOException;
