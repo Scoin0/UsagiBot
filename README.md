@@ -1,34 +1,34 @@
-# UsagiBot
-
+[![CodeFactor](https://www.codefactor.io/repository/github/scoin0/usagibot/badge)](https://www.codefactor.io/repository/github/scoin0/usagibot)
+# UsagiBot 
 ---
-
 UsagiBot is a Twitch & Bancho IRC bot for handling song requests in Osu!
 
-### Running The Bot
+### Instruction
 
 ---
+This version of the bot is targeting Java 8. Please have Java 8 or higher installed.
 
-1. Open notepad and create a `start.bat` script. You can copy and paste the code from below.
+1. Download the latest version of [UsagiBot](https://github.com/Scoin0/UsagiBot/releases)
+2. Extract `UsagiBot.jar` to it's own folder
+3. Open notepad and create a `start.bat` script. You can copy and paste the code from below.
 ```
 java -jar Usagibot.jar
 pause
 ```
-2. Run Once. It will generate the configuration file and should close back out. Fill in the fields marked `required`.
-3. Start bot again. Everything should be working properly.
+4. Run the newly created script once. It will create a configuration file for you. Fill out those fields and run the bot again.
+    * Head over to the [configuration](https://github.com/Scoin0/UsagiBot/wiki/Configuration) wiki to learn how to configure the bot properly.
+5. Everything should hopefully be working properly.
 
 ### Twitch Usage
 
 ---
-#### Commands
-
-`np` - Now Playing. This command will output the current playing song as a download link in chat.    
-`rq toggle` - Request Toggle. You can turn on and off requests if you'd like.
+#### Here's a list of avaliable [Commands](https://github.com/Scoin0/UsagiBot/wiki/Commands)
 
 #### Requesting songs
-Anyone can request a song to be added. To do this just simply post the beatmapset link inside the chat.
-As of right now, the bot only accepts urls in the `beatmapsets` format. As an example,
-`https://osu.ppy.sh/beatmapsets/53176#osu/162237`. This will be changed later to accept all forms of urls.
-Like `/b/`, `/s/`, and `/beatmapsets/`.
+Anyone can request a song to be added. To do this just simply post the beatmapset link inside the chat.    
+As an example, `https://osu.ppy.sh/beatmapsets/53176#osu/162237`.     
+If you would like to tell the streamer to play certain mods, use `+<mods>`.    
+As an example, `https://osu.ppy.sh/beatmapsets/53176#osu/162237 +HDHR`.
 
 ### Requirements
 
@@ -39,17 +39,4 @@ Like `/b/`, `/s/`, and `/beatmapsets/`.
 * [Bancho IRC Token](https://osu.ppy.sh/p/irc) - Do not create a new account to send you the beatmaps you can be banned for multiaccounting. Use your own account, it will be like you're DM'ing yourself.
 * [Osu API Token](https://osu.ppy.sh/home/account/edit) - Scroll down to the bottom to obtain your token. More information inside the [wiki](https://github.com/Scoin0/UsagiBot/wiki/Configuration).
 
-
-### Todo 
-
----
-
-* PP Calculation
-* Support osu mods
-* Finish Implementing the Ratelimiter
-* Support other osu urls. (`/b/` and `/s/`)
-* Add more commands (`!stats` and such)
-* Have 2 versions, a standalone and an always running version.
-
----
 If there are any issues please let me know either in the issue tracker or DM me on Discord at `Scoin0#0002`.
