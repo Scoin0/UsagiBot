@@ -2,10 +2,8 @@ package usagibot.osu.memreaders.tosu;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Getter
 public class Menu {
 
     // Ignore MainMenu
@@ -23,6 +21,7 @@ public class Menu {
     @JsonProperty("pp")
     public PP pp;
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class BM {
 
         @JsonProperty("time")
@@ -69,6 +68,7 @@ public class Menu {
 
         }
 
+        @JsonIgnoreProperties(ignoreUnknown = true)
         public static class Stats {
 
             @JsonProperty("AR")

@@ -2,14 +2,12 @@ package usagibot.osu.memreaders.streamcompanion;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
 
 /**
  * Follows the JSON schema (As of March 10th, 2024)
  * URL:         https://piotrekol.github.io/StreamCompanion/development/SC/api.html
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Getter
 public class StreamCompanionModel {
 
     // Ignore BackgroundImageLocation

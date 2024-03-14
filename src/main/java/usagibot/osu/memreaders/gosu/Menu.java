@@ -22,6 +22,7 @@ public class Menu {
     @JsonProperty("pp")
     public PP pp;
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public class BM {
 
         @JsonProperty("time")
@@ -52,6 +53,7 @@ public class Menu {
 
         }
 
+        @JsonIgnoreProperties(ignoreUnknown = true)
         public class MetaData {
 
             @JsonProperty("artist")
@@ -65,6 +67,7 @@ public class Menu {
 
         }
 
+        @JsonIgnoreProperties(ignoreUnknown = true)
         public class Stats {
 
             @JsonProperty("AR")
@@ -103,6 +106,7 @@ public class Menu {
 
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public class Mods {
 
         @JsonProperty("num")
@@ -112,6 +116,7 @@ public class Menu {
 
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public class PP {
 
         @JsonProperty("100")

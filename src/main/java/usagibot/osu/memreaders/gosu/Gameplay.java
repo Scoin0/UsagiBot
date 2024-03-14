@@ -2,10 +2,8 @@ package usagibot.osu.memreaders.gosu;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Getter
 public class Gameplay {
 
     @JsonProperty("gameMode")
@@ -41,6 +39,7 @@ public class Gameplay {
 
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public class Hits {
 
         @JsonProperty("300")
@@ -63,6 +62,7 @@ public class Gameplay {
         public float unstableRate;
         // Ignore HitErrorArray
 
+        @JsonIgnoreProperties(ignoreUnknown = true)
         public class Grade {
 
             @JsonProperty("current")
@@ -73,5 +73,4 @@ public class Gameplay {
         }
 
     }
-
 }

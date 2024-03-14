@@ -2,14 +2,12 @@ package usagibot.osu.memreaders.rosu;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
 
 /**
  * Follows the JSON schema (As of March 10th, 2024)
  * URL:         https://github.com/486c/rosu-memory
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Getter
 public class ROsuModel {
 
     @JsonProperty("skin")
