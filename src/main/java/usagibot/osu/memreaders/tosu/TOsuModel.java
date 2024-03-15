@@ -19,5 +19,4 @@ public class TOsuModel {
     public UserProfile userProfile;
     // Ignore ResultsScreen
     // Ignore Tourney
-
 }
