@@ -30,6 +30,7 @@ public class Gameplay {
 
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Hits {
 
         @JsonProperty("0")
