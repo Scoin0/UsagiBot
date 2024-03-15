@@ -33,10 +33,13 @@ public class MemoryReaderConnections {
             log.info("gosumemory found!");
             memoryReader = new GOsuMemoryReader();
         } else if (tosuRunning) {
+            log.info("tosu found!");
             memoryReader = new TOsuReader();
         } else if (rosuRunning) {
+            log.info("rosu found!");
             memoryReader = new ROsuReader();
         } else if (streamCompanionRunning) {
+            log.info("StreamCompanion found!");
             memoryReader = new StreamCompanionReader();
         } else {
             log.warn("There are no memory readers running or it is not within the list of supported memory readers.");
