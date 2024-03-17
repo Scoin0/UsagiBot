@@ -6,9 +6,8 @@ import org.pircbotx.exception.IrcException;
 import usagibot.configuration.BannedUsers;
 import usagibot.configuration.Configuration;
 import usagibot.osu.OsuClient;
-import usagibot.osu.api.GameMode;
 import usagibot.osu.irc.OsuIrc;
-import usagibot.osu.pp.PPCalculator;
+import usagibot.osu.memreaders.MemoryReaderConnections;
 import usagibot.twitch.TwitchClient;
 import usagibot.utils.Constants;
 import usagibot.utils.Utility;
@@ -26,6 +25,7 @@ public class UsagiBot {
     static BannedUsers bannedUsers = new BannedUsers();
     static OsuClient client;
     static PircBotX bot;
+    static MemoryReaderConnections memoryReader;
 
     public static Configuration getConfig() {
         return config;
@@ -43,12 +43,16 @@ public class UsagiBot {
         return bot;
     }
 
+    public static MemoryReaderConnections getMemoryReader() {
+        return memoryReader;
+    }
+
     public static void main(String[] args) throws Exception {
         System.out.println(Constants.logo);
         config.initConfiguration();
         VersionUpdate.checkForUpdate();
 
-        ExecutorService executor = Executors.newFixedThreadPool(3);
+        ExecutorService executor = Executors.newFixedThreadPool(4);
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             executor.shutdown();
@@ -61,6 +65,8 @@ public class UsagiBot {
                 e.printStackTrace();
             }
         }));
+
+        executor.execute(() -> memoryReader = new MemoryReaderConnections());
 
         executor.execute(() -> {
             TwitchClient twitchClient = new TwitchClient();
