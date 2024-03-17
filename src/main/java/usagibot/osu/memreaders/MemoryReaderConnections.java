@@ -2,6 +2,8 @@ package usagibot.osu.memreaders;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
 import usagibot.UsagiBot;
 import usagibot.osu.api.Beatmap;
 import usagibot.osu.memreaders.gosu.GOsuMemoryReader;
@@ -13,6 +15,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 @Slf4j
@@ -26,7 +30,7 @@ public class MemoryReaderConnections {
     private static boolean streamCompanionRunning;
     public static IMemoryReader memoryReader;
 
-    public MemoryReaderConnections() {
+    public MemoryReaderConnections(){
         log.info("Attempting to find which osu memory reader is running...");
         updateRunningPrograms();
         if (gosumemoryRunnning) {
@@ -74,8 +78,8 @@ public class MemoryReaderConnections {
     private static void updateRunningPrograms() {
         gosumemoryRunnning = isProcessRunning("gosumemory.exe");
         tosuRunning = isProcessRunning("tosu.exe");
-        rosuRunning = isProcessRunning("rosu.exe");
-        streamCompanionRunning = isProcessRunning("streamcompanion.exe");
+        rosuRunning = isProcessRunning("windows_rosu-memory.exe");
+        streamCompanionRunning = isProcessRunning("osu!StreamCompanion.exe");
     }
 
     /**
@@ -103,7 +107,7 @@ public class MemoryReaderConnections {
     }
 
     public static String fetchJsonData(String apiUrl) throws IOException {
-        URL url = new URL(apiUrl);
+        URL url = new URL("http://localhost:20727/json");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
         // Set up the connection
@@ -121,5 +125,20 @@ public class MemoryReaderConnections {
         } finally {
             connection.disconnect();
         }
+    }
+
+    public static String fetchJsonDataWebSocket(String webSocketURI) {
+        try {
+            WebSocketConnector webSocketConnector = new WebSocketConnector(new URI(webSocketURI));
+            webSocketConnector.connect();
+            Thread.sleep(500); // Wait a second to fetch data
+            webSocketConnector.close();
+            return webSocketConnector.getJsonData();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
