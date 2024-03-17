@@ -3,7 +3,7 @@
 ---
 UsagiBot is a Twitch & Bancho IRC bot for handling song requests in Osu!
 
-### Instruction
+### :blue_book: Instruction
 
 ---
 This version of the bot is targeting Java 8. Please have Java 8 or higher installed.
@@ -19,7 +19,7 @@ pause
     * Head over to the [configuration](https://github.com/Scoin0/UsagiBot/wiki/Configuration) wiki to learn how to configure the bot properly.
 5. Everything should hopefully be working properly.
 
-### Twitch Usage
+### :pencil2: Twitch Usage
 
 ---
 #### Here's a list of avaliable [Commands](https://github.com/Scoin0/UsagiBot/wiki/Commands)
@@ -30,13 +30,35 @@ As an example, `https://osu.ppy.sh/beatmapsets/53176#osu/162237`.
 If you would like to tell the streamer to play certain mods, use `+<mods>`.    
 As an example, `https://osu.ppy.sh/beatmapsets/53176#osu/162237 +HDHR`.
 
-### Requirements
+### :white_check_mark: Supported Memory Readers
 
 ---
 
-* [Gosumemory](https://github.com/l3lackShark/gosumemory) - This is how the bot knows what song is playing.
-* [Twitch OAuth2 Token](https://twitchapps.com/tmi/) - It is recommended to create a new account for this.
-* [Bancho IRC Token](https://osu.ppy.sh/p/irc) - Do not create a new account to send you the beatmaps you can be banned for multiaccounting. Use your own account, it will be like you're DM'ing yourself.
-* [Osu API Token](https://osu.ppy.sh/home/account/edit) - Scroll down to the bottom to obtain your token. More information inside the [wiki](https://github.com/Scoin0/UsagiBot/wiki/Configuration).
+* [gosumemory](https://github.com/l3lackShark/gosumemory) by l3lackShark
+* [rosu-memory](https://github.com/486c/rosu-memory) by 486c     
+* [tosu](https://github.com/KotRikD/tosu) by KotRikD     
+* [StreamCompanion](https://github.com/Piotrekol/StreamCompanion) by Piotrekol     
 
-If there are any issues please let me know either in the issue tracker or DM me on Discord at `Scoin0#0002`.
+### :heavy_exclamation_mark: Requirements
+
+---
+
+* [Twitch OAuth2 Token](https://twitchapps.com/tmi/) - It is recommended to create a new account for this.
+* [Osu API Token](https://osu.ppy.sh/home/account/edit) - Scroll down to the bottom to obtain your tokens. More information inside the [wiki](https://github.com/Scoin0/UsagiBot/wiki/Configuration).
+
+If there are any issues please let me know either in the issue tracker or DM me on Discord at `Scoin0#0002`.     
+
+<div>
+➖🟨🟨🟨<br>
+🟨⬜⬜⬜🟨<br>  
+⬛⬜⬛⬜⬛<br> 
+🟨⬜⬜⬜🟨<br>
+🟨🟨🟨🟨🟨<br>
+🟦🟦🟦🟦🟦<br>
+🟨🟦🟦🟦🟨<br>
+🟨🟦🟦🟦🟨<br>
+🟦🟦🟦🟦🟦<br>
+➖🟦➖🟦<br>
+⬛⬛➖⬛⬛<br>
+</div>
+
