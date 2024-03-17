@@ -5,6 +5,7 @@ import usagibot.UsagiBot;
 import usagibot.commands.Command;
 import usagibot.commands.CommandEvent;
 import usagibot.osu.api.Beatmap;
+import usagibot.osu.memreaders.MemoryReaderConnections;
 import usagibot.utils.Utility;
 
 import java.io.IOException;
@@ -32,7 +33,7 @@ public class NowPlayingCommand extends Command {
     @Override
     public void onCommand(CommandEvent event) {
         try {
-            if (Utility.findGosumemory()) {
+            if (MemoryReaderConnections.memoryReader != null) {
                 Future<String> futureMods = Utility.fetchBeatmapModsInBackground();
                 if (!futureMods.get().contains("NM")){
                     event.getClient().sendMessage(UsagiBot.getConfig().getLocalParsedMessage(UsagiBot.getConfig().getNowPlayingMessage() + " +" + futureMods.get(), event.getClient().getBeatmap(), event.getEvent().getUser()));
@@ -40,8 +41,7 @@ public class NowPlayingCommand extends Command {
                     event.getClient().sendMessage(UsagiBot.getConfig().getLocalParsedMessage(UsagiBot.getConfig().getNowPlayingMessage(), event.getClient().getBeatmap(), event.getEvent().getUser()));
                 }
             } else {
-                event.getClient().sendMessage("GOsumemory is not online!");
-                log.warn("GOsumemory is not online!");
+                event.getClient().sendMessage("No memory readers are running. Streamer doko?");
             }
         } catch (IOException e) {
             log.warn(e.getMessage());
