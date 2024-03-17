@@ -2,8 +2,6 @@ package usagibot.osu.memreaders;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.handshake.ServerHandshake;
 import usagibot.UsagiBot;
 import usagibot.osu.api.Beatmap;
 import usagibot.osu.memreaders.gosu.GOsuMemoryReader;
@@ -107,7 +105,7 @@ public class MemoryReaderConnections {
     }
 
     public static String fetchJsonData(String apiUrl) throws IOException {
-        URL url = new URL("http://localhost:20727/json");
+        URL url = new URL(apiUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
         // Set up the connection
