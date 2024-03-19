@@ -36,7 +36,7 @@ public class Configuration {
 
     // Global Settings
     private String prefix = "!";
-    private int configVersion = 5;
+    private int configVersion = 6;
     private boolean useUpdater = true;
 
     // Twitch Settings
@@ -44,8 +44,8 @@ public class Configuration {
     private String twitchPassword = "";
     private String twitchChannel = "";
 
-    // GOsu Settings
-    private String gOsuUrlPath = "http://127.0.0.1:24050/json";
+    // Memory Reader Settings
+    private String webPath = "http://127.0.0.1:24050/json";
 
     // Osu Settings
     private String banchoUsername = "";
@@ -79,11 +79,6 @@ public class Configuration {
         }
     }
 
-    /**
-     * Load all the configuration values. If there is an update to the config then it will load all previous
-     * values first before adding the new values.
-     * @throws Exception    If it cannot save or load the file.
-     */
     public void loadConfiguration() throws Exception {
         PropertiesConfiguration config = new PropertiesConfiguration(file);
         FileInputStream fileInput = new FileInputStream(file);
@@ -96,7 +91,6 @@ public class Configuration {
         twitchUsername = config.getString("twitch_username");
         twitchPassword = config.getString("twitch_password");
         twitchChannel = config.getString("twitch_channel");
-        gOsuUrlPath = config.getString("gosu_url_path");
         osuClientId = config.getString("osu_api_clientid");
         osuAPIKey = config.getString("osu_api_key");
         banchoUsername = config.getString("bancho_username");
@@ -120,7 +114,7 @@ public class Configuration {
             initConfiguration();
         } else {
             // This section is for adding new or updated lines to the config file.
-            osuIrcMessage = config.getString("osu_message");
+            webPath = config.getString("web_path");
             log.info("Config Loaded.");
         }
     }
@@ -260,7 +254,7 @@ public class Configuration {
         config.addProperty("twitch_username", twitchUsername);
         config.addProperty("twitch_password", twitchPassword);
         config.addProperty("twitch_channel", twitchChannel);
-        config.addProperty("gosu_url_path", gOsuUrlPath);
+        config.addProperty("web_path", webPath);
         config.addProperty("osu_api_clientid", osuClientId);
         config.addProperty("osu_api_key", osuAPIKey);
         config.addProperty("bancho_username", banchoUsername);

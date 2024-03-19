@@ -27,6 +27,8 @@ public class UsagiBot {
     static PircBotX bot;
     static MemoryReaderConnections memoryReader;
 
+    private static boolean isRunning = false;
+
     public static Configuration getConfig() {
         return config;
     }
@@ -66,7 +68,21 @@ public class UsagiBot {
             }
         }));
 
-        executor.execute(() -> memoryReader = new MemoryReaderConnections());
+        executor.execute(() -> {
+            while (true) {
+                if ((MemoryReaderConnections.tosuRunning ? 1 : 0) + (MemoryReaderConnections.rosuRunning ? 1 : 0)
+                        + (MemoryReaderConnections.streamCompanionRunning ? 1 : 0) + (MemoryReaderConnections.gosumemoryRunnning ? 1 : 0) == 0) {
+                    memoryReader = new MemoryReaderConnections();
+                } else {
+                    MemoryReaderConnections.updateRunningPrograms();
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         executor.execute(() -> {
             TwitchClient twitchClient = new TwitchClient();
