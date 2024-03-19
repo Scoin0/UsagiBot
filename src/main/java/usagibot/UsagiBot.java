@@ -27,8 +27,6 @@ public class UsagiBot {
     static PircBotX bot;
     static MemoryReaderConnections memoryReader;
 
-    private static boolean isRunning = false;
-
     public static Configuration getConfig() {
         return config;
     }

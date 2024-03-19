@@ -92,8 +92,7 @@ public class StreamCompanionModel {
     public long score;
     @JsonProperty("currentMaxCombo")
     public int currentMaxCombo;
-    @JsonProperty("playerHp")
-    public float playerHp;
+    // Ignore Player HP
     @JsonProperty("ppIfMapEndsNow")
     public float ppIfMapEndsNow;
     // Ignore Aim PP If Map Ends Now
@@ -155,7 +154,7 @@ public class StreamCompanionModel {
     @JsonProperty("minBpm")
     public float minBPM;
     @JsonProperty("bpm")
-    public float bpm;
+    public String bpm;
     @JsonProperty("mainBpm")
     public float mainBPM;
     // Ignore Tags

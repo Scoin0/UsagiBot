@@ -1,13 +1,15 @@
 package usagibot.osu.memreaders.streamcompanion;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import kotlin.text.Charsets;
+import lombok.extern.slf4j.Slf4j;
 import usagibot.UsagiBot;
 import usagibot.osu.api.Beatmap;
 import usagibot.osu.memreaders.IMemoryReader;
 import usagibot.osu.memreaders.MemoryReaderConnections;
-
 import java.io.IOException;
 
+@Slf4j
 public class StreamCompanionReader implements IMemoryReader {
 
     static Beatmap beatmap;
@@ -16,7 +18,6 @@ public class StreamCompanionReader implements IMemoryReader {
     public Beatmap getSong() {
         try {
             String json = MemoryReaderConnections.fetchJsonData(MemoryReaderConnections.webHookPath);
-            json = removeBOM(json);
             ObjectMapper mapper = new ObjectMapper();
             StreamCompanionModel model = mapper.readValue(json, StreamCompanionModel.class);
             String beatmapId = String.valueOf(model.mapId);
@@ -31,7 +32,6 @@ public class StreamCompanionReader implements IMemoryReader {
     public String getMods() {
         try {
             String json = MemoryReaderConnections.fetchJsonData(MemoryReaderConnections.webHookPath);
-            json = removeBOM(json);
             ObjectMapper mapper = new ObjectMapper();
             StreamCompanionModel model = mapper.readValue(json, StreamCompanionModel.class);
             String mods = String.valueOf(model.mods);
@@ -44,12 +44,4 @@ public class StreamCompanionReader implements IMemoryReader {
             return null;
         }
     }
-
-    private String removeBOM(String json) {
-        if (json != null && json.startsWith("\uFEFF")) {
-            return json.substring(1);
-        }
-        return json;
-    }
-
 }
