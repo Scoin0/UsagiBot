@@ -21,7 +21,7 @@ import java.net.URL;
 @Getter
 public class MemoryReaderConnections {
 
-    public static final String webHookPath = UsagiBot.getConfig().getGOsuUrlPath();
+    public static final String webHookPath = UsagiBot.getConfig().getWebPath();
     private static boolean gosumemoryRunnning;
     private static boolean tosuRunning;
     private static boolean rosuRunning;
@@ -73,7 +73,7 @@ public class MemoryReaderConnections {
         }
     }
 
-    private static void updateRunningPrograms() {
+    private void updateRunningPrograms() {
         gosumemoryRunnning = isProcessRunning("gosumemory.exe");
         tosuRunning = isProcessRunning("tosu.exe");
         rosuRunning = isProcessRunning("windows_rosu-memory.exe");
@@ -85,7 +85,7 @@ public class MemoryReaderConnections {
      * @param processName = The memory reader to be searched for
      * @return            = The programs name
      */
-    private static boolean isProcessRunning(String processName) {
+    public boolean isProcessRunning(String processName) {
         if (System.getProperty("os.name").startsWith("Windows")) {
             try {
                 Process process = Runtime.getRuntime().exec("tasklist");
