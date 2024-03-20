@@ -9,9 +9,7 @@ import usagibot.osu.memreaders.rosu.ROsuReader;
 import usagibot.osu.memreaders.streamcompanion.StreamCompanionReader;
 import usagibot.osu.memreaders.tosu.TOsuReader;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -113,18 +111,35 @@ public class MemoryReaderConnections {
         connection.setRequestProperty("Accept", "application/json");
 
         // Read the response
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-            StringBuilder response = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
+        try (InputStream inputStream = connection.getInputStream()) {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            boolean bomSkipped = false;
+
+            // Check for BOM (Byte Order Mark)
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                if (!bomSkipped) {
+                    if (bytesRead >= 3 && buffer[0] == (byte) 0xEF && buffer[1] == (byte) 0xBB && buffer[2] == (byte) 0xBF) {
+                        // Skip BOM
+                        outputStream.write(buffer, 3, bytesRead - 3);
+                        bomSkipped = true;
+                        continue;
+                    } else {
+                        // No BOM found, write the buffer as is
+                        outputStream.write(buffer, 0, bytesRead);
+                        bomSkipped = true;
+                        continue;
+                    }
+                }
+                outputStream.write(buffer, 0, bytesRead);
             }
-            return response.toString();
+
+            return outputStream.toString("UTF-8");
         } finally {
             connection.disconnect();
         }
     }
-
     public static String fetchJsonDataWebSocket(String webSocketURI) {
         try {
             WebSocketConnector webSocketConnector = new WebSocketConnector(new URI(webSocketURI));
