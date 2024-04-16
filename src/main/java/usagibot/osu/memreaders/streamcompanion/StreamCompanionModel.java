@@ -114,8 +114,7 @@ public class StreamCompanionModel {
     public int sliderBreaks;
     // Ignore Live Star Rating
     // Ignore Is Break Time
-    @JsonProperty("currentBpm")
-    public float currentBPM;
+    // Ignore Current BPM
     // Ignore Leader Board Players
     // Ignore Leader Board Main Player
     // Ignore Key Overlay
@@ -149,14 +148,10 @@ public class StreamCompanionModel {
     public String difficultyName;
     // Ignore HashCode
     // Ignore Osu File Name
-    @JsonProperty("maxBpm")
-    public float maxBPM;
-    @JsonProperty("minBpm")
-    public float minBPM;
-    @JsonProperty("bpm")
-    public String bpm;
-    @JsonProperty("mainBpm")
-    public float mainBPM;
+    // Ignore Max BPM
+    // Ignore Min BPM
+    // Ignore BPM
+    // Ignore Main BPM
     // Ignore Tags
     @JsonProperty("circles")
     public int circles;
@@ -210,13 +205,7 @@ public class StreamCompanionModel {
     public float mHP;
     @JsonProperty("mStars")
     public float mStars;
-    @JsonProperty("mBpm")
-    public float mBPM;
-    @JsonProperty("mMaxBpm")
-    public float mMaxBPM;
-    @JsonProperty("mMinBpm")
-    public float mMinBPM;
-    @JsonProperty("mMainBpm")
-    public float MMainBPm;
+    // Ignore BPM
+
 
 }
