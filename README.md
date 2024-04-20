@@ -6,10 +6,10 @@ UsagiBot is a Twitch & Bancho IRC bot for handling song requests in Osu!
 ### :blue_book: Instruction
 
 ---
-This version of the bot is targeting Java 8. Please have Java 8 or higher installed.
+This version of the bot is targeting Java 8. Please have [Java 8](https://www.java.com/download/ie_manual.jsp) or higher installed.
 
 1. Download the latest version of [UsagiBot](https://github.com/Scoin0/UsagiBot/releases)
-2. Extract `UsagiBot.jar` to it's own folder
+2. Extract `UsagiBot.jar` to its own folder
 3. Open notepad and create a `start.bat` script. You can copy and paste the code from below.
 ```
 java -jar Usagibot.jar
@@ -46,26 +46,5 @@ As an example, `https://osu.ppy.sh/beatmapsets/53176#osu/162237 +HDHR`.
 * [Twitch OAuth2 Token](https://twitchapps.com/tmi/) - It is recommended to create a new account for this.
 * [Osu API Token](https://osu.ppy.sh/home/account/edit) - Scroll down to the bottom to obtain your tokens. More information inside the [wiki](https://github.com/Scoin0/UsagiBot/wiki/Configuration).
 
-If there are any issues please let me know either in the issue tracker or DM me on Discord at `Scoin0#0002`.     
-
-<div>
-⬜⬜⬜🟨🟨🟨🟨🟨🟨⬜⬜⬜<br>
-⬜⬜🟨🟨🟨🟪🟪🟨🟨🟨⬜⬜<br>
-⬜🟨🟨🟨🟪⬜⬜🟪🟨🟨🟨⬜<br>
-⬜⬛⬛🟪⬜⬛⬛⬜🟪⬛⬛⬜<br>
-⬜⬛⬛🟪⬜⬛⬛⬜🟪⬛⬛⬜<br>
-⬜🟨🟨🟨🟪⬜⬜🟪🟨🟨🟨⬜<br>
-⬜🟨🟨🟨🟨🟪🟪🟨🟨🟨🟨⬜<br>
-⬜🟨🟨⬛🟨🟨🟨🟨⬛🟨🟨⬜<br>
-⬜🟨🟨🟨⬛⬛⬛⬛🟨🟨🟨⬜<br>
-⬜🟦🟨🟨🟨🟨🟨🟨🟨🟨🟦⬜<br>
-⬜🟨🟦🟨🟨🟨🟨🟨🟨🟦🟨⬜<br>
-⬜🟨🟨🟦🟦🟦🟦🟦🟦🟨🟨⬜<br>
-⬜🟨🟨🟦🟦🟦🟦🟦🟦🟨🟨⬜<br>
-⬜🟨🟦🟦🟦🟦🟦🟦🟦🟦🟨⬜<br>
-⬜🟨🟦🟦🟦🟦🟦🟦🟦🟦🟨⬜<br>
-⬜⬛🟦🟦🟦🟦🟦🟦🟦🟦⬛⬜<br>
-⬛⬛⬜⬛⬛⬜⬜⬛⬛⬜⬛⬛<br>
-⬜⬜⬛⬛⬛⬜⬜⬛⬛⬛⬜⬜<br>
-</div>
+If there are any issues please let me know either in the issue tracker or DM me on Discord at `Scoin0#0002`.
 
