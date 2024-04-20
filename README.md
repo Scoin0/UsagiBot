@@ -6,7 +6,9 @@ UsagiBot is a Twitch & Bancho IRC bot for handling song requests in Osu!
 ### :blue_book: Instruction
 
 ---
+
 This version of the bot is targeting Java 8. Please have [Java 8](https://www.java.com/download/ie_manual.jsp) or higher installed.
+This program only works with Windows.
 
 1. Download the latest version of [UsagiBot](https://github.com/Scoin0/UsagiBot/releases)
 2. Extract `UsagiBot.jar` to its own folder
