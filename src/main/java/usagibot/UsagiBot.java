@@ -1,5 +1,6 @@
 package usagibot;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.pircbotx.PircBotX;
 import org.pircbotx.exception.IrcException;
@@ -9,6 +10,7 @@ import usagibot.osu.OsuClient;
 import usagibot.osu.irc.OsuIrc;
 import usagibot.osu.memreaders.MemoryReaderConnections;
 import usagibot.twitch.TwitchClient;
+import usagibot.utils.ConsoleColors;
 import usagibot.utils.Constants;
 import usagibot.utils.Utility;
 import usagibot.utils.version.VersionUpdate;
@@ -21,36 +23,34 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class UsagiBot {
 
+    @Getter
     static Configuration config = new Configuration();
+    @Getter
     static BannedUsers bannedUsers = new BannedUsers();
+    @Getter
     static OsuClient client;
     static PircBotX bot;
+    @Getter
     static MemoryReaderConnections memoryReader;
-
-    public static Configuration getConfig() {
-        return config;
-    }
-
-    public static BannedUsers getBannedUsers() {
-        return bannedUsers;
-    }
-
-    public static OsuClient getClient() {
-        return client;
-    }
 
     public static PircBotX getIrcBot() {
         return bot;
-    }
-
-    public static MemoryReaderConnections getMemoryReader() {
-        return memoryReader;
     }
 
     public static void main(String[] args) throws Exception {
         System.out.println(Constants.logo);
         config.initConfiguration();
         VersionUpdate.checkForUpdate();
+
+        if (Utility.getJavaVersion() <= 8) {
+            log.info(ConsoleColors.RED_BOLD_BRIGHT + "You are on Java Version: {}.", Utility.getJavaVersion());
+            log.info(ConsoleColors.RED_BOLD_BRIGHT + "This is the last version that will be in Java 8." +
+                    "\nThe next version will be in Java 21. You can get the download from here: " +
+                    ConsoleColors.BLUE_BOLD_BRIGHT + "https://www.oracle.com/java/technologies/downloads/"
+                    + ConsoleColors.RESET + ConsoleColors.RED_BOLD_BRIGHT
+                    + "\nIf you do not download the newest version of Java you will not be able to download new updates for this program." +
+                    ConsoleColors.RESET);
+        }
 
         ExecutorService executor = Executors.newFixedThreadPool(4);
 
