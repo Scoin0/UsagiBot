@@ -19,7 +19,6 @@ public class VersionUpdate {
     static {
         try {
             currentFileName = new File(VersionUpdate.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getAbsolutePath();
-            log.info(currentFileName);
         } catch (URISyntaxException e) {
             currentFileName = "UsagiBot.jar";
             log.error("Unable to get path of the JAR file!");
