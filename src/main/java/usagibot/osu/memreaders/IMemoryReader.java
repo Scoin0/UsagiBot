@@ -7,4 +7,5 @@ import java.io.IOException;
 public interface IMemoryReader {
     Beatmap getSong();
     String getMods();
+    String getSkin();
 }

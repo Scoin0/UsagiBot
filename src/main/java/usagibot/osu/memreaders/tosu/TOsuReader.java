@@ -1,6 +1,7 @@
 package usagibot.osu.memreaders.tosu;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jetbrains.annotations.ApiStatus;
 import usagibot.UsagiBot;
 import usagibot.osu.api.Beatmap;
 import usagibot.osu.memreaders.IMemoryReader;
@@ -43,4 +44,17 @@ public class TOsuReader implements IMemoryReader {
             return null;
         }
     }
+
+    @Override
+    public String getSkin() {
+        try {
+            String json = MemoryReaderConnections.fetchJsonData(MemoryReaderConnections.webHookPath);
+            ObjectMapper mapper = new ObjectMapper();
+            TOsuModel model = mapper.readValue(json, TOsuModel.class);
+            return String.valueOf(model.settings.folders.skin);
+        } catch (IOException e) {
+            return "Something went wrong. Cannot get skin...";
+        }
+    }
+
 }

@@ -44,4 +44,17 @@ public class StreamCompanionReader implements IMemoryReader {
             return null;
         }
     }
+
+    @Override
+    public String getSkin() {
+        try {
+            String json = MemoryReaderConnections.fetchJsonData(MemoryReaderConnections.webHookPath);
+            ObjectMapper mapper = new ObjectMapper();
+            StreamCompanionModel model = mapper.readValue(json, StreamCompanionModel.class);
+            return String.valueOf(model.skin);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Something went wrong. Cannot get skin...";
+        }
+    }
 }

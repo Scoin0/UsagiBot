@@ -71,6 +71,18 @@ public class MemoryReaderConnections {
         }
     }
 
+    public String getSkin() {
+        if (memoryReader == null)
+            return null;
+
+        try {
+            return memoryReader.getSkin();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public static void updateRunningPrograms() {
         gosumemoryRunnning = isProcessRunning("gosumemory.exe");
         tosuRunning = isProcessRunning("tosu.exe");

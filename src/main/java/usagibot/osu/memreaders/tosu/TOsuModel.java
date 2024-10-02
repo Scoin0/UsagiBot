@@ -10,7 +10,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TOsuModel {
 
-    // Ignore Settings
+    @JsonProperty("settings")
+    public Settings settings;
     @JsonProperty("menu")
     public Menu menu;
     @JsonProperty("gameplay")

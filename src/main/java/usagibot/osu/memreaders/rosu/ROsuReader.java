@@ -47,4 +47,17 @@ public class ROsuReader implements IMemoryReader {
             return null;
         }
     }
+
+    @Override
+    public String getSkin() {
+        try {
+            String json = MemoryReaderConnections.fetchJsonDataWebSocket(MemoryReaderConnections.webHookPath);
+            ObjectMapper mapper = new ObjectMapper();
+            ROsuModel model = mapper.readValue(json, ROsuModel.class);
+            return String.valueOf(model.skin);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Something went wrong. Cannot get skin...";
+        }
+    }
 }
