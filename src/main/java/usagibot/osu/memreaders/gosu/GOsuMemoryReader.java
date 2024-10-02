@@ -55,29 +55,6 @@ public class GOsuMemoryReader implements IMemoryReader {
 
     @Override
     public String getPP(int percentage) {
-        try {
-            String json = MemoryReaderConnections.fetchJsonData(MemoryReaderConnections.webHookPath);
-            ObjectMapper mapper = new ObjectMapper();
-            GOsuModel model = mapper.readValue(json, GOsuModel.class);
-            float a;
-            if (percentage == 100) {
-                a = model.menu.pp.perfect;
-            } else if (percentage == 99) {
-                a = model.menu.pp.ninetyNine;
-            } else if (percentage == 98) {
-                a = model.menu.pp.ninetyEight;
-            } else if (percentage == 97) {
-                a = model.menu.pp.ninetySeven;
-            } else if (percentage == 96) {
-                a = model.menu.pp.ninetySix;
-            } else if (percentage == 95) {
-                a = model.menu.pp.ninetyFive;
-            } else {
-                return null;
-            }
-            return String.valueOf(a);
-        } catch (IOException e) {
-            return null;
-        }
+        return "Gosumemory's pp calculations are currently broken.";
     }
 }
