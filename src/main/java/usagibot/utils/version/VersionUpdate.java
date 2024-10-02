@@ -3,7 +3,9 @@ package usagibot.utils.version;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
+import usagibot.utils.ConsoleColors;
 import usagibot.utils.Constants;
+import usagibot.utils.Utility;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -34,15 +36,22 @@ public class VersionUpdate {
             log.info("You are up to date.");
             return;
         }
-        log.info("Update was found! (Current Build: " + Constants.version + ") | (Latest Build: " + latest.toString() + ")");
-        log.info("Updating now...");
-        try {
-            String latestVersion = getUpdatedBotURL(VersionUtil.getLatestVersion());
-            downloadLatestVersionAndRestart(latestVersion, true);
-            log.info("Downloaded Updated Build...");
-        } catch (IOException e) {
-            log.warn("Unable to write the file...");
-            e.printStackTrace();
+
+        String lastVersion = VersionUtil.getLatestVersion() + ""; // Weird work around for getting the version
+
+        if (lastVersion.equals("3.0.2") && Utility.getJavaVersion() <= 20) { //TODO: Figure out another way to do this.
+            log.info(ConsoleColors.RED_BOLD_BRIGHT + "This is the last version you can update to. Please update to Java 21 or higher." + ConsoleColors.RESET);
+        } else {
+            log.info("Update was found! (Current Build: " + Constants.version + ") | (Latest Build: " + latest.toString() + ")");
+            log.info("Updating now...");
+            try {
+                String latestVersion = getUpdatedBotURL(VersionUtil.getLatestVersion());
+                downloadLatestVersionAndRestart(latestVersion, true);
+                log.info("Downloaded Updated Build...");
+            } catch (IOException e) {
+                log.warn("Unable to write the file...");
+                e.printStackTrace();
+            }
         }
     }
 
