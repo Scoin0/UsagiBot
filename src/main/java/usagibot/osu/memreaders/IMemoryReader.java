@@ -8,4 +8,5 @@ public interface IMemoryReader {
     Beatmap getSong();
     String getMods();
     String getSkin();
+    String getPP(int percentage);
 }

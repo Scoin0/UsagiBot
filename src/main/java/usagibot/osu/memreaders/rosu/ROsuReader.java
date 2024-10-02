@@ -60,4 +60,21 @@ public class ROsuReader implements IMemoryReader {
             return "Something went wrong. Cannot get skin...";
         }
     }
+
+    public String getPP(int percentage) {
+        try {
+            String json = MemoryReaderConnections.fetchJsonData(MemoryReaderConnections.webHookPath);
+            ObjectMapper mapper = new ObjectMapper();
+            ROsuModel model = mapper.readValue(json, ROsuModel.class);
+            float a;
+            if (percentage == 100) {
+                a = model.ssPP;
+            } else {
+                return "rosu doesn't support other pp percentages.";
+            }
+            return String.valueOf(a);
+        } catch (IOException e) {
+            return null;
+        }
+    }
 }
