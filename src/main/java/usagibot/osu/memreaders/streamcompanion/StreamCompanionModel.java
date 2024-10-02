@@ -47,7 +47,8 @@ public class StreamCompanionModel {
     // Ignore Mania
     // Ignore OsuIsRunning
     // Ignore Map Strains
-    // Ignore Skin
+    @JsonProperty("skin")
+    public String skin;
     // Ignore Skin Path
     @JsonProperty("firstHitObjectTime")
     public int firstHitObjectTime;

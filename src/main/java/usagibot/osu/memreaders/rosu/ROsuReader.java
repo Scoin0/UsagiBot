@@ -47,4 +47,34 @@ public class ROsuReader implements IMemoryReader {
             return null;
         }
     }
+
+    @Override
+    public String getSkin() {
+        try {
+            String json = MemoryReaderConnections.fetchJsonDataWebSocket(MemoryReaderConnections.webHookPath);
+            ObjectMapper mapper = new ObjectMapper();
+            ROsuModel model = mapper.readValue(json, ROsuModel.class);
+            return String.valueOf(model.skin);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Something went wrong. Cannot get skin...";
+        }
+    }
+
+    public String getPP(int percentage) {
+        try {
+            String json = MemoryReaderConnections.fetchJsonData(MemoryReaderConnections.webHookPath);
+            ObjectMapper mapper = new ObjectMapper();
+            ROsuModel model = mapper.readValue(json, ROsuModel.class);
+            float a;
+            if (percentage == 100) {
+                a = model.ssPP;
+            } else {
+                return "rosu doesn't support other pp percentages.";
+            }
+            return String.valueOf(a);
+        } catch (IOException e) {
+            return null;
+        }
+    }
 }

@@ -13,7 +13,9 @@ import usagibot.twitch.TwitchClient;
 import usagibot.utils.ConsoleColors;
 import usagibot.utils.Constants;
 import usagibot.utils.Utility;
+import usagibot.utils.version.Version;
 import usagibot.utils.version.VersionUpdate;
+import usagibot.utils.version.VersionUtil;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
@@ -42,13 +44,13 @@ public class UsagiBot {
         config.initConfiguration();
         VersionUpdate.checkForUpdate();
 
-        if (Utility.getJavaVersion() <= 8) {
+        if (Utility.getJavaVersion() <= 20) {
             log.info(ConsoleColors.RED_BOLD_BRIGHT + "You are on Java Version: {}.", Utility.getJavaVersion());
             log.info(ConsoleColors.RED_BOLD_BRIGHT + "This is the last version that will be in Java 8." +
                     "\nThe next version will be in Java 21. You can get the download from here: " +
                     ConsoleColors.BLUE_BOLD_BRIGHT + "https://www.oracle.com/java/technologies/downloads/"
                     + ConsoleColors.RESET + ConsoleColors.RED_BOLD_BRIGHT
-                    + "\nIf you do not download the newest version of Java you will not be able to download new updates for this program." +
+                    + "\nIf you do not download the newest version of Java, you will not be able to download new updates for this program." +
                     ConsoleColors.RESET);
         }
 
