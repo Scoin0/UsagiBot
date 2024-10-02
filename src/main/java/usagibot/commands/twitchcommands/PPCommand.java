@@ -1,9 +1,12 @@
 package usagibot.commands.twitchcommands;
 
+import lombok.extern.slf4j.Slf4j;
 import usagibot.UsagiBot;
 import usagibot.commands.Command;
 import usagibot.commands.CommandEvent;
+import usagibot.osu.memreaders.MemoryReaderConnections;
 
+@Slf4j
 public class PPCommand extends Command {
 
     public PPCommand() {
@@ -16,8 +19,10 @@ public class PPCommand extends Command {
     @Override
     public void onCommand(CommandEvent event) {
 
-        if (event.getArgs().length == 0) {
-            event.getClient().sendMessage("For SS: " + UsagiBot.getMemoryReader().getPP(100));
+        if (MemoryReaderConnections.gosumemoryRunnning) {
+            event.getClient().sendMessage("Gosumemory currently does not support pp calculations.");
+        } else if (event.getArgs().length == 0) {
+            event.getClient().sendMessage("For SS: " + UsagiBot.getMemoryReader().getPP(100) + "pp");
         } else {
             int percentage = (int) Math.round(Double.parseDouble(event.getArgs()[0]));
 

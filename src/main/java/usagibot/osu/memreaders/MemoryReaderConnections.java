@@ -26,7 +26,7 @@ public class MemoryReaderConnections {
     public static boolean streamCompanionRunning;
     public static IMemoryReader memoryReader;
 
-    public MemoryReaderConnections(){
+    public MemoryReaderConnections() {
         log.info("Attempting to find which osu memory reader is running...");
         updateRunningPrograms();
         if (gosumemoryRunnning) {
