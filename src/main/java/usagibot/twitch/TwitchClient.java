@@ -59,7 +59,8 @@ public class TwitchClient {
         commandClient.addCommand(new RequestToggleCommand());
         commandClient.addCommand(new StarLimitCommand());
         commandClient.addCommand(new StatsCommand());
-        commandClient.addCommand(new SkinCommand());
         commandClient.addCommand(new PPCommand());
+        commandClient.addCommand(new AddCommand(commandClient));
+        commandClient.addCommand(new RemoveCommand(commandClient));
     }
 }
