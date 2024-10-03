@@ -36,7 +36,7 @@ public class Configuration {
 
     // Global Settings
     private String prefix = "!";
-    private int configVersion = 7;
+    private int configVersion = 6;
     private boolean useUpdater = true;
 
     // Twitch Settings
@@ -57,9 +57,6 @@ public class Configuration {
     private String osuClientId = "";
     private String osuAPIKey = "";
     private double osuStarLimit = 6.0;
-
-    // Command Settings
-    private boolean skinCommand = false;
 
     // Custom Messages
     private String twitchMessage = "[RECEIVED] > <user_sent> [<ranked_status>] <artist> - <title> [<version>] <music_note_emoji> <length> <star_emoji> <star_rating> BPM:<bpm> AR:<ar> OD:<od>";
@@ -94,7 +91,6 @@ public class Configuration {
         twitchUsername = config.getString("twitch_username");
         twitchPassword = config.getString("twitch_password");
         twitchChannel = config.getString("twitch_channel");
-        webPath = config.getString("web_path");
         osuClientId = config.getString("osu_api_clientid");
         osuAPIKey = config.getString("osu_api_key");
         banchoUsername = config.getString("bancho_username");
@@ -118,7 +114,7 @@ public class Configuration {
             initConfiguration();
         } else {
             // This section is for adding new or updated lines to the config file.
-            skinCommand = config.getBoolean("skin_command");
+            webPath = config.getString("web_path");
             log.info("Config Loaded.");
         }
     }
@@ -144,13 +140,6 @@ public class Configuration {
         PropertiesConfiguration config = new PropertiesConfiguration(file);
         this.osuStarLimit = starLimit;
         config.setProperty("osu_star_limit", starLimit);
-        config.save();
-    }
-
-    public void setSkinCommand(boolean isSkinCommandActive) throws Exception {
-        PropertiesConfiguration config = new PropertiesConfiguration(file);
-        this.skinCommand = isSkinCommandActive;
-        config.setProperty("skin_command", skinCommand);
         config.save();
     }
 
@@ -275,7 +264,6 @@ public class Configuration {
         config.addProperty("bancho_server", banchoServer);
         config.addProperty("bancho_port", banchoPort);
         config.addProperty("bancho_channel", banchoChannel);
-        config.addProperty("skin_command", skinCommand);
         config.addProperty("received_message", twitchMessage);
         config.addProperty("osu_message", osuIrcMessage);
         config.addProperty("np_message", nowPlayingMessage);
