@@ -56,6 +56,18 @@ public class CommandClient {
         log.info("Added the command " + command.name);
     }
 
+    public void removeCommand (Command command) {
+        synchronized (commandIndex) {
+            commands.remove(command);
+            commandIndex.remove(command.getName());
+            for (String alias : command.aliases) {
+                commandIndex.remove(alias);
+            }
+            commands.remove(command);
+            log.info("Removed the command " + command.name);
+        }
+    }
+
     /**
      * Sends a message within Twitch chat
      * @param message   The message to be sent

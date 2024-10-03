@@ -46,7 +46,7 @@ public class UsagiBot {
 
         if (Utility.getJavaVersion() <= 20) {
             log.info(ConsoleColors.RED_BOLD_BRIGHT + "You are on Java Version: {}.", Utility.getJavaVersion());
-            log.info(ConsoleColors.RED_BOLD_BRIGHT + "This is the last version that will be in Java 8." +
+            log.info(ConsoleColors.RED_BOLD_BRIGHT + "This may be the last version that will be in Java 8." +
                     "\nThe next version will be in Java 21. You can get the download from here: " +
                     ConsoleColors.BLUE_BOLD_BRIGHT + "https://www.oracle.com/java/technologies/downloads/"
                     + ConsoleColors.RESET + ConsoleColors.RED_BOLD_BRIGHT
