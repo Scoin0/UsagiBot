@@ -36,7 +36,7 @@ public class AddCommand extends Command {
 
     @Override
     public void onCommand(CommandEvent event) {
-        if (!event.getEvent().getUser().getName().equals(UsagiBot.getConfig().getTwitchChannel())) {
+        if (!event.getEvent().getUser().getName().equals(UsagiBot.getConfig().getTwitchChannel().toLowerCase())) {
             return; // Ignore commands from other users, Streamer Only
         }
 

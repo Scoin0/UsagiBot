@@ -29,7 +29,7 @@ public class StarLimitCommand extends Command {
             event.getClient().sendMessage("The current star limit is: " + UsagiBot.getConfig().getOsuStarLimit() + "*");
         }
 
-        if (event.getEvent().getUser().getName().equals(UsagiBot.getConfig().getTwitchChannel())) {
+        if (event.getEvent().getUser().getName().equals(UsagiBot.getConfig().getTwitchChannel().toLowerCase())) {
             if (event.getArgs().length == 1) {
                 try {
                     double newStarLimit = Double.parseDouble(event.getArgs()[0]);

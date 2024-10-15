@@ -24,7 +24,7 @@ public class RemoveCommand extends Command {
 
     public RemoveCommand(CommandClient commandClient) {
         name = "removecommand";
-        description = "remove a custom command with 1 output string. (Streamer Only)";
+        description = "Remove a custom command. (Streamer Only)";
         usage.add("removecommand");
         usage.add("removecommand <command name>");
         usage.add("remove");
@@ -35,7 +35,7 @@ public class RemoveCommand extends Command {
 
     @Override
     public void onCommand(CommandEvent event) {
-        if (!event.getEvent().getUser().getName().equals(UsagiBot.getConfig().getTwitchChannel())) {
+        if (!event.getEvent().getUser().getName().equals(UsagiBot.getConfig().getTwitchChannel().toLowerCase())) {
             return; // Ignore commands from other users, Streamer Only
         }
 
@@ -48,7 +48,7 @@ public class RemoveCommand extends Command {
         String commandName = event.getArgs()[0];
 
         if (!customCommands.containsKey(commandName)) {
-            event.getClient().sendMessage("Command !" + commandName + "does not exist.");
+            event.getClient().sendMessage("Command !" + commandName + " does not exist.");
             return;
         }
 
