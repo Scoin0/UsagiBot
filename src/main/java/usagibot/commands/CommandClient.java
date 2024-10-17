@@ -116,13 +116,19 @@ public class CommandClient {
      * @param beatmapToReceive  The URL of the map sent.
      */
     public void receiveBeatmap(EventUser event, String beatmapToReceive) {
+        String beatmapId = parseMessage(beatmapToReceive);
+
         if (!isRequestToggleActive() || isUserBanned(event.getName())) {
             sendMessage("You cannot request a beatmap at this time.");
             return;
         }
 
+        if (beatmapId == null) {
+            return;
+        }
+
         log.info("Received possible osu song request. Getting beatmap data now...");
-        Beatmap beatmap = UsagiBot.getClient().getBeatmap(parseMessage(beatmapToReceive));
+        Beatmap beatmap = UsagiBot.getClient().getBeatmap(beatmapId);
         log.info("Beatmap ID Found: " + beatmap.getId());
 
         String mods = extractMods(beatmapToReceive);

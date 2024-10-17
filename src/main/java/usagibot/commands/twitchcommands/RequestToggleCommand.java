@@ -32,7 +32,7 @@ public class RequestToggleCommand extends Command {
             event.getClient().sendMessage("The current status of requesting beatmaps is: " + requestToggle);
         }
 
-        if (event.getEvent().getUser().getName().equals(UsagiBot.getConfig().getTwitchChannel())) {
+        if (event.getEvent().getUser().getName().equals(UsagiBot.getConfig().getTwitchChannel().toLowerCase())) {
             if (event.getArgs()[0].equalsIgnoreCase("toggle")) {
                 requestToggle = !requestToggle;
                 event.getClient().sendMessage("The current status of requesting beatmaps is: " + requestToggle);
