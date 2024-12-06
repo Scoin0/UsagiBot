@@ -104,6 +104,7 @@ public class Menu {
             @JsonProperty("memoryHP")
             public float memoryHP;
 
+            @JsonIgnoreProperties(ignoreUnknown = true)
             public static class BPM {
 
                 @JsonProperty("common")
