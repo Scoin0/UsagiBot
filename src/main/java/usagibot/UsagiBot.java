@@ -10,7 +10,6 @@ import usagibot.osu.OsuClient;
 import usagibot.osu.irc.OsuIrc;
 import usagibot.osu.memreaders.MemoryReaderConnections;
 import usagibot.twitch.TwitchClient;
-import usagibot.utils.ConsoleColors;
 import usagibot.utils.Constants;
 import usagibot.utils.Utility;
 import usagibot.utils.version.Version;
@@ -43,16 +42,6 @@ public class UsagiBot {
         System.out.println(Constants.logo);
         config.initConfiguration();
         VersionUpdate.checkForUpdate();
-
-        if (Utility.getJavaVersion() <= 20) {
-            log.info(ConsoleColors.RED_BOLD_BRIGHT + "You are on Java Version: {}.", Utility.getJavaVersion());
-            log.info(ConsoleColors.RED_BOLD_BRIGHT + "This may be the last version that will be in Java 8." +
-                    "\nThe next version will be in Java 21. You can get the download from here: " +
-                    ConsoleColors.BLUE_BOLD_BRIGHT + "https://www.oracle.com/java/technologies/downloads/"
-                    + ConsoleColors.RESET + ConsoleColors.RED_BOLD_BRIGHT
-                    + "\nIf you do not download the newest version of Java, you will not be able to download new updates for this program." +
-                    ConsoleColors.RESET);
-        }
 
         ExecutorService executor = Executors.newFixedThreadPool(4);
 
