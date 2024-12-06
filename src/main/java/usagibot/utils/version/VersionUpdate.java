@@ -39,8 +39,8 @@ public class VersionUpdate {
 
         String lastVersion = VersionUtil.getLatestVersion() + ""; // Weird work around for getting the version
 
-        if (lastVersion.equals("3.0.2") && Utility.getJavaVersion() <= 20) { //TODO: Figure out another way to do this.
-            log.info(ConsoleColors.RED_BOLD_BRIGHT + "This is the last version you can update to. Please update to Java 21 or higher." + ConsoleColors.RESET);
+        if (lastVersion.equals("3.1.2") && Utility.getJavaVersion() <= 20) { //TODO: Figure out another way to do this.
+            log.info(ConsoleColors.RED_BOLD_BRIGHT + "Since UsagiBot Version 3.1.2 we are using Java 21. Please update to Java 21 or higher." + ConsoleColors.RESET);
         } else {
             log.info("Update was found! (Current Build: " + Constants.version + ") | (Latest Build: " + latest.toString() + ")");
             log.info("Updating now...");
