@@ -67,10 +67,23 @@ public enum Mods {
 
         Mods[] values = values();
 
-        for (int i = 0; i < values.length; i++) {
-            if (values[i].is(mods))
-                ret.add(values[i]);
+        if ((mods & Nightcore.bit) != 0) {
+            ret.add(Nightcore);
+            mods &= ~DoubleTime.bit;
         }
+
+        if ((mods & Perfect.bit) != 0) {
+            ret.add(Perfect);
+            mods &= ~SuddenDeath.bit;
+        }
+
+        for (Mods value : values) {
+            if (value == Nightcore || value == Perfect) continue;
+            if (value.is(mods)) {
+                ret.add(value);
+            }
+        }
+
         return ret;
     }
 
