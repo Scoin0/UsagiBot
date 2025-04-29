@@ -1,10 +1,9 @@
 package usagibot.osu.api.v2;
 
 import lombok.Getter;
+import java.time.OffsetDateTime;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import java.time.OffsetDateTime;
 
 /**
  * The following is the format returned when API v2 version header is 20220705 or higher.
