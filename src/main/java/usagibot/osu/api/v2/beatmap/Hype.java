@@ -1,11 +1,11 @@
-package usagibot.osu.api.v2;
+package usagibot.osu.api.v2.beatmap;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
-public class NominationsSummary {
+public class Hype {
 
     private int current;
     private int required;

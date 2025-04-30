@@ -2,6 +2,9 @@ package usagibot.osu.api.v2;
 
 import lombok.Getter;
 import java.time.OffsetDateTime;
+import usagibot.osu.api.v2.beatmap.Beatmap;
+import usagibot.osu.api.v2.beatmap.Beatmapset;
+import usagibot.osu.api.v2.user.UserStatistics;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -40,8 +43,6 @@ public class Score {
     private int legacyTotalScore;
     @JsonProperty("max_combo")
     private int maxCombo;
-    @JsonProperty("maximum_statistics")
-    private ScoreStatistics maximumStatistics;
     private List<Mods> mods;
     private boolean passed;
     /**
@@ -79,7 +80,7 @@ public class Score {
     private int userId;
 
     // Initial Version: The following is the format returned when API v2 header is 20220704 or lower.
-    private Statistics statistics;
+    private UserStatistics statistics;
 
     // Optional Attributes
     private Beatmap beatmap;

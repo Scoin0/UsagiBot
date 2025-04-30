@@ -1,19 +1,13 @@
-package usagibot.osu.api.v2;
+package usagibot.osu.api.v2.beatmap;
 
 import lombok.Getter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
-public class Level {
+public class NominationsSummary {
 
-    /**
-     * Current level.
-     */
     private int current;
-    /**
-     * Progress to next level.
-     */
-    private float progress;
+    private int required;
 
 }

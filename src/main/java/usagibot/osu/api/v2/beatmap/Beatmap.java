@@ -1,8 +1,10 @@
-package usagibot.osu.api.v2;
+package usagibot.osu.api.v2.beatmap;
 
 
 import lombok.Getter;
 import java.util.List;
+import usagibot.osu.api.v2.enums.Ruleset;
+import usagibot.osu.api.v2.enums.RankStatus;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;

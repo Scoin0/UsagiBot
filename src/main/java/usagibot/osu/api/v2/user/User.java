@@ -1,7 +1,10 @@
-package usagibot.osu.api.v2;
+package usagibot.osu.api.v2.user;
 
 import lombok.Getter;
+import java.util.List;
 import java.time.OffsetDateTime;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -10,6 +13,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.DEDUCTION,
+        defaultImpl = User.class
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = UserExtended.class)
+})
 public class User {
 
     /**
@@ -78,6 +88,39 @@ public class User {
     private List<UserAccountHistory> accountHistory;
     private List<ProfileBanner> tournamentBanner;
     private List<UserBadge> badges;
+    private Cover cover;
+    @JsonProperty("beatmap_playcount_count")
     private int beatmapPlaycountsCount;
-    
+    @JsonProperty("favourite_beatmapset_count")
+    private int favouriteBeatmapsetCount;
+    @JsonProperty("follow_user_mapping")
+    private List<Integer> followUserMapping;
+    @JsonProperty("follower_count")
+    private int followerCount;
+    @JsonProperty("graveyard_beatmapset_count")
+    private int graveyardBeatmapsetCount;
+    private List<UserGroup> groups;
+    @JsonProperty("guest_beatmapset_count")
+    private int guestBeatmapsetCount;
+    @JsonProperty("is_restricted")
+    private Boolean isRestricted;
+    private Kudosu kudosu;
+    @JsonProperty("loved_beatmapset_count")
+    private int lovedBeatmapsetCount;
+    @JsonProperty("mapper_following_count")
+    private int mapperFollowingCount;
+    @JsonProperty("nominated_beatmapset_count")
+    private int nominatedBeatmapsetCount;
+    @JsonProperty("rank_highest")
+    private List<RankHighest> rankHighest;
+    @JsonProperty("scores_best_count")
+    private int scoresBestCount;
+    @JsonProperty("scores_first_count")
+    private int scoresFirstCount;
+    @JsonProperty("scores_recent_count")
+    private int scoresRecentCount;
+    @JsonProperty("session_verified")
+    private boolean sessionVerified;
+    private UserStatistics statistics;
+
 }

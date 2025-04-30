@@ -1,4 +1,4 @@
-package usagibot.osu.api.v2;
+package usagibot.osu.api.v2.enums;
 
 import lombok.Getter;
 import com.fasterxml.jackson.annotation.JsonValue;

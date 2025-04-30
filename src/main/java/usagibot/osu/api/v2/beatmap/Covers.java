@@ -1,4 +1,4 @@
-package usagibot.osu.api.v2;
+package usagibot.osu.api.v2.beatmap;
 
 import lombok.Getter;
 import com.fasterxml.jackson.annotation.JsonProperty;

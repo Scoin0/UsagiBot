@@ -1,7 +1,8 @@
-package usagibot.osu.api.v2;
+package usagibot.osu.api.v2.beatmap;
 
 import lombok.Getter;
 import java.time.OffsetDateTime;
+import usagibot.osu.api.v2.enums.RankStatus;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
