@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 /**
- * Available rulesets: {@code osu, taiko, fruits, mania}.
+ * Available rulesets: {@code osu}, {@code taiko}, {@code fruits}, {@code mania}.
  */
 @Getter
 public enum Ruleset {

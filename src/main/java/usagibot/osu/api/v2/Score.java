@@ -1,7 +1,9 @@
 package usagibot.osu.api.v2;
 
 import lombok.Getter;
+import java.util.List;
 import java.time.OffsetDateTime;
+import usagibot.osu.api.v2.enums.Mods;
 import usagibot.osu.api.v2.beatmap.Beatmap;
 import usagibot.osu.api.v2.beatmap.Beatmapset;
 import usagibot.osu.api.v2.user.UserStatistics;
