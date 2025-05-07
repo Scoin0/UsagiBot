@@ -12,13 +12,19 @@ import usagibot.commands.twitchcommands.*;
 public class TwitchClient {
 
     public static com.github.twitch4j.TwitchClient client;
-    public static OAuth2Credential credentials = new OAuth2Credential("twitch", UsagiBot.getConfig().getTwitchPassword());
+    public static OAuth2Credential credentials;
     CommandClient commandClient;
 
     /**
      * The Twitch IRC client constructor
      */
     public TwitchClient(){
+        String token =  UsagiBot.getConfig().getTwitchPassword();
+        if (token == null || token.isEmpty()) {
+            throw new IllegalArgumentException("Twitch OAuth token is missing.");
+        }
+
+        credentials = new OAuth2Credential("twitch", token);
         client = TwitchClientBuilder.builder()
                 .withEnableChat(true)
                 .withChatAccount(credentials)
@@ -33,7 +39,7 @@ public class TwitchClient {
         loadListeners();
         try {
             client.getChat().joinChannel(UsagiBot.getConfig().getTwitchChannel());
-            log.info("Successfully Joined " + UsagiBot.getConfig().getTwitchChannel());
+            log.info("Successfully Joined {}", UsagiBot.getConfig().getTwitchChannel());
         } catch (Exception e) {
             log.warn("Could not connect to Twitch Channel. Is everything set up correctly?");
         }

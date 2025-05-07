@@ -21,16 +21,27 @@ public class PPCommand extends Command {
 
         if (MemoryReaderConnections.gosumemoryRunnning) {
             event.getClient().sendMessage("Gosumemory currently does not support pp calculations.");
-        } else if (event.getArgs().length == 0) {
-            event.getClient().sendMessage("For SS: " + UsagiBot.getMemoryReader().getPP(100) + "pp");
-        } else {
-            int percentage = (int) Math.round(Double.parseDouble(event.getArgs()[0]));
+            return;
+        }
 
-            if (percentage >= 95 && percentage <= 100) {
-                event.getClient().sendMessage("PP at " + percentage + "% : " + UsagiBot.getMemoryReader().getPP(percentage) + "pp.");
+        String[] args = event.getArgs();
+
+        if (args.length == 0 || args[0].trim().isEmpty()) {
+            event.getClient().sendMessage("For SS: " + UsagiBot.getMemoryReader().getPP(100) + "pp");
+            return;
+        }
+
+        try {
+            double percentage = Double.parseDouble(args[0].trim());
+            int roundedPercentage = (int) Math.round(percentage);
+
+            if (roundedPercentage >= 95 && roundedPercentage <= 100) {
+                event.getClient().sendMessage("PP at " + roundedPercentage + "% : " + UsagiBot.getMemoryReader().getPP(roundedPercentage) + "pp.");
             } else {
-                event.getClient().sendMessage("Percentages must be between 95 and 100. It rounds to the nearest int.");
+                event.getClient().sendMessage("Percentages must be between 95 and 100. This number is rounded upwards.");
             }
+        } catch (NumberFormatException e) {
+            event.getClient().sendMessage("Invalid percentage format. Please enter a number between 95 and 100.");
         }
     }
 }

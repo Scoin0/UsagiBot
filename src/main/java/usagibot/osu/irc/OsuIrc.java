@@ -2,9 +2,7 @@ package usagibot.osu.irc;
 
 import lombok.extern.slf4j.Slf4j;
 import org.pircbotx.Configuration;
-import org.pircbotx.delay.Delay;
 import usagibot.UsagiBot;
-
 import java.nio.charset.StandardCharsets;
 
 @Slf4j
