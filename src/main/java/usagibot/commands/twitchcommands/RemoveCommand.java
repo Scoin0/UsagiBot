@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.extern.slf4j.Slf4j;
 import usagibot.UsagiBot;
-import usagibot.commands.Command;
-import usagibot.commands.CommandClient;
-import usagibot.commands.CommandEvent;
-import usagibot.commands.DynamicCommand;
+import usagibot.commands.*;
 
 import java.io.File;
 import java.io.IOException;

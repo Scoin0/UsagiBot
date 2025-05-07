@@ -1,10 +1,12 @@
 package usagibot.commands.twitchcommands;
 
+import lombok.extern.slf4j.Slf4j;
 import usagibot.commands.Command;
 import usagibot.commands.CommandEvent;
 
 import java.util.Optional;
 
+@Slf4j
 public class HelpCommand extends Command {
 
     /**
