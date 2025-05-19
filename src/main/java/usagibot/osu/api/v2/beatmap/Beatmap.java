@@ -5,8 +5,6 @@ import lombok.Getter;
 import java.util.List;
 import usagibot.osu.api.v2.enums.Ruleset;
 import usagibot.osu.api.v2.enums.RankStatus;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -15,13 +13,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
-@JsonTypeInfo(
-        use = JsonTypeInfo.Id.DEDUCTION,
-        defaultImpl = Beatmap.class
-)
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = BeatmapExtended.class)
-})
 public class Beatmap {
 
     @JsonProperty("beatmapset_id")

@@ -112,7 +112,7 @@ public class User {
     @JsonProperty("nominated_beatmapset_count")
     private int nominatedBeatmapsetCount;
     @JsonProperty("rank_highest")
-    private List<RankHighest> rankHighest;
+    private RankHighest rankHighest;
     @JsonProperty("scores_best_count")
     private int scoresBestCount;
     @JsonProperty("scores_first_count")

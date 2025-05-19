@@ -6,6 +6,8 @@ import usagibot.osu.api.v2.beatmap.GradeCounts;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.math.BigInteger;
+
 /**
  * A summary of various gameplay statistics for a {@link User}. Specific to a {@link Ruleset}.
  */
@@ -77,7 +79,7 @@ public class UserStatistics {
      * Current ranked score.
      */
     @JsonProperty("ranked_score")
-    private int rankedScore;
+    private Long rankedScore;
     /**
      * Number of replays watched by other users.
      */
@@ -92,7 +94,7 @@ public class UserStatistics {
      * Total score.
      */
     @JsonProperty("total_score")
-    private int totalScore;
+    private Long totalScore;
 
     // Optional Attributes
     /**

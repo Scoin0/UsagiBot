@@ -3,7 +3,6 @@ package usagibot.osu.api.v2;
 import lombok.Getter;
 import java.util.List;
 import java.time.OffsetDateTime;
-import usagibot.osu.api.v2.enums.Mods;
 import usagibot.osu.api.v2.beatmap.Beatmap;
 import usagibot.osu.api.v2.beatmap.Beatmapset;
 import usagibot.osu.api.v2.user.UserStatistics;
@@ -22,9 +21,9 @@ public class Score {
     @JsonProperty("beatmap_id")
     private float beatmapId;
     @JsonProperty("best_id")
-    private Integer bestId;
+    private Long bestId;
     @JsonProperty("build_id")
-    private Integer buildId;
+    private Long buildId;
     /**
      * Only for {@code solo_score} type.
      */
@@ -34,7 +33,7 @@ public class Score {
     private OffsetDateTime endedAt;
     @JsonProperty("has_replay")
     private boolean hasReplay;
-    private int id;
+    private Long id;
     @JsonProperty("is_perfect_combo")
     private boolean isPerfectCombo;
     @JsonProperty("legacy_perfect")
@@ -45,7 +44,7 @@ public class Score {
     private int legacyTotalScore;
     @JsonProperty("max_combo")
     private int maxCombo;
-    private List<Mods> mods;
+    private List<String> mods;
     private boolean passed;
     /**
      * Only for multiplayer score
@@ -78,7 +77,7 @@ public class Score {
     @JsonProperty("total_score")
     private int totalScore;
     private String type;
-    @JsonProperty("userId")
+    @JsonProperty("user_id")
     private int userId;
 
     // Initial Version: The following is the format returned when API v2 header is 20220704 or lower.
@@ -87,8 +86,6 @@ public class Score {
     // Optional Attributes
     private Beatmap beatmap;
     private Beatmapset beatmapset;
-    @JsonProperty("current_user_attributes")
-    private Integer currentUserAttributes;
-    private Integer position;
+    private Long position;
 
 }

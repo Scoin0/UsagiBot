@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 @Getter
 public enum Ruleset {
 
+    UNKNOWN(""),
     OSU("osu"),
     TAIKO("taiko"),
     FRUITS("fruits"),
