@@ -1,0 +1,82 @@
+name: Release
+
+# Runs when you push a tag like v1.0.0 (or 1.0.0). Tags with a "-" (v1.0.0-beta) become pre-releases.
+on:
+  push:
+    tags:
+      - 'v*'
+      - '[0-9]*'
+
+jobs:
+  build:
+    name: Build (${{ matrix.name }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: windows-latest, name: windows }
+          - { os: macos-latest,   name: macos }    # Apple Silicon (arm64)
+          - { os: ubuntu-latest,  name: linux }
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      # v1.0.0 -> 1.0.0. Passed to Gradle so the jar name, manifest and app version match the tag.
+      - name: Version from tag
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
+
+      - name: Build jar and app image
+        run: |
+          chmod +x gradlew
+          ./gradlew shadowJar packageApp -Pversion="$VERSION"
+
+      # jpackage output
+      - name: Archive app image
+        working-directory: build/dist
+        run: |
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            powershell -NoProfile -Command "Compress-Archive -Path UsagiBot -DestinationPath '../../UsagiBot-$VERSION-windows.zip'"
+          else
+            tar -czf "../../UsagiBot-$VERSION-${{ matrix.name }}.tar.gz" *
+          fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: app-${{ matrix.name }}
+          path: UsagiBot-*-${{ matrix.name }}.*
+
+      # The plain jar is identical on every OS, so only upload it once.
+      - uses: actions/upload-artifact@v4
+        if: matrix.name == 'linux'
+        with:
+          name: jar
+          path: build/libs/UsagiBot-*.jar
+
+  release:
+    name: Publish release
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          generate_release_notes: true
+          prerelease: ${{ contains(github.ref_name, '-') }}

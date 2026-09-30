@@ -1,7 +1,6 @@
 # Compiled / logs
 *.class
 *.log
-*.properties
 logs/
 hs_err_pid*
 
