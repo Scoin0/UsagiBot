@@ -1,5 +1,8 @@
 package usagibot.osu.api.enums;
 
+import lombok.Getter;
+import java.util.Locale;
+import lombok.extern.slf4j.Slf4j;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
@@ -8,8 +11,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
  * @see <a href=https://osu.ppy.sh/docs/#beatmapset-rank-status>#beatmapset-rank-status</a>
  */
 
+@Slf4j
+@Getter
 public enum RankStatus {
 
+    UNKNOWN(Integer.MIN_VALUE, "unknown"),
     GRAVEYARD(-2, "graveyard"),
     WIP(-1, "wip"),
     PENDING(0, "pending"),
@@ -29,17 +35,13 @@ public enum RankStatus {
 
     @JsonCreator
     public static RankStatus fromValue(Object value) {
-        if (value instanceof Integer) {
-            int intValue = (Integer) value;
-            for (RankStatus status : values()) {
-                if (status.code == intValue) return status;
-            }
-        } else if (value instanceof String) {
-            String stringValue = ((String) value).toLowerCase();
-            for (RankStatus status : values()) {
-                if (status.name.equals(stringValue)) return status;
-            }
+        if (value instanceof Integer i) {
+            for (RankStatus s : values()) if (s.code == i) return s;
+        } else if (value instanceof String str) {
+            String lower = str.toLowerCase(Locale.ROOT);
+            for (RankStatus s : values()) if (s.name.equals(lower)) return s;
         }
-        throw new IllegalArgumentException("Rank Status value " + value + " is not a valid Rank Status value");
+        log.warn("Unknown rank status: {}", value);
+        return UNKNOWN;
     }
 }
