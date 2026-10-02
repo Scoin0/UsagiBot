@@ -28,8 +28,8 @@ public class BeatmapDifficultyAttributes {
     private float speedDifficulty;
     @JsonProperty("speed_note_count")
     private float speedNoteCount;
-    @JsonProperty("float_factor")
-    private float floatFactor;
+    @JsonProperty("slider_factor")
+    private float sliderFactor;
     @JsonProperty("aim_difficult_strain_count")
     private float aimDifficultStrainCount;
     @JsonProperty("speed_difficult_strain_count")

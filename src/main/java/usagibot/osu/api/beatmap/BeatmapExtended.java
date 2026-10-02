@@ -22,8 +22,11 @@ public class BeatmapExtended extends Beatmap {
     private int beatmapsetId;
     private Float bpm;
     private boolean convert;
+    @JsonProperty("count_circles")
     private int countCircles;
+    @JsonProperty("count_sliders")
     private int countSliders;
+    @JsonProperty("count_spinners")
     private int countSpinners;
     @JsonProperty("cs")
     private float circleSize;
