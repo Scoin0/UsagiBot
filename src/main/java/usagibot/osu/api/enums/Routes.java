@@ -1,4 +1,4 @@
-package usagibot.osu.enums;
+package usagibot.osu.api.enums;
 
 import lombok.Getter;
 import usagibot.osu.Route;

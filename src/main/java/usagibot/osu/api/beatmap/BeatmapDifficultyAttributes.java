@@ -1,0 +1,41 @@
+package usagibot.osu.api.beatmap;
+
+import lombok.Getter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+/**
+ * Represent beatmap difficulty attributes.
+ * Following fields are always present and then there are additional fields for different rulesets.
+ * @see <a href=https://osu.ppy.sh/docs/#beatmapdifficultyattributes>#beatmapdifficultyattributes</a>
+ */
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@Getter
+public class BeatmapDifficultyAttributes {
+
+    @JsonProperty("star_rating")
+    private float starRating;
+    @JsonProperty("max_combo")
+    private int maxCombo;
+
+    // Osu
+    @JsonProperty("aim_difficulty")
+    private float aimDifficulty;
+    @JsonProperty("aim_difficulty_slider_count")
+    private float aimDifficultySliderCount;
+    @JsonProperty("speed_difficulty")
+    private float speedDifficulty;
+    @JsonProperty("speed_note_count")
+    private float speedNoteCount;
+    @JsonProperty("float_factor")
+    private float floatFactor;
+    @JsonProperty("aim_difficult_strain_count")
+    private float aimDifficultStrainCount;
+    @JsonProperty("speed_difficult_strain_count")
+    private float speedDifficultStrainCount;
+
+    // Taiko
+    @JsonProperty("mono_stamina_factor")
+    private float monoStaminaFactor;
+}
